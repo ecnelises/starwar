@@ -69,12 +69,14 @@
 		D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6B0611A1803AB670077942B /* CoreMotion.framework */; };
 		ED545A7C1B68A1F400C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7B1B68A1F400C3958E /* libiconv.dylib */; };
 		ED545A7E1B68A1FA00C3958E /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = ED545A7D1B68A1FA00C3958E /* libiconv.dylib */; };
-		F56E1F2A1CEC3B8200E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F291CEC3B8200E0DB3B /* ball.png */; };
-		F56E1F2B1CEC3B8200E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F291CEC3B8200E0DB3B /* ball.png */; };
 		F56E1F2D1CEC3B8D00E0DB3B /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F2C1CEC3B8D00E0DB3B /* background.png */; };
 		F56E1F2E1CEC3B8D00E0DB3B /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F2C1CEC3B8D00E0DB3B /* background.png */; };
 		F56E1F321CEC410400E0DB3B /* Controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56E1F301CEC410400E0DB3B /* Controller.cpp */; };
 		F56E1F331CEC410400E0DB3B /* Controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56E1F301CEC410400E0DB3B /* Controller.cpp */; };
+		F56E1F351CEC8A0300E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F341CEC8A0300E0DB3B /* ball.png */; };
+		F56E1F361CEC8A0300E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F341CEC8A0300E0DB3B /* ball.png */; };
+		F56E1F381CEC8A1600E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F371CEC8A1600E0DB3B /* ball.png */; };
+		F56E1F391CEC8A1600E0DB3B /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F56E1F371CEC8A1600E0DB3B /* ball.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,10 +171,11 @@
 		D6B0611A1803AB670077942B /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		ED545A7B1B68A1F400C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
 		ED545A7D1B68A1FA00C3958E /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		F56E1F291CEC3B8200E0DB3B /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ball.png; path = ../Classes/ball.png; sourceTree = "<group>"; };
 		F56E1F2C1CEC3B8D00E0DB3B /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 		F56E1F301CEC410400E0DB3B /* Controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Controller.cpp; sourceTree = "<group>"; };
 		F56E1F311CEC410400E0DB3B /* Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Controller.h; sourceTree = "<group>"; };
+		F56E1F341CEC8A0300E0DB3B /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
+		F56E1F371CEC8A1600E0DB3B /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -297,8 +300,9 @@
 				521A8EA819F11F5000D177D7 /* fonts */,
 				3EACC98E19EE6D4300EB3C5E /* res */,
 				46880B7619C43A67006E1F66 /* CloseNormal.png */,
-				F56E1F291CEC3B8200E0DB3B /* ball.png */,
 				F56E1F2C1CEC3B8D00E0DB3B /* background.png */,
+				F56E1F371CEC8A1600E0DB3B /* ball.png */,
+				F56E1F341CEC8A0300E0DB3B /* ball.png */,
 				46880B7719C43A67006E1F66 /* CloseSelected.png */,
 				46880B7A19C43A67006E1F66 /* HelloWorld.png */,
 			);
@@ -468,6 +472,8 @@
 				50EF629917ECD46A001EB2F8 /* Icon-100.png in Resources */,
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
+				F56E1F381CEC8A1600E0DB3B /* ball.png in Resources */,
+				F56E1F351CEC8A0300E0DB3B /* ball.png in Resources */,
 				F56E1F2D1CEC3B8D00E0DB3B /* background.png in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
@@ -477,7 +483,6 @@
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
-				F56E1F2A1CEC3B8200E0DB3B /* ball.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
 				3EACC98F19EE6D4300EB3C5E /* res in Resources */,
@@ -496,12 +501,13 @@
 			files = (
 				46880B8219C43A67006E1F66 /* HelloWorld.png in Resources */,
 				F56E1F2E1CEC3B8D00E0DB3B /* background.png in Resources */,
+				F56E1F391CEC8A1600E0DB3B /* ball.png in Resources */,
+				F56E1F361CEC8A0300E0DB3B /* ball.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				3EACC99019EE6D4300EB3C5E /* res in Resources */,
 				521A8EAA19F11F5000D177D7 /* fonts in Resources */,
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				46880B7E19C43A67006E1F66 /* CloseSelected.png in Resources */,
-				F56E1F2B1CEC3B8200E0DB3B /* ball.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
