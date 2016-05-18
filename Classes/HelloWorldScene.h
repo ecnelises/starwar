@@ -14,7 +14,7 @@ public:
     CREATE_FUNC(HelloWorld);
 private:
     pair<cocos2d::Sprite*, bool> selected;
-    pair<float, float> maxDistance;
+    pair<float, float> finalPoint;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

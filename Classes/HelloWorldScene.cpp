@@ -25,8 +25,8 @@ bool HelloWorld::init()
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    maxDistance = make_pair(0.0f, 0.0f);
-
+    finalPoint = make_pair(0.0f, 0.0f);
+    const int MAXFORCE = 250;
     auto map = Sprite::create("background.png");
     auto ball1 = Sprite::create("ball.png");
     auto ball2 = Sprite::create("ball.png");
@@ -61,38 +61,30 @@ bool HelloWorld::init()
     
     mouseListener->onMouseMove = [=](Event *event) {
         EventMouse *e = (EventMouse*) event;
-        glLineWidth(5);
+        glLineWidth(5); // 规定线段的粗细
+        float ballX = ball1->getPositionX(), ballY = ball1->getPositionY();
+        float cursorX = e->getCursorX(), cursorY = e->getCursorY();
         if(selected.first == ball1 && selected.second == true) {
-            draw->clear();
-            float diff = sqrt(pow((ball1->getPositionX() - e->getCursorX()), 2.0f) + pow((ball1->getPositionY() - e->getCursorY()), 2.0f));
-            float x = e->getCursorX();
-            float y = e->getCursorY();
-            double ctan = atan(abs(ball1->getPositionY() - e->getCursorY()) / abs(ball1->getPositionX() - e->getCursorX()));
-            if(diff > 180) {
-                float diffX = 180 * cos(ctan);
-                float diffY = 180 * sin(ctan);
-                if(ball1->getPositionX() > e->getCursorX()) {
-                    x = ball1->getPositionX() - diffX;
-                } else {
-                    x = ball1->getPositionX() + diffX;
-                }
-                if(ball1->getPositionY() > e->getCursorY()) {
-                    y = ball1->getPositionY() - diffY;
-                } else {
-                    y = ball1->getPositionY() + diffY;
-                }
+            draw->clear(); // 不清除的话，会出现重影现象
+            float diff = sqrt(pow((ballX - cursorX), 2.0f) + pow((ballY - cursorY), 2.0f)); // 当前点到球心线段长度
+            double ctan = atan(abs(ballY - cursorY) / abs(ballX - cursorX)); // 线段与水平x的夹角
+            if(diff > MAXFORCE) { // 判断是不是超出最大长度
+                float diffX = MAXFORCE * cos(ctan); // 超出就按照最大长度来重新计算 应当所在的点
+                float diffY = MAXFORCE * sin(ctan);
+                cursorX = ballX > cursorX ? ballX - diffX : ballX + diffX; // 应当点
+                cursorY = ballY > cursorY ? ballY - diffY : ballY + diffY;
             }
-            maxDistance = make_pair(x, y);
-            draw->drawSegment(ball1->getPosition(), Vec2(x, y), 2, Color4F(0, 1, 0, 1));
+            finalPoint = make_pair(cursorX, cursorY); // 记录最后点的位置
+            draw->drawSegment(ball1->getPosition(), Vec2(cursorX, cursorY), 2, Color4F(0, 1, 0, 1)); // 画线段
         }
     };
     
     mouseListener->onMouseUp = [=](Event *event) {
         if(selected.first == ball1 && selected.second) {
-            selected = make_pair(ball1, false);
+            selected = make_pair(ball1, false); // 改变按下点的状态
             draw->clear();
-            float x = ball1->getPositionX() - maxDistance.first;
-            float y = ball1->getPositionY() - maxDistance.second;
+            float x = ball1->getPositionX() - finalPoint.first;
+            float y = ball1->getPositionY() - finalPoint.second;
             x = x < ball1->getPositionX() ? x : -x;
             y = y < ball1->getPositionY() ? y : -y;
             ball1Body->applyImpulse(Vec2(x*1000, y*1000));
