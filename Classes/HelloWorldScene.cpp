@@ -42,6 +42,9 @@ bool HelloWorld::init()
     ball2Body->setLinearDamping(5.0f);
     ball1Body->setRotationEnable(false); // 不转动
     ball2Body->setRotationEnable(false);
+    ball1Body->getShape(0)->setRestitution(1.0f); // 反弹
+    ball2Body->getShape(0)->setRestitution(1.0f);
+    
     
     map->setPhysicsBody(mapFrame);
     ball1->setPhysicsBody(ball1Body);
@@ -51,6 +54,7 @@ bool HelloWorld::init()
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     ball1->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     ball2->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    
     mouseListener->onMouseDown = [=](Event *event) {
         EventMouse *e = (EventMouse*) event;
         auto ball1Box = ball1->getBoundingBox();
