@@ -64,28 +64,35 @@ bool HelloWorld::init()
         glLineWidth(5);
         if(selected.first == ball1 && selected.second == true) {
             draw->clear();
-//            float diff = sqrt(pow((ball1->getPositionX() - e->getCursorX()), 2.0f) + pow((ball1->getPositionY() - e->getCursorY()), 2.0f));
+            float diff = sqrt(pow((ball1->getPositionX() - e->getCursorX()), 2.0f) + pow((ball1->getPositionY() - e->getCursorY()), 2.0f));
             float x = e->getCursorX();
             float y = e->getCursorY();
-//            double ctan = tanh(abs(ball1->getPositionX() - e->getCursorX()) / abs(ball1->getPositionY() - e->getCursorY()));
-//            if(diff > 180) {
-//                float diffX = e->getCursorX() < ball1->getPositionX() ? -180 * cos(ctan) : 180 * cos(ctan);
-//                float diffY = e->getCursorY() < ball1->getPositionY() ? -180 * sin(ctan) : 180 * sin(ctan);
-//                x = ball1->getPositionX() + diffX;
-//                y = ball1->getPositionY() + diffY;
-//               // maxDistance = make_pair(e->getCursorX(), e->getCursorY());
-//            }
+            double ctan = atan(abs(ball1->getPositionY() - e->getCursorY()) / abs(ball1->getPositionX() - e->getCursorX()));
+            if(diff > 180) {
+                float diffX = 180 * cos(ctan);
+                float diffY = 180 * sin(ctan);
+                if(ball1->getPositionX() > e->getCursorX()) {
+                    x = ball1->getPositionX() - diffX;
+                } else {
+                    x = ball1->getPositionX() + diffX;
+                }
+                if(ball1->getPositionY() > e->getCursorY()) {
+                    y = ball1->getPositionY() - diffY;
+                } else {
+                    y = ball1->getPositionY() + diffY;
+                }
+            }
+            maxDistance = make_pair(x, y);
             draw->drawSegment(ball1->getPosition(), Vec2(x, y), 2, Color4F(0, 1, 0, 1));
         }
     };
     
     mouseListener->onMouseUp = [=](Event *event) {
-        EventMouse *e = (EventMouse*) event;
         if(selected.first == ball1 && selected.second) {
             selected = make_pair(ball1, false);
             draw->clear();
-            float x = ball1->getPositionX() - e->getCursorX();
-            float y = ball1->getPositionY() - e->getCursorY();
+            float x = ball1->getPositionX() - maxDistance.first;
+            float y = ball1->getPositionY() - maxDistance.second;
             x = x < ball1->getPositionX() ? x : -x;
             y = y < ball1->getPositionY() ? y : -y;
             ball1Body->applyImpulse(Vec2(x*1000, y*1000));
