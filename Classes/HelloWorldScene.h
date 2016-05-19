@@ -15,6 +15,7 @@ public:
 private:
     pair<cocos2d::Sprite*, bool> selected;
     pair<float, float> finalPoint;
+    cocos2d::Sprite* hero;
 };
 
 #endif // __HELLOWORLD_SCENE_H__

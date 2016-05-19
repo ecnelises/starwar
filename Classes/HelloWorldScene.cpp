@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+#include "Item.h"
 
 USING_NS_CC;
 
@@ -6,11 +7,13 @@ Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
-    
+    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
+    auto itemLayer = Item::create();
     // add layer as a child to scene
     scene->addChild(layer);
+    scene->addChild(itemLayer);
     // return the scene
     return scene;
 }
@@ -27,6 +30,7 @@ bool HelloWorld::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     finalPoint = make_pair(0.0f, 0.0f);
     const int MAXFORCE = 250;
+    const int FORCE = 1000;
     auto map = Sprite::create("background.png");
     auto ball1 = Sprite::create("ball.png");
     auto ball2 = Sprite::create("ball.png");
@@ -35,6 +39,8 @@ bool HelloWorld::init()
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
     auto mouseListener = EventListenerMouse::create();
     auto draw = DrawNode::create();
+    
+    hero = ball1; // 将ball1设置为hero.
     
     ball1Body->setGravityEnable(false); // 不受重力影响
     ball2Body->setGravityEnable(false);
@@ -91,7 +97,7 @@ bool HelloWorld::init()
             float y = ball1->getPositionY() - finalPoint.second;
             x = x < ball1->getPositionX() ? x : -x;
             y = y < ball1->getPositionY() ? y : -y;
-            ball1Body->applyImpulse(Vec2(x*1000, y*1000));
+            ball1Body->applyImpulse(Vec2(x, y) * FORCE);
         }
     };
     
