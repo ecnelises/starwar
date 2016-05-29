@@ -9,6 +9,7 @@
 #ifndef Item_hpp
 #define Item_hpp
 
+/*
 #include "cocos2d.h"
 using namespace cocos2d;
 
@@ -18,5 +19,6 @@ public:
     virtual bool init();
     CREATE_FUNC(Item);
 };
+ */
 
 #endif /* Item_hpp */

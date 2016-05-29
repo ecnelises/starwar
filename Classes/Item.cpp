@@ -1,6 +1,7 @@
 #include "Item.h"
 USING_NS_CC;
 
+/*
 bool Item::init()
 {
     if ( !Layer::init() )
@@ -17,3 +18,4 @@ bool Item::init()
     this->addChild(item1);
     return true;
 }
+*/

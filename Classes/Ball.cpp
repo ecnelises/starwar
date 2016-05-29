@@ -6,6 +6,7 @@
 //
 //
 
+/*
 #include "Ball.h"
 USING_NS_CC;
 
@@ -49,4 +50,4 @@ void Ball::applyForce(const Vec2 force)
 {
     ballBody->applyImpulse(force);
 };
-
+*/

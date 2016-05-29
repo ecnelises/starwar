@@ -1,5 +1,5 @@
 #include "HelloWorldScene.h"
-#include "Item.h"
+//#include "Item.h"
 
 USING_NS_CC;
 
@@ -10,10 +10,10 @@ Scene* HelloWorld::createScene()
     //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
-    auto itemLayer = Item::create();
+    //auto itemLayer = Item::create();
     // add layer as a child to scene
     scene->addChild(layer);
-    scene->addChild(itemLayer);
+    //scene->addChild(itemLayer);
     // return the scene
     return scene;
 }
@@ -34,8 +34,8 @@ bool HelloWorld::init()
     auto map = Sprite::create("background.png");
     auto ball1 = Sprite::create("ball.png");
     auto ball2 = Sprite::create("ball.png");
-    auto ball1Body = PhysicsBody::createCircle(ball1->getContentSize().width / 2);
-    auto ball2Body = PhysicsBody::createCircle(ball1->getContentSize().width / 2);
+    auto ball1Body = PhysicsBody::createCircle((ball1->getContentSize()).width / 2);
+    auto ball2Body = PhysicsBody::createCircle((ball1->getContentSize()).width / 2);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
     auto mouseListener = EventListenerMouse::create();
     auto draw = DrawNode::create();

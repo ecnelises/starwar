@@ -8,7 +8,7 @@
 
 #ifndef Ball_hpp
 #define Ball_hpp
-
+/*
 #include "cocos2d.h"
 using namespace cocos2d;
 
@@ -49,5 +49,6 @@ private:
         big = 48
     } _size;
 };
+*/
 
 #endif /* Ball_hpp */
