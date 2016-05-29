@@ -30,7 +30,7 @@ bool HelloWorld::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     finalPoint = make_pair(0.0f, 0.0f);
     const int MAXFORCE = 250;
-    const int FORCE = 1000;
+    const int FORCE = 1200;
     auto map = Sprite::create("background.png");
     auto ball1 = Sprite::create("ball.png");
     auto ball2 = Sprite::create("ball.png");
@@ -48,8 +48,8 @@ bool HelloWorld::init()
     ball2Body->setLinearDamping(5.0f);
     ball1Body->setRotationEnable(false); // 不转动
     ball2Body->setRotationEnable(false);
-    ball1Body->getShape(0)->setRestitution(1.0f); // 反弹
-    ball2Body->getShape(0)->setRestitution(1.0f);
+    ball1Body->getShape(0)->setRestitution(1.25f); // 反弹
+    ball2Body->getShape(0)->setRestitution(1.25f);
     
     
     map->setPhysicsBody(mapFrame);
