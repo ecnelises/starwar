@@ -1,24 +1,16 @@
-//
-//  Item.hpp
-//  ball
-//
-//  Created by Dcalsky on 16/5/19.
-//
-//
+//===--- Item.h - Item class definition ---===//
+/// \file Item.h
+/// This file contains declaration of Item class, which
+/// plays an important role in game experience.
 
-#ifndef Item_hpp
-#define Item_hpp
+#ifndef ITEM_H_
+#define ITEM_H_
 
-/*
 #include "cocos2d.h"
-using namespace cocos2d;
 
-class Item : public Layer
-{
-public:
-    virtual bool init();
-    CREATE_FUNC(Item);
+/// \class Item
+/// \brief Item can be used by player to make effects.
+class Item {
 };
- */
 
-#endif /* Item_hpp */
+#endif // ITEM_H_
