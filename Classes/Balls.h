@@ -33,18 +33,46 @@ protected:
 /// \brief Any bomb will explode immediately when touching another ball.
 class Bomb : public Ball {
 public:
-    Bomb();
-    virtual ~Bomb();
+    Bomb()
+    {
+        _sprite = cocos2d::Sprite::create("bomb.png");
+        _ballBody = cocos2d::PhysicsBody::createCircle(radius);
+        // TODO: Where is physics material?
+        _sprite->setPhysicsBody(_ballBody);
+    }
+    
+    virtual ~Bomb()
+    {
+        _sprite->release();
+        _ballBody->release();
+    }
+    
     virtual void move(const Force& force);
+private:
+    const float radius = 24;
 };
 
 /// \class Curling
 /// \brief A curling is a ordinary ball can collide with other balls.
 class Curling : public Ball {
 public:
-    Curling();
-    virtual ~Curling();
+    Curling() = delete;
+    Curling(float radius)
+    {
+        _radius = radius;
+        _sprite = cocos2d::Sprite::create("ball.png");
+        _ballBody = cocos2d::PhysicsBody::createCircle(_radius);
+    }
+    
+    virtual ~Curling()
+    {
+        _sprite->release();
+        _ballBody->release();
+    }
+    
     virtual void move(const Force& force);
+private:
+    float _radius;
 };
 
 #endif // BALLS_H_
