@@ -50,12 +50,15 @@ bool HelloWorld::init()
     ball2Body->setRotationEnable(false);
     ball1Body->getShape(0)->setRestitution(1.25f); // 反弹
     ball2Body->getShape(0)->setRestitution(1.25f);
+    ball1Body->setTag(1);
+    ball2Body->setTag(2);
     
-    
+    // 设置物理对象
     map->setPhysicsBody(mapFrame);
     ball1->setPhysicsBody(ball1Body);
     ball2->setPhysicsBody(ball2Body);
     
+    // 大小与位置
     map->setScale(1.0f);
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     ball1->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
@@ -107,6 +110,11 @@ bool HelloWorld::init()
     this->addChild(ball1, 1);
     this->addChild(ball2, 2);
     this->addChild(draw, 10);
-    
+    this->scheduleUpdate();
     return true;
+}
+
+void HelloWorld::update(float dt)
+{
+    
 }
