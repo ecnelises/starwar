@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef Controller_hpp
-#define Controller_hpp
+#ifndef CONTROLLER_H_
+#define CONTROLLER_H_
 
 #include "cocos2d.h"
 
@@ -15,4 +15,4 @@ class Controller: cocos2d::Node {
     
 };
 
-#endif /* Controller_hpp */
+#endif // CONTROLLER_H_

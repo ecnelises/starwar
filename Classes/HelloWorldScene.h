@@ -1,5 +1,5 @@
-#ifndef __HELLOWORLD_SCENE_H__
-#define __HELLOWORLD_SCENE_H__
+#ifndef HELLOWORLD_SCENE_H__
+#define HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
 using namespace std;
@@ -18,4 +18,4 @@ private:
     cocos2d::Sprite* hero;
 };
 
-#endif // __HELLOWORLD_SCENE_H__
+#endif // HELLOWORLD_SCENE_H__
