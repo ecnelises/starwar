@@ -8,6 +8,12 @@
 
 #include "cocos2d.h"
 
+enum ballSize {
+    SMALL,
+    MEDIUM,
+    BIG
+};
+
 // TODO: Such simple classes should be moved to a single header.
 struct Force {
     Force() = delete;
@@ -22,7 +28,7 @@ class Ball {
 public:
     // What's the parameters?
     Ball();
-    virtual ~Ball() = 0;
+    virtual ~Ball() {};
     virtual void move(const Force& force) = 0;
 protected:
     cocos2d::Sprite *_sprite;
@@ -42,9 +48,12 @@ public:
 /// \brief A curling is a ordinary ball can collide with other balls.
 class Curling : public Ball {
 public:
-    Curling();
-    virtual ~Curling();
-    virtual void move(const Force& force);
+    Curling() = delete;
+    Curling(ballSize);
+    virtual ~Curling() {};
+    virtual void move(const Force&) {};
+    cocos2d::Sprite *getSprite();
+    cocos2d::PhysicsBody *getBallBody();
 };
 
 #endif // BALLS_H_
