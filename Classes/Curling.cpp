@@ -3,13 +3,11 @@
 #include "Ball.h"
 using namespace cocos2d;
 
-Ball::Ball() {
-    
-}
 
-Curling::Curling(ballSize ballSize):Ball() {
+Curling::Curling(ballSize ballSize) : Ball() {
     float scale = 1.0f;
-    switch (ballSize) {
+    _ballSize = ballSize;
+    switch (_ballSize) {
         case SMALL:
             scale = 1.0f;
             break;
@@ -32,6 +30,6 @@ Curling::Curling(ballSize ballSize):Ball() {
     _sprite->setPhysicsBody(_ballBody);
 }
 
-Sprite* Curling::getSprite() {
+Sprite* Ball::getSprite() {
     return _sprite;
 }

@@ -1,5 +1,5 @@
 #include "HelloWorldScene.h"
-#include "Ball.h"
+
 //#include "Item.h"
 
 USING_NS_CC;
@@ -29,47 +29,26 @@ bool HelloWorld::init()
     
     Size visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    std::vector<Ball*> curlings;
     
     for( int i = 0; i < 9; ++i ) {
         auto curling = new Curling(MEDIUM);
-        this->addChild(curling->getSprite(), 1);
+        curlings.push_back(curling);
+        this->addBall(curling, 9);
     }
 //    finalPoint = make_pair(0.0f, 0.0f);
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
     auto map = Sprite::create("background.png");
-//    auto ball1 = Sprite::create("ball.png");
-//    auto ball2 = Sprite::create("ball.png");
-//    
-//    auto ball1Body = PhysicsBody::createCircle((ball1->getContentSize()).width / 2);
-//    auto ball2Body = PhysicsBody::createCircle((ball1->getContentSize()).width / 2);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
-//    auto mouseListener = EventListenerMouse::create();
-//    auto draw = DrawNode::create();
-//    
-//    hero = ball1; // 将ball1设置为hero.
-//    
-//    ball1Body->setGravityEnable(false); // 不受重力影响
-//    ball2Body->setGravityEnable(false);
-//    ball1Body->setLinearDamping(5.0f); // 线性阻尼
-//    ball2Body->setLinearDamping(5.0f);
-//    ball1Body->setRotationEnable(false); // 不转动
-//    ball2Body->setRotationEnable(false);
-//    ball1Body->getShape(0)->setRestitution(1.25f); // 反弹
-//    ball2Body->getShape(0)->setRestitution(1.25f);
-//    ball1Body->setTag(1);
-//    ball2Body->setTag(2);
-//    
+    auto mouseController = MouseController::create();
+    mouseController->addBalls(curlings);
 //    // 设置物理对象
     map->setPhysicsBody(mapFrame);
-//    ball1->setPhysicsBody(ball1Body);
-//    ball2->setPhysicsBody(ball2Body);
 //    
 //    // 大小与位置
     map->setScale(1.3f);
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-//    ball1->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-//    ball2->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 //    
 //    mouseListener->onMouseDown = [=](Event *event) {
 //        EventMouse *e = (EventMouse*) event;
@@ -110,16 +89,18 @@ bool HelloWorld::init()
 //            ball1Body->applyImpulse(Vec2(x, y) * FORCE);
 //        }
 //    };
-//    
-//    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, ball1);
 //
-    this->addChild(map, 0);
-//    this->addChild(ball1, 1);
-//    this->addChild(ball2, 2);
-//    this->addChild(draw, 10);
+    this->addChild(mouseController, 0);
+    this->addChild(map, 1);
 //    this->scheduleUpdate();
     return true;
 }
+
+
+void HelloWorld::addBall(Ball *ball, int zIndex) {
+    this->addChild(ball->getSprite(), zIndex);
+}
+
 
 void HelloWorld::update(float dt)
 {

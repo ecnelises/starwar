@@ -1,13 +1,23 @@
 //
-//  Player.hpp
-//  bumpflow
+//  Player.h
+//  ball
 //
-//  Created by 邱超凡 on 16/5/29.
+//  Created by Dcalsky on 16/5/31.
 //
 //
 
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#ifndef Player_h
+#define Player_h
+
+#include "Ball.h"
+#include "cocos2d"
+
+class Player : cocos2d::Node {
+public:
+    Player();
+    virtual ~Player();
+    virtual update(float dt) override;
+};
 
 
-#endif // PLAYER_H_
+#endif /* Player_h */

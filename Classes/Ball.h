@@ -27,12 +27,15 @@ struct Force {
 class Ball {
 public:
     // What's the parameters?
-    Ball();
+    Ball() {};
     virtual ~Ball() {};
     virtual void move(const Force& force) = 0;
+    virtual cocos2d::Sprite *getSprite();
+    virtual cocos2d::PhysicsBody *getBallBody() {};
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
+    ballSize _ballSize;
 };
 
 /// \class Bomb
@@ -51,9 +54,7 @@ public:
     Curling() = delete;
     Curling(ballSize);
     virtual ~Curling() {};
-    virtual void move(const Force&) {};
-    cocos2d::Sprite *getSprite();
-    cocos2d::PhysicsBody *getBallBody();
+    virtual void move(const Force&) override {};
 };
 
 #endif // BALLS_H_

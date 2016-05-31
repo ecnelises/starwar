@@ -9,18 +9,21 @@
 #ifndef MouseController_hpp
 #define MouseController_hpp
 
-class MouseController {
-private:
-    MouseController();
-    static MouseController * _mouseController;
+#include "Ball.h"
+#include "cocos2d.h"
+
+class MouseController : public cocos2d::Node {
 public:
-    static MouseController * getInstance()
-    {
-        if( _mouseController == nullptr) {
-            _mouseController = new MouseController();
-        }
-        return _mouseController;
-    };
+    virtual bool init() override;
+    virtual ~MouseController() {};
+    void addBalls(std::vector<Ball*>);
+    CREATE_FUNC(MouseController);
+private:
+    void _handleMouseUp(cocos2d::Event*);
+    void _handleMouseMove(cocos2d::Event*);
+    void _handleMouseDown(cocos2d::Event*);
+    std::vector<Ball*> _balls;
+    std::pair<Ball*, bool> selected;
 };
 
 #endif /* MouseController_hpp */
