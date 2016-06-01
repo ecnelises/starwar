@@ -16,16 +16,16 @@ bool MouseController::init()
         return false;
     }
     
-    // Keyboard Listener
     auto mouseListener = EventListenerMouse::create();
-    auto draw = DrawNode::create();
+    
     finalPoint = std::make_pair(0.0f, 0.0f);
-    _draw = draw;
+    _draw = DrawNode::create();;
+    
     mouseListener->onMouseUp = CC_CALLBACK_1(MouseController::_handleMouseUp, this);
     mouseListener->onMouseDown = CC_CALLBACK_1(MouseController::_handleMouseDown, this);
     mouseListener->onMouseMove = CC_CALLBACK_1(MouseController::_handleMouseMove, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
-    this->addChild(draw, 10);
+    this->addChild(_draw, 10);
     return true;
 }
 
@@ -60,7 +60,6 @@ void MouseController::_handleMouseMove(cocos2d::Event *event) {
             if(selected.first == ball && selected.second == true) {
                 _draw->clear(); // 不清除的话，会出现重影现象
                 float diff = sqrt(pow((ballX - cursorX), 2.0f) + pow((ballY - cursorY), 2.0f)); // 当前点到球心线段长度
-                printf("%f\n", diff);
                 float ctan = atan(fabs(ballY - cursorY) / fabs(ballX - cursorX)); // 线段与水平x的夹角
                 if(diff > 250) { // 判断是不是超出最大长度
                     float diffX = 250 * cos(ctan); // 超出就按照最大长度来重新计算 应当所在的点
@@ -69,7 +68,7 @@ void MouseController::_handleMouseMove(cocos2d::Event *event) {
                     cursorY = ballY > cursorY ? ballY - diffY : ballY + diffY;
                 }
                 finalPoint = std::make_pair(cursorX, cursorY); // 记录最后点的位置
-                _draw->drawSegment(ball->getSprite()->getPosition(), Vec2(cursorX, cursorY), 2, Color4F(0, 1, 0, 1));
+                _draw->drawSegment(ball->getSprite()->getPosition(), Vec2(cursorX, cursorY), 2, Color4F(1, 0, 0, 1));
             }
         }
 

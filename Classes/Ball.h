@@ -36,6 +36,7 @@ protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
     ballSize _ballSize;
+    float _speed;
 };
 
 /// \class Bomb

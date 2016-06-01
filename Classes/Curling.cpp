@@ -22,6 +22,10 @@ Curling::Curling(ballSize ballSize) : Ball() {
     _sprite->setScale(scale);
     _sprite->setPosition(Vec2(rand() % 901, rand() % 901));
     _ballBody = PhysicsBody::createCircle(_sprite->getContentSize().width / 2);
+    
+    _ballBody->setCategoryBitmask(0x0000000F);
+    _ballBody->setCollisionBitmask(0x0000000F);
+    _ballBody->setContactTestBitmask(0x0000000F);
     _ballBody->setGravityEnable(false); // 不受重力影响
     _ballBody->setLinearDamping(5.0f); // 线性阻尼
     _ballBody->setRotationEnable(false); // 不转动
