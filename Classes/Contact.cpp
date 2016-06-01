@@ -7,25 +7,28 @@
 //
 
 #include "Contact.h"
-#include "SimpleAudioEngine.h"
+#include "Audio.h"
 
 USING_NS_CC;
 
 
-bool Contact::init() {
-    if (!Node::init())
-    {
+bool Contact::init()
+{
+    if (!Node::init()) {
         return false;
     }
     
     auto physicsListener = EventListenerPhysicsContact::create();
+    
+    _audio = new Audio();
     physicsListener->onContactBegin = CC_CALLBACK_1(Contact::_onContactBegin, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(physicsListener, this);
     
     return true;
 }
 
-bool Contact::_onContactBegin(PhysicsContact &contact) {
-    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("knock.mp3");
+bool Contact::_onContactBegin(PhysicsContact &contact)
+{
+    _audio->playEffect("knock.mp3");
     return true;
 }

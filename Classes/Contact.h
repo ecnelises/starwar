@@ -9,6 +9,7 @@
 #ifndef Contact_hpp
 #define Contact_hpp
 #include "cocos2d.h"
+#include "Audio.h"
 
 class Contact : public cocos2d::Node {
 public:
@@ -17,6 +18,7 @@ public:
     CREATE_FUNC(Contact);
 private:
     bool _onContactBegin(cocos2d::PhysicsContact& contact);
+    Audio *_audio;
 };
 
 
