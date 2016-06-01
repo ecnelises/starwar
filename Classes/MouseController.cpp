@@ -22,6 +22,7 @@ bool MouseController::init()
     _draw = DrawNode::create();;
     
     mouseListener->onMouseUp = CC_CALLBACK_1(MouseController::_handleMouseUp, this);
+    //mouseListener->onMouseUp = MouseController::_handleMouseUp;
     mouseListener->onMouseDown = CC_CALLBACK_1(MouseController::_handleMouseDown, this);
     mouseListener->onMouseMove = CC_CALLBACK_1(MouseController::_handleMouseMove, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
@@ -29,11 +30,13 @@ bool MouseController::init()
     return true;
 }
 
-void MouseController::addBalls(std::vector<Ball*> balls) {
+void MouseController::addBalls(std::vector<Ball*> balls)
+{
     _balls = balls;
 }
 
-void MouseController::_handleMouseUp(cocos2d::Event *event) {
+void MouseController::_handleMouseUp(cocos2d::Event *event)
+{
     Ball* ball;
     if(selected.second) {
         ball = selected.first;
@@ -47,7 +50,8 @@ void MouseController::_handleMouseUp(cocos2d::Event *event) {
     }
 }
 
-void MouseController::_handleMouseMove(cocos2d::Event *event) {
+void MouseController::_handleMouseMove(cocos2d::Event *event)
+{
     EventMouse *e = (EventMouse*) event;
     Ball* ball = nullptr;
     if(selected.first && selected.second) {
