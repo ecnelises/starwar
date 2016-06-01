@@ -1,5 +1,5 @@
-#ifndef  APP_DELEGATE_H_
-#define  APP_DELEGATE_H_
+#ifndef APP_DELEGATE_H_
+#define APP_DELEGATE_H_
 
 #include "cocos2d.h"
 

@@ -7,22 +7,20 @@
 //
 
 #include "MouseController.h"
-USING_NS_CC;
+#include <utility>
 
 bool MouseController::init()
 {
-    if (!Node::init())
-    {
+    if (!Node::init()) {
         return false;
     }
     
-    auto mouseListener = EventListenerMouse::create();
+    auto mouseListener = cocos2d::EventListenerMouse::create();
     
     finalPoint = std::make_pair(0.0f, 0.0f);
-    _draw = DrawNode::create();;
+    _draw = cocos2d::DrawNode::create();;
     
     mouseListener->onMouseUp = CC_CALLBACK_1(MouseController::_handleMouseUp, this);
-    //mouseListener->onMouseUp = MouseController::_handleMouseUp;
     mouseListener->onMouseDown = CC_CALLBACK_1(MouseController::_handleMouseDown, this);
     mouseListener->onMouseMove = CC_CALLBACK_1(MouseController::_handleMouseMove, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
@@ -46,13 +44,13 @@ void MouseController::_handleMouseUp(cocos2d::Event *event)
         float y = ball->getSprite()->getPositionY() - finalPoint.second;
         x = x < ball->getSprite()->getPositionX() ? x : -x;
         y = y < ball->getSprite()->getPositionY() ? y : -y;
-        ball->getBallBody()->applyImpulse(Vec2(x, y) * 1300);
+        ball->getBallBody()->applyImpulse(cocos2d::Vec2(x, y) * 1300);
     }
 }
 
 void MouseController::_handleMouseMove(cocos2d::Event *event)
 {
-    EventMouse *e = (EventMouse*) event;
+    cocos2d::EventMouse *e = (cocos2d::EventMouse*) event;
     Ball* ball = nullptr;
     if(selected.first && selected.second) {
         ball = selected.first;
@@ -72,7 +70,7 @@ void MouseController::_handleMouseMove(cocos2d::Event *event)
                     cursorY = ballY > cursorY ? ballY - diffY : ballY + diffY;
                 }
                 finalPoint = std::make_pair(cursorX, cursorY); // 记录最后点的位置
-                _draw->drawSegment(ball->getSprite()->getPosition(), Vec2(cursorX, cursorY), 2, Color4F(1, 0, 0, 1));
+                _draw->drawSegment(ball->getSprite()->getPosition(), cocos2d::Vec2(cursorX, cursorY), 2, cocos2d::Color4F(1, 0, 0, 1));
             }
         }
 
@@ -80,10 +78,10 @@ void MouseController::_handleMouseMove(cocos2d::Event *event)
 }
 
 void MouseController::_handleMouseDown(cocos2d::Event *event) {
-    EventMouse *e = (EventMouse*) event;
+    cocos2d::EventMouse *e = (cocos2d::EventMouse*) event;
     for (int i = 0; i < _balls.size(); ++i) {
         auto ballBox = _balls[i]->getSprite()->getBoundingBox();
-        if(ballBox.containsPoint(Point(e->getCursorX(), e->getCursorY()))) {
+        if(ballBox.containsPoint(cocos2d::Point(e->getCursorX(), e->getCursorY()))) {
             selected = std::make_pair(_balls[i], true);
         }
     }

@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef MenuScene_h
-#define MenuScene_h
+#ifndef MENU_SCENE_H_
+#define MENU_SCENE_H_
 
 #include "cocos2d.h"
 
@@ -19,4 +19,4 @@ public:
     CREATE_FUNC(MenuScene);
 };
 
-#endif /* MenuScene_h */
+#endif // MENU_SCENE_H_

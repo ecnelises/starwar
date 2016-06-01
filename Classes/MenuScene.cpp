@@ -28,8 +28,7 @@ Scene* MenuScene::createScene()
 }
 
 bool MenuScene::init() {
-    if (!Node::init())
-    {
+    if (!Node::init()) {
         return false;
     }
     Audio *audio = new Audio();

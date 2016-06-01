@@ -1,18 +1,12 @@
-//===--- Balls.h - Ball class definition ---===//
-/// \file Balls.h
+//===--- Ball.h - Ball class definition ---===//
+/// \file Ball.h
 /// This file declares several classes related to Ball,
 /// including base Ball, Bomb, Curling, etc.
 
-#ifndef BALLS_H_
-#define BALLS_H_
+#ifndef BALL_H_
+#define BALL_H_
 
 #include "cocos2d.h"
-
-enum ballSize {
-    SMALL,
-    MEDIUM,
-    BIG
-};
 
 // TODO: Such simple classes should be moved to a single header.
 struct Force {
@@ -30,13 +24,16 @@ public:
     Ball() {}
     virtual ~Ball() {}
     virtual void move(const Force& force) = 0;
-    virtual cocos2d::Sprite *getSprite();
-    virtual cocos2d::PhysicsBody *getBallBody();
+    cocos2d::Sprite* getSprite();
+    cocos2d::PhysicsBody* getBallBody();
+    bool stationary(void) const
+    {
+        return _ballBody->isResting();
+    }
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
-    ballSize _ballSize;
-    float _speed;
+    //float _speed;
 };
 
 /// \class Bomb
@@ -67,9 +64,17 @@ private:
 class Curling : public Ball {
 public:
     Curling() = delete;
-    Curling(ballSize);
+    // TODO: color of Curling should in constructor
+    Curling(float radius);
     virtual ~Curling() {}
-    virtual void move(const Force&) override {}
+    virtual void move(const Force&) override;
+    
+    // These should be defined as constant values instead of enums.
+    const float Small = 24.0;
+    const float Medium = 32.0;
+    const float Large = 48.0;
+private:
+    float _radius;
 };
 
-#endif // BALLS_H_
+#endif // BALL_H_

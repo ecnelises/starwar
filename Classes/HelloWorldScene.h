@@ -1,5 +1,5 @@
-#ifndef HELLOWORLD_SCENE_H__
-#define HELLOWORLD_SCENE_H__
+#ifndef HELLOWORLD_SCENE_H_
+#define HELLOWORLD_SCENE_H_
 
 #include "Ball.h"
 #include "cocos2d.h"
@@ -20,4 +20,4 @@ private:
     void createMouseListener(MouseController*);
 };
 
-#endif // HELLOWORLD_SCENE_H__
+#endif // HELLOWORLD_SCENE_H_

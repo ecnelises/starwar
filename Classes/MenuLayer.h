@@ -6,9 +6,9 @@
 //
 //
 
-#ifndef MenuLayer_hpp
-#define MenuLayer_hpp
+#ifndef MENU_LAYER_H_
+#define MENU_LAYER_H_
 
 #include <stdio.h>
 
-#endif /* MenuLayer_hpp */
+#endif // MENU_LAYER_H_
