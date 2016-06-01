@@ -11,7 +11,7 @@
 
 #include "cocos2d.h"
 
-class Audio : public cocos2d::Node  {
+class Audio {
 public:
     Audio() {}
     virtual ~Audio() {}
