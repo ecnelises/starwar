@@ -4,6 +4,7 @@
 USING_NS_CC;
 
 // TODO: Should we design our map in this resolution?
+static cocos2d::Size developmentResolutionSize = cocos2d::Size(640, 480);
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
@@ -44,7 +45,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || \
     (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) ||   \
     (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("ball", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        glview = GLViewImpl::createWithRect("ball", Rect(0, 0, developmentResolutionSize.width, developmentResolutionSize.height));
 #else
         glview = GLViewImpl::create("ball");
 #endif
@@ -58,27 +59,23 @@ bool AppDelegate::applicationDidFinishLaunching()
     director->setAnimationInterval(1.0 / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(developmentResolutionSize.width, developmentResolutionSize.height, ResolutionPolicy::NO_BORDER);
     Size frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
-    if (frameSize.height > mediumResolutionSize.height)
-    {        
+    if (frameSize.height > mediumResolutionSize.height) {
         director->setContentScaleFactor(MIN(largeResolutionSize.height/designResolutionSize.height, largeResolutionSize.width/designResolutionSize.width));
-    }
     // if the frame's height is larger than the height of small size.
-    else if (frameSize.height > smallResolutionSize.height)
-    {        
+    } else if (frameSize.height > smallResolutionSize.height) {
         director->setContentScaleFactor(MIN(mediumResolutionSize.height/designResolutionSize.height, mediumResolutionSize.width/designResolutionSize.width));
-    }
     // if the frame's height is smaller than the height of medium size.
-    else
-    {        
+    } else {
         director->setContentScaleFactor(MIN(smallResolutionSize.height/designResolutionSize.height, smallResolutionSize.width/designResolutionSize.width));
     }
 
     register_all_packages();
 
     FileUtils::getInstance()->addSearchPath("res");
+    
     // create a scene. it's an autorelease object
     auto scene = HelloWorld::createScene();
 

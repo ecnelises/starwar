@@ -98,6 +98,7 @@ bool HelloWorld::init()
             x = x < ball1->getPositionX() ? x : -x;
             y = y < ball1->getPositionY() ? y : -y;
             ball1Body->applyImpulse(Vec2(x, y) * FORCE);
+            //ball1Body->setVelocity(Vec2(x, y));
         }
     };
     

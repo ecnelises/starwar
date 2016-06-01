@@ -57,6 +57,7 @@ private:
 class Curling : public Ball {
 public:
     Curling() = delete;
+    // TODO: really need decide value of radius every time?
     Curling(float radius)
     {
         _radius = radius;
