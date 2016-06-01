@@ -24,6 +24,8 @@ private:
     void _handleMouseDown(cocos2d::Event*);
     std::vector<Ball*> _balls;
     std::pair<Ball*, bool> selected;
+    std::pair<float, float> finalPoint;
+    cocos2d::DrawNode *_draw;
 };
 
 #endif /* MouseController_hpp */

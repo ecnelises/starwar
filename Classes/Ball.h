@@ -31,7 +31,7 @@ public:
     virtual ~Ball() {};
     virtual void move(const Force& force) = 0;
     virtual cocos2d::Sprite *getSprite();
-    virtual cocos2d::PhysicsBody *getBallBody() {};
+    virtual cocos2d::PhysicsBody *getBallBody();
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;

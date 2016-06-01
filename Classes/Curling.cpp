@@ -33,3 +33,8 @@ Curling::Curling(ballSize ballSize) : Ball() {
 Sprite* Ball::getSprite() {
     return _sprite;
 }
+
+
+PhysicsBody* Ball::getBallBody() {
+    return _ballBody;
+}

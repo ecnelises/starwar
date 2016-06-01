@@ -36,7 +36,7 @@ bool HelloWorld::init()
         curlings.push_back(curling);
         this->addBall(curling, 9);
     }
-//    finalPoint = make_pair(0.0f, 0.0f);
+//    
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
     auto map = Sprite::create("background.png");
@@ -50,13 +50,6 @@ bool HelloWorld::init()
     map->setScale(1.3f);
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
 //    
-//    mouseListener->onMouseDown = [=](Event *event) {
-//        EventMouse *e = (EventMouse*) event;
-//        auto ball1Box = ball1->getBoundingBox();
-//        if(ball1Box.containsPoint(Point(e->getCursorX(), e->getCursorY()))) {
-//            selected = make_pair(ball1, true);
-//        }
-//    };
 //    
 //    mouseListener->onMouseMove = [=](Event *event) {
 //        EventMouse *e = (EventMouse*) event;
