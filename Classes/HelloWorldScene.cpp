@@ -83,7 +83,7 @@ bool HelloWorld::init()
 //        }
 //    };
 //
-    this->addChild(mouseController, 0);
+    this->addChild(mouseController, 10);
     this->addChild(map, 1);
 //    this->scheduleUpdate();
     return true;
