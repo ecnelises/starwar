@@ -8,6 +8,12 @@
 
 #include "cocos2d.h"
 
+enum ballSize {
+    SMALL,
+    MEDIUM,
+    BIG
+};
+
 // TODO: Such simple classes should be moved to a single header.
 struct Force {
     Force() = delete;
@@ -21,12 +27,16 @@ struct Force {
 class Ball {
 public:
     // What's the parameters?
-    Ball();
-    virtual ~Ball() = 0;
+    Ball() {}
+    virtual ~Ball() {}
     virtual void move(const Force& force) = 0;
+    virtual cocos2d::Sprite *getSprite();
+    virtual cocos2d::PhysicsBody *getBallBody();
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
+    ballSize _ballSize;
+    float _speed;
 };
 
 /// \class Bomb
@@ -57,23 +67,9 @@ private:
 class Curling : public Ball {
 public:
     Curling() = delete;
-    // TODO: really need decide value of radius every time?
-    Curling(float radius)
-    {
-        _radius = radius;
-        _sprite = cocos2d::Sprite::create("ball.png");
-        _ballBody = cocos2d::PhysicsBody::createCircle(_radius);
-    }
-    
-    virtual ~Curling()
-    {
-        _sprite->release();
-        _ballBody->release();
-    }
-    
-    virtual void move(const Force& force);
-private:
-    float _radius;
+    Curling(ballSize);
+    virtual ~Curling() {}
+    virtual void move(const Force&) override {}
 };
 
 #endif // BALLS_H_

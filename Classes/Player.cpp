@@ -1,8 +1,8 @@
 //
 //  Player.cpp
-//  bumpflow
+//  ball
 //
-//  Created by 邱超凡 on 16/5/29.
+//  Created by Dcalsky on 16/5/31.
 //
 //
 

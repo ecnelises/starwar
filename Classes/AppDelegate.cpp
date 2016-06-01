@@ -1,5 +1,6 @@
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "MenuScene.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -12,9 +13,12 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate()
 {
+    // audio initialize
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect("knock.mp3");
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic("bg1.mp3");
 }
 
-AppDelegate::~AppDelegate() 
+AppDelegate::~AppDelegate()
 {
 }
 
@@ -45,7 +49,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || \
     (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) ||   \
     (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("ball", Rect(0, 0, developmentResolutionSize.width, developmentResolutionSize.height));
+        // glview = GLViewImpl::createWithRect("ball", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+        // XXX: Full Screen Here!
+        glview =  GLViewImpl::createWithFullScreen("ball");
 #else
         glview = GLViewImpl::create("ball");
 #endif
@@ -60,6 +66,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // Set the design resolution
     glview->setDesignResolutionSize(developmentResolutionSize.width, developmentResolutionSize.height, ResolutionPolicy::NO_BORDER);
+
     Size frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height) {
@@ -77,7 +84,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     FileUtils::getInstance()->addSearchPath("res");
     
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+    auto scene = MenuScene::createScene();
 
     // run
     director->runWithScene(scene);
