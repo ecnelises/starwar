@@ -18,6 +18,8 @@ public:
     virtual ~Audio() {}
     void playKnockEffect();
     void playMenuSceneMusic();
+    void preloadyMenuSceneMusic();
+    void preloadKnockEffect();
 private:
     CocosDenshion::SimpleAudioEngine *_player;
 };

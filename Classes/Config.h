@@ -13,7 +13,7 @@
 
 // Audio
 #define KNOCK_EFFECT "audio/knock.mp3"
-#define MENUSCENE_MUSIC "audio/bg1.mp3"
+#define MENU_SCENE_MUSIC "audio/bg1.mp3"
 
 // Sprite frame
 #define BALL_FRAME "texture/ball.png"
@@ -23,5 +23,6 @@
 #define EXIT_TEXTURE "texture/exit.png"
 #define BATTLE_SCENE_FRAME "texture/background.png"
 #define MENU_SCENE_FRAME "texture/bg.png"
+#define BOMB_FRAME "texture/bomb.png"
 
 #endif /* Config_h */

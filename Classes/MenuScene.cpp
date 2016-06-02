@@ -50,9 +50,9 @@ bool MenuScene::init() {
     bg->setPosition(Vec2(windowSize.width/2, windowSize.height/2));
     
     for(const auto &child : menu->getChildren()) {
-        float offset = 50.0f * i;
-        child->setScale(0.45f);
-        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 2 - 20.0f, 145.0f - offset));
+        float offset = 36.0f * i;
+        child->setScale(0.35f);
+        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 2 - 80.0f, 95.0f - offset));
         i++;
     }
     

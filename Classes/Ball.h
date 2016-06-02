@@ -7,6 +7,7 @@
 #define BALL_H_
 
 #include "cocos2d.h"
+#include "Config.h"
 
 // TODO: Such simple classes should be moved to a single header.
 struct Force {
@@ -42,7 +43,7 @@ class Bomb : public Ball {
 public:
     Bomb()
     {
-        _sprite = cocos2d::Sprite::create("bomb.png");
+        _sprite = cocos2d::Sprite::create(BOMB_FRAME);
         _ballBody = cocos2d::PhysicsBody::createCircle(radius);
         // TODO: Where is physics material?
         _sprite->setPhysicsBody(_ballBody);
