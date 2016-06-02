@@ -7,15 +7,21 @@
 //
 
 #include "Audio.h"
-#include "SimpleAudioEngine.h"
+#include "Config.h"
+
 USING_NS_CC;
 
-void Audio::playEffect(const char *fileName)
+Audio::Audio()
 {
-    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(fileName);
+    _player = CocosDenshion::SimpleAudioEngine::getInstance();
 }
 
-void Audio::playMusic(const char *fileName)
+void Audio::playMenuSceneMusic()
 {
-    CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(fileName);
+    _player->playBackgroundMusic(MENUSCENE_MUSIC);
+}
+
+void Audio::playKnockEffect()
+{
+    _player->playEffect(KNOCK_EFFECT);
 }

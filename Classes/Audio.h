@@ -10,13 +10,16 @@
 #define Sound_h
 
 #include "cocos2d.h"
+#include "SimpleAudioEngine.h"
 
 class Audio {
 public:
-    Audio() {}
+    Audio();
     virtual ~Audio() {}
-    void playEffect(const char *fileName);
-    void playMusic(const char *fileName);
+    void playKnockEffect();
+    void playMenuSceneMusic();
+private:
+    CocosDenshion::SimpleAudioEngine *_player;
 };
 
 

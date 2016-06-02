@@ -1,4 +1,5 @@
 #include "HelloWorldScene.h"
+#include "Config.h"
 
 //#include "Item.h"
 
@@ -39,7 +40,7 @@ bool HelloWorld::init()
 //    
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
-    auto map = Sprite::create("background.png");
+    auto map = Sprite::create(BATTLE_SCENE_FRAME);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
     auto mouseController = MouseController::create();
     auto contact = Contact::create();

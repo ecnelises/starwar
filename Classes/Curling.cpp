@@ -1,6 +1,7 @@
 //===--- Curling.cpp  ---===//
 
 #include "Ball.h"
+#include "Config.h"
 using namespace cocos2d;
 
 
@@ -18,7 +19,7 @@ Curling::Curling(ballSize ballSize) : Ball() {
             scale = 1.5f;
             break;
     }
-    _sprite = Sprite::create("ball.png");
+    _sprite = Sprite::create(BALL_FRAME);
     _sprite->setScale(scale);
     _sprite->setPosition(Vec2(rand() % 901, rand() % 901));
     _ballBody = PhysicsBody::createCircle(_sprite->getContentSize().width / 2);
