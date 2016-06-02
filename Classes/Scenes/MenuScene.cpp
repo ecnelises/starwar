@@ -27,7 +27,8 @@ Scene* MenuScene::createScene()
     return scene;
 }
 
-bool MenuScene::init() {
+bool MenuScene::init()
+{
     if (!Node::init()) {
         return false;
     }

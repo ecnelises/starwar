@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "MenuScene.h"
+#include "Scenes/MenuScene.h"
 #include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -84,6 +84,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     FileUtils::getInstance()->addSearchPath("res");
     
     // create a scene. it's an autorelease object
+    //auto scene = MenuScene::createScene();
     auto scene = MenuScene::createScene();
 
     // run

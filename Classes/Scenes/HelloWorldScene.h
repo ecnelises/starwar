@@ -6,13 +6,12 @@
 #include "Contact.h"
 #include "MouseController.h"
 
-class HelloWorld : public cocos2d::Layer
-{
+class HelloWorld : public cocos2d::Layer {
 public:
     static cocos2d::Scene* createScene();
     virtual bool init() override;
     void update(float dt) override;
-    CREATE_FUNC(HelloWorld);
+    CREATE_FUNC(HelloWorld)
 private:
     std::pair<cocos2d::Sprite*, bool> selected;
     std::pair<float, float> finalPoint;
