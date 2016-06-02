@@ -32,7 +32,7 @@ bool HelloWorld::init()
     std::vector<Ball*> curlings;
     
     for( int i = 0; i < 9; ++i ) {
-        auto curling = new Curling(MEDIUM);
+        auto curling = new Curling(Curling::Medium);
         curlings.push_back(curling);
         this->addBall(curling, 9);
     }

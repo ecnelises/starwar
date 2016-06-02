@@ -8,7 +8,6 @@
 
 #include "cocos2d.h"
 
-// TODO: Such simple classes should be moved to a single header.
 struct Force {
     Force() = delete;
     Force(const cocos2d::Vec2 d, float f = 1000.0f) : direction(d), force(f) {}
@@ -67,12 +66,12 @@ public:
     // TODO: color of Curling should in constructor
     Curling(float radius);
     virtual ~Curling() {}
-    virtual void move(const Force&) override;
+    virtual void move(const Force&) override {}
     
     // These should be defined as constant values instead of enums.
-    const float Small = 24.0;
-    const float Medium = 32.0;
-    const float Large = 48.0;
+    static constexpr float Small = 24.0;
+    static constexpr float Medium = 32.0;
+    static constexpr float Large = 48.0;
 private:
     float _radius;
 };

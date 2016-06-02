@@ -9,14 +9,14 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include "Balls.h"
+#include "Ball.h"
 #include "cocos2d.h"
 
 class Player : cocos2d::Node {
 public:
     Player();
     virtual ~Player();
-    virtual update(float dt) override;
+    virtual void update(float dt) override;
 };
 
 

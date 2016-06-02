@@ -2,6 +2,10 @@
 
 #include "Ball.h"
 
+const float Curling::Small;
+const float Curling::Medium;
+const float Curling::Large;
+
 Curling::Curling(float radius) : _radius(radius)
 {
     const float fileBallSize = 24.0;

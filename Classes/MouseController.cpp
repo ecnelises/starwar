@@ -7,7 +7,9 @@
 //
 
 #include "MouseController.h"
+#include "Ball.h"
 #include <utility>
+#include <functional>
 
 bool MouseController::init()
 {
@@ -18,12 +20,18 @@ bool MouseController::init()
     auto mouseListener = cocos2d::EventListenerMouse::create();
     
     finalPoint = std::make_pair(0.0f, 0.0f);
-    _draw = cocos2d::DrawNode::create();;
+    _draw = cocos2d::DrawNode::create();
     
-    mouseListener->onMouseUp = CC_CALLBACK_1(MouseController::_handleMouseUp, this);
-    mouseListener->onMouseDown = CC_CALLBACK_1(MouseController::_handleMouseDown, this);
-    mouseListener->onMouseMove = CC_CALLBACK_1(MouseController::_handleMouseMove, this);
+    // Bind member functions to mouse listener.
+    mouseListener->onMouseUp =
+        std::bind(&MouseController::_handleMouseUp, this, std::placeholders::_1);
+    mouseListener->onMouseDown =
+        std::bind(&MouseController::_handleMouseDown, this, std::placeholders::_1);
+    mouseListener->onMouseMove =
+        std::bind(&MouseController::_handleMouseMove, this, std::placeholders::_1);
+    
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
+    
     this->addChild(_draw, 10);
     return true;
 }
