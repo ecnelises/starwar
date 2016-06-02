@@ -11,6 +11,7 @@
 #include "Config.h"
 #include "Audio.h"
 
+
 USING_NS_CC;
 
 Scene* MenuScene::createScene()
@@ -39,6 +40,7 @@ bool MenuScene::init() {
     auto onlineItem = MenuItemImage::create(ONLINE_TEXTURE, ONLINE_TEXTURE);
     auto aboutItem = MenuItemImage::create(ABOUT_TEXTURE, ABOUT_TEXTURE);
     auto exitItem = MenuItemImage::create(EXIT_TEXTURE, EXIT_TEXTURE);
+    
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     
     audio->playMenuSceneMusic();

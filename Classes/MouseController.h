@@ -22,7 +22,6 @@ private:
     void _handleMouseUp(cocos2d::Event*);
     void _handleMouseMove(cocos2d::Event*);
     void _handleMouseDown(cocos2d::Event*);
-    std::vector<Ball*> _balls;
     std::pair<Ball*, bool> selected;
     std::pair<float, float> finalPoint;
     cocos2d::DrawNode *_draw;

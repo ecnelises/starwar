@@ -7,6 +7,7 @@
 //
 
 #include "MouseController.h"
+#include "Player.h"
 #include <utility>
 
 bool MouseController::init()
@@ -28,16 +29,10 @@ bool MouseController::init()
     return true;
 }
 
-void MouseController::addBalls(std::vector<Ball*> balls)
-{
-    _balls = balls;
-}
-
 void MouseController::_handleMouseUp(cocos2d::Event *event)
 {
-    Ball* ball;
     if(selected.second) {
-        ball = selected.first;
+        auto ball = selected.first;
         selected = std::make_pair(ball, false); // 改变按下点的状态
         _draw->clear();
         float x = ball->getSprite()->getPositionX() - finalPoint.first;

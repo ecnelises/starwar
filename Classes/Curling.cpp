@@ -1,7 +1,7 @@
 //===--- Curling.cpp  ---===//
 
 #include "Ball.h"
-
+USING_NS_CC;
 
 Curling::Curling(float radius) : _radius(radius)
 {
@@ -40,7 +40,7 @@ cocos2d::PhysicsBody* Ball::getBallBody()
     return _ballBody;
 }
 
-void Curling::move(const Force&)
+void Ball::move(const Force& f)
 {
-    
+    _ballBody->applyImpulse(f.direction * f.force);
 }

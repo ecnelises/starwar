@@ -24,7 +24,7 @@ public:
     // What's the parameters?
     Ball() {}
     virtual ~Ball() {}
-    virtual void move(const Force& force) = 0;
+    virtual void move(const Force& force);
     cocos2d::Sprite* getSprite();
     cocos2d::PhysicsBody* getBallBody();
     bool stationary(void) const

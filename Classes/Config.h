@@ -13,7 +13,7 @@
 
 // Audio
 #define KNOCK_EFFECT "audio/knock.mp3"
-#define MENU_SCENE_MUSIC "audio/bg1.mp3"
+#define MENU_SCENE_MUSIC "audio/maple_island.mp3"
 
 // Sprite frame
 #define BALL_FRAME "texture/ball.png"
@@ -24,5 +24,10 @@
 #define BATTLE_SCENE_FRAME "texture/background.png"
 #define MENU_SCENE_FRAME "texture/bg.png"
 #define BOMB_FRAME "texture/bomb.png"
+
+// Position
+#define SMALL_SPRITE Point(200, 200)
+#define MEDIUM_SPRITE Point(400, 400)
+
 
 #endif /* Config_h */
