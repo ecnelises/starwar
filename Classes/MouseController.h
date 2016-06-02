@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef MouseController_hpp
-#define MouseController_hpp
+#ifndef MOUSE_CONTROLLER_H_
+#define MOUSE_CONTROLLER_H_
 
 #include "Ball.h"
 #include "cocos2d.h"
@@ -28,4 +28,4 @@ private:
     cocos2d::DrawNode *_draw;
 };
 
-#endif /* MouseController_hpp */
+#endif // MOUSE_CONTROLLER_H_

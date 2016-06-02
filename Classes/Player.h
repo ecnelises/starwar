@@ -6,11 +6,11 @@
 //
 //
 
-#ifndef Player_h
-#define Player_h
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
-#include "Ball.h"
-#include "cocos2d"
+#include "Balls.h"
+#include "cocos2d.h"
 
 class Player : cocos2d::Node {
 public:
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif /* Player_h */
+#endif // PLAYER_H_

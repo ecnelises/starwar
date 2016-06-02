@@ -6,8 +6,9 @@
 //
 //
 
-#ifndef Contact_hpp
-#define Contact_hpp
+#ifndef CONTACT_H_
+#define CONTACT_H_
+
 #include "cocos2d.h"
 #include "Audio.h"
 
@@ -22,4 +23,4 @@ private:
 };
 
 
-#endif /* Contact_hpp */
+#endif // CONTACT_H_

@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef Sound_h
-#define Sound_h
+#ifndef AUDIO_H_
+#define AUDIO_H_
 
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
@@ -23,4 +23,4 @@ private:
 };
 
 
-#endif /* Sound_h */
+#endif // AUDIO_H_

@@ -6,9 +6,9 @@
 //
 //
 
-#ifndef Timer_h
-#define Timer_h
+#ifndef TIMER_H_
+#define TIMER_H_
 
 #include <stdio.h>
 
-#endif /* Timer_h */
+#endif // TIMER_H_
