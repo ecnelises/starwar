@@ -7,3 +7,10 @@
 //
 
 #include "GameController.h"
+
+bool GameController::run()
+{
+    while (_status == PROCESSING) {
+    }
+    return false;
+}

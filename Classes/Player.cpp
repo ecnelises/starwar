@@ -7,3 +7,8 @@
 //
 
 #include "Player.h"
+
+void LocalPlayer::attack(void)
+{
+    _mouse->active();
+}

@@ -13,8 +13,8 @@
 
 class Audio {
 public:
-    Audio() {}
-    virtual ~Audio() {}
+    Audio() = default;
+    virtual ~Audio() = default;
     void playEffect(const char *fileName);
     void playMusic(const char *fileName);
 };

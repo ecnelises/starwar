@@ -6,9 +6,11 @@
 //
 //
 
+// TODO: 还需要实现Click的击打方式
+
 #include "MouseController.h"
 #include "Ball.h"
-#include <utility>
+#include "Player.h"
 #include <functional>
 
 bool MouseController::init()
@@ -17,80 +19,104 @@ bool MouseController::init()
         return false;
     }
     
+    _active = false;
+    shootMethod = Drag;
+    _localBalls = nullptr;
+    _selectedBall = nullptr;
+    
     auto mouseListener = cocos2d::EventListenerMouse::create();
     
-    finalPoint = std::make_pair(0.0f, 0.0f);
-    _draw = cocos2d::DrawNode::create();
+    _drawer = cocos2d::DrawNode::create();
     
     // Bind member functions to mouse listener.
     mouseListener->onMouseUp =
-        std::bind(&MouseController::_handleMouseUp, this, std::placeholders::_1);
+        std::bind(&MouseController::handleMouseUp, this, std::placeholders::_1);
     mouseListener->onMouseDown =
-        std::bind(&MouseController::_handleMouseDown, this, std::placeholders::_1);
+        std::bind(&MouseController::handleMouseDown, this, std::placeholders::_1);
     mouseListener->onMouseMove =
-        std::bind(&MouseController::_handleMouseMove, this, std::placeholders::_1);
+        std::bind(&MouseController::handleMouseMove, this, std::placeholders::_1);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
     
-    this->addChild(_draw, 10);
+    // XXX: Why 10 here?
+    this->addChild(_drawer, 10);
+    
+    // TODO: always true?
     return true;
 }
 
-void MouseController::addBalls(std::vector<Ball*> balls)
+void MouseController::setPlayer(LocalPlayer* player)
 {
-    _balls = balls;
+    _localBalls = (player->_balls).get();
+    _localPlayer = player;
 }
 
-void MouseController::_handleMouseUp(cocos2d::Event *event)
+namespace {
+
+cocos2d::Point getCurrentCursor(cocos2d::Event* event)
 {
-    Ball* ball;
-    if(selected.second) {
-        ball = selected.first;
-        selected = std::make_pair(ball, false); // 改变按下点的状态
-        _draw->clear();
-        float x = ball->getSprite()->getPositionX() - finalPoint.first;
-        float y = ball->getSprite()->getPositionY() - finalPoint.second;
-        x = x < ball->getSprite()->getPositionX() ? x : -x;
-        y = y < ball->getSprite()->getPositionY() ? y : -y;
-        ball->getBallBody()->applyImpulse(cocos2d::Vec2(x, y) * 1300);
+    // TODO: static is safe?
+    return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(), static_cast<cocos2d::EventMouse*>(event)->getCursorY());
+}
+
+} // anonymous namespace
+
+// FIXME: 如果鼠标位置超出了游戏窗口会出现反方向击打的情况
+void MouseController::handleMouseUp(cocos2d::Event* event)
+{
+    if (!_active || _selectedBall == nullptr) {
+        return;
     }
+    const float maxDistance = 250;
+    const float shootForceEfficiency = 1300;
+    _drawer->clear();
+    // TODO: static_cast is safe?
+    auto destPoint = getCurrentCursor(event);
+    auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
+    if (pointDiff.length() > maxDistance) {
+        _selectedBall->move(Force(pointDiff, maxDistance * shootForceEfficiency));
+    } else {
+        _selectedBall->move(Force(pointDiff, pointDiff.length() * shootForceEfficiency));
+    }
+    _selectedBall = nullptr;
+    _active = false;
 }
 
-void MouseController::_handleMouseMove(cocos2d::Event *event)
+void MouseController::handleMouseMove(cocos2d::Event* event)
 {
-    cocos2d::EventMouse *e = (cocos2d::EventMouse*) event;
-    Ball* ball = nullptr;
-    if(selected.first && selected.second) {
-        ball = selected.first;
-        if(ball != nullptr) {
-            glLineWidth(5); // 规定线段的粗细
-            float ballX = ball->getSprite()->getPositionX();
-            float ballY = ball->getSprite()->getPositionY();
-            float cursorX = e->getCursorX(), cursorY = e->getCursorY();
-            if(selected.first == ball && selected.second == true) {
-                _draw->clear(); // 不清除的话，会出现重影现象
-                float diff = sqrt(pow((ballX - cursorX), 2.0f) + pow((ballY - cursorY), 2.0f)); // 当前点到球心线段长度
-                float ctan = atan(fabs(ballY - cursorY) / fabs(ballX - cursorX)); // 线段与水平x的夹角
-                if(diff > 250) { // 判断是不是超出最大长度
-                    float diffX = 250 * cos(ctan); // 超出就按照最大长度来重新计算 应当所在的点
-                    float diffY = 250 * sin(ctan);
-                    cursorX = ballX > cursorX ? ballX - diffX : ballX + diffX; // 应当点
-                    cursorY = ballY > cursorY ? ballY - diffY : ballY + diffY;
-                }
-                finalPoint = std::make_pair(cursorX, cursorY); // 记录最后点的位置
-                _draw->drawSegment(ball->getSprite()->getPosition(), cocos2d::Vec2(cursorX, cursorY), 2, cocos2d::Color4F(1, 0, 0, 1));
-            }
+    const float maxDistance = 250;
+    if (!_active || _selectedBall == nullptr) {
+        return;
+    }
+    // TODO: really need this?
+    glLineWidth(5.0);
+    _drawer->clear();
+    auto destPoint = getCurrentCursor(event);
+    auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
+    
+    // Distance has a limit.
+    if (pointDiff.length() > maxDistance) {
+        pointDiff.normalize();
+        pointDiff.scale(sqrtf(maxDistance));
+        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
+    }
+    _drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
+                         2, cocos2d::Color4F(1, 0, 0, 0.7));
+}
+
+void MouseController::handleMouseDown(cocos2d::Event* event)
+{
+    if (!_active) {
+        return;
+    }
+    
+    // Find if there is any ball the cursor in.
+    auto currentCursor = getCurrentCursor(event);
+    for (const auto& f : *_localBalls) {
+        if (!f.moved && ((f.ball)->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
+            _selectedBall = f.ball.get();
+            return;
         }
-
     }
-}
-
-void MouseController::_handleMouseDown(cocos2d::Event *event) {
-    cocos2d::EventMouse *e = (cocos2d::EventMouse*) event;
-    for (int i = 0; i < _balls.size(); ++i) {
-        auto ballBox = _balls[i]->getSprite()->getBoundingBox();
-        if(ballBox.containsPoint(cocos2d::Point(e->getCursorX(), e->getCursorY()))) {
-            selected = std::make_pair(_balls[i], true);
-        }
-    }
+    _selectedBall = nullptr;
 }

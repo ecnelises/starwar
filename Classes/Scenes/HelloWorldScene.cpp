@@ -44,7 +44,7 @@ bool HelloWorld::init()
     auto mouseController = MouseController::create();
     auto contact = Contact::create();
     
-    mouseController->addBalls(curlings);
+    //mouseController->addBalls(curlings);
     // 设置物理对象
     map->setPhysicsBody(mapFrame);
     

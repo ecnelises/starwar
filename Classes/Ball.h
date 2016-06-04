@@ -76,4 +76,12 @@ private:
     float _radius;
 };
 
+
+struct BallWithStatus {
+    std::unique_ptr<Ball> ball;
+    bool moved;
+};
+
+using BallsCollection = std::vector<BallWithStatus>;
+
 #endif // BALL_H_
