@@ -54,16 +54,4 @@ private:
     NetworkController* _net;
 };
 
-class RemotePlayer : public Player {
-public:
-    RemotePlayer();
-    virtual ~RemotePlayer() {}
-};
-
-class LocalPlayer : public Player {
-public:
-    LocalPlayer();
-    virtual ~LocalPlayer() {}
-};
-
 #endif // PLAYER_H_
