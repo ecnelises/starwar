@@ -39,7 +39,7 @@ bool HelloWorld::init()
 //    const int FORCE = 1200;
     auto map = Sprite::create("background.png");
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
-    auto mouseController = MouseController::create();
+    auto gameController = GameController::create();
     auto contact = Contact::create();
     
     //mouseController->addBalls(curlings);
