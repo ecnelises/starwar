@@ -10,6 +10,7 @@
 #define AUDIO_H_
 
 #include "cocos2d.h"
+#include "SimpleAudioEngine.h"
 
 class Audio {
 public:

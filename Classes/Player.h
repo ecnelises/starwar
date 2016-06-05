@@ -5,7 +5,7 @@
 //  Created by Dcalsky on 16/5/31.
 //
 //
-
+// Player 功能: 1、向GameController发送请求；2、接受MouseController或者NetworkController发送的请求；3、管理所有属于自己的ball状态;
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
@@ -52,6 +52,18 @@ public:
     virtual void attack() override;
 private:
     NetworkController* _net;
+};
+
+class RemotePlayer : public Player {
+public:
+    RemotePlayer();
+    virtual ~RemotePlayer() {}
+};
+
+class LocalPlayer : public Player {
+public:
+    LocalPlayer();
+    virtual ~LocalPlayer() {}
 };
 
 #endif // PLAYER_H_

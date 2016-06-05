@@ -29,6 +29,6 @@ bool Contact::init()
 
 bool Contact::_onContactBegin(PhysicsContact &contact)
 {
-    _audio->playEffect("knock.mp3");
+    _audio->playKnockEffect();
     return true;
 }

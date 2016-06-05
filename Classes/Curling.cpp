@@ -1,6 +1,7 @@
 //===--- Curling.cpp  ---===//
 
 #include "Ball.h"
+USING_NS_CC;
 
 const float Curling::Small;
 const float Curling::Medium;
@@ -9,7 +10,7 @@ const float Curling::Large;
 Curling::Curling(float radius) : _radius(radius)
 {
     const float fileBallSize = 24.0;
-    _sprite = cocos2d::Sprite::create("ball.png");
+    _sprite = cocos2d::Sprite::create(BALL_FRAME);
     _sprite->setScale(radius / fileBallSize);
     // TODO
     // If we really want to set balls randomly?
@@ -41,4 +42,9 @@ cocos2d::Sprite* Ball::getSprite()
 cocos2d::PhysicsBody* Ball::getBallBody()
 {
     return _ballBody;
+}
+
+void Ball::move(const Force& f)
+{
+    _ballBody->applyImpulse(f.direction * f.force);
 }

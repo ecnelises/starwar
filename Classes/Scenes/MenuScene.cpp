@@ -8,7 +8,9 @@
 
 #include "MenuScene.h"
 #include "SimpleAudioEngine.h"
+#include "Config.h"
 #include "Audio.h"
+
 
 USING_NS_CC;
 
@@ -34,14 +36,15 @@ bool MenuScene::init()
     }
     Audio *audio = new Audio();
     int i = 0;
-    auto bg = Sprite::create("bg.png");
-    auto computerItem = MenuItemImage::create("computer.png", "computer.png");
-    auto onlineItem = MenuItemImage::create("online.png", "online.png");
-    auto aboutItem = MenuItemImage::create("about.png", "about.png");
-    auto exitItem = MenuItemImage::create("exit.png", "exit.png");
+    auto bg = Sprite::create(MENU_SCENE_FRAME);
+    auto computerItem = MenuItemImage::create(COMPUTER_TEXTURE, COMPUTER_TEXTURE);
+    auto onlineItem = MenuItemImage::create(ONLINE_TEXTURE, ONLINE_TEXTURE);
+    auto aboutItem = MenuItemImage::create(ABOUT_TEXTURE, ABOUT_TEXTURE);
+    auto exitItem = MenuItemImage::create(EXIT_TEXTURE, EXIT_TEXTURE);
+    
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     
-    audio->playMusic("bg1.mp3");
+    audio->playMenuSceneMusic();
     //Size visibleSize = Director::getInstance()->getVisibleSize();
     
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
@@ -50,9 +53,9 @@ bool MenuScene::init()
     bg->setPosition(Vec2(windowSize.width/2, windowSize.height/2));
     
     for(const auto &child : menu->getChildren()) {
-        float offset = 50.0f * i;
-        child->setScale(0.45f);
-        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 2 - 20.0f, 145.0f - offset));
+        float offset = 36.0f * i;
+        child->setScale(0.35f);
+        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 2 - 80.0f, 95.0f - offset));
         i++;
     }
     

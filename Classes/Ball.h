@@ -7,6 +7,7 @@
 #define BALL_H_
 
 #include "cocos2d.h"
+#include "Config.h"
 
 struct Force {
     Force() = delete;
@@ -22,7 +23,7 @@ public:
     // What's the parameters?
     Ball() {}
     virtual ~Ball() {}
-    virtual void move(const Force& force) = 0;
+    virtual void move(const Force& force);
     cocos2d::Sprite* getSprite();
     cocos2d::PhysicsBody* getBallBody();
     bool stationary(void) const
@@ -41,7 +42,7 @@ class Bomb : public Ball {
 public:
     Bomb()
     {
-        _sprite = cocos2d::Sprite::create("bomb.png");
+        _sprite = cocos2d::Sprite::create(BOMB_FRAME);
         _ballBody = cocos2d::PhysicsBody::createCircle(radius);
         // TODO: Where is physics material?
         _sprite->setPhysicsBody(_ballBody);
