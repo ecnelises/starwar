@@ -15,14 +15,16 @@
 
 class Player;
 
+/// \class GameController
+/// \brief Main dispatcher in game processing.
 class GameController : public cocos2d::Node {
 public:
-    bool run();
+    void run();
     virtual bool init() override;
     CREATE_FUNC(GameController)
 private:
     // TODO: why shared_ptr?
-    enum { OVER, PROCESSING } _status;
+    enum { OVER, PROCESSING, READY } _status;
     std::vector<std::shared_ptr<Player>> _players;
 };
 

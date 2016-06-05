@@ -1,16 +1,28 @@
-//
-//  GameController.cpp
-//  bumpflow
-//
-//  Created by 邱超凡 on 16/6/2.
-//
-//
+//===--- GameController.cpp - GameController class implementation ---===//
+/// \file GameController.cpp
+/// This file implements interfaces of GameController.
 
 #include "GameController.h"
+#include "Player.h"
 
-bool GameController::run()
+bool GameController::init(void)
 {
-    while (_status == PROCESSING) {
+    if (!Node::init()) {
+        return false;
     }
-    return false;
+    
+    _status = READY;
+    
+    auto roundSwitchListener = cocos2d::EventListenerCustom::create("RoundSwitch", [=](cocos2d::EventCustom* event){
+        // TODO
+    });
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
+    
+    return true;
+}
+
+void GameController::run(void)
+{
+    _status = PROCESSING;
 }

@@ -1,10 +1,6 @@
-//
-//  MouseController.cpp
-//  ball
-//
-//  Created by Dcalsky on 16/5/30.
-//
-//
+//===--- MouseController.cpp - MouseController class implementation ---===//
+/// \file MouseController.cpp
+/// This file implements interfaces of MouseController.
 
 // TODO: 还需要实现Click的击打方式
 
