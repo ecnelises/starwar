@@ -8,6 +8,7 @@
 
 #include "MenuScene.h"
 #include "SimpleAudioEngine.h"
+#include "HelloWorldScene.h"
 #include "Config.h"
 #include "Audio.h"
 
@@ -37,10 +38,16 @@ bool MenuScene::init()
     Audio *audio = new Audio();
     int i = 0;
     auto bg = Sprite::create(menuSceneFrameFile);
-    auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile);
+	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [](Ref *sender) {
+		auto battleScene = HelloWorld::createScene();
+		Director::getInstance()->replaceScene(battleScene);
+	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile);
     auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile);
-    auto exitItem = MenuItemImage::create(exitTextureFile, exitTextureFile);
+    auto exitItem = MenuItemImage::create(exitTextureFile, exitTextureFile, [](Ref *sender) {
+		auto battleScene = HelloWorld::createScene();
+		Director::getInstance()->end();
+	});
     
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     

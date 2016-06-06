@@ -23,10 +23,7 @@ LocalPlayer::LocalPlayer() //: _balls(std::make_unique<BallsCollection>)
     constexpr unsigned ballsNum = 9;
     
     for (int i = 0; i < ballsNum; ++i) {
-        _balls->push_back({
-            .ball = std::make_unique<Ball>(),
-            .moved = false
-        });
+		_balls->push_back(BallWithStatus());
     }
 }
 

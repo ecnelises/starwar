@@ -49,9 +49,9 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || \
     (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) ||   \
     (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        // glview = GLViewImpl::createWithRect("ball", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+         glview = GLViewImpl::createWithRect("ball", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
         // XXX: Full Screen Here!
-        glview =  GLViewImpl::createWithFullScreen("ball");
+        // glview =  GLViewImpl::createWithFullScreen("ball");
 #else
         glview = GLViewImpl::create("ball");
 #endif
@@ -59,13 +59,13 @@ bool AppDelegate::applicationDidFinishLaunching()
     }
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0 / 60);
 
     // Set the design resolution
-    glview->setDesignResolutionSize(developmentResolutionSize.width, developmentResolutionSize.height, ResolutionPolicy::NO_BORDER);
+    glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
 
     Size frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.

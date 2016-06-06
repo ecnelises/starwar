@@ -1,6 +1,6 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
-#include "GameController.h"
+#include "Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
 Scene* HelloWorld::createScene()

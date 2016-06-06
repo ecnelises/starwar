@@ -80,6 +80,7 @@ private:
 
 
 struct BallWithStatus {
+	BallWithStatus() : ball(std::make_unique<Ball>()), moved(false) {}
     std::unique_ptr<Ball> ball;
     bool moved;
 };

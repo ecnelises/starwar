@@ -3,9 +3,6 @@
 #include "Ball.h"
 USING_NS_CC;
 
-const float Curling::Small;
-const float Curling::Medium;
-const float Curling::Large;
 
 Curling::Curling(float radius) : _radius(radius)
 {
