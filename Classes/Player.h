@@ -23,6 +23,7 @@ public:
     Player() = default;
     virtual ~Player() = default;
     virtual void attack() = 0;
+    virtual std::unique_ptr<BallsCollection> getBalls();
 protected:
     std::unique_ptr<BallsCollection> _balls;
 };
@@ -30,11 +31,7 @@ protected:
 class LocalPlayer : public Player {
     friend class MouseController;
 public:
-    LocalPlayer()
-    {
-        _mouse = MouseController::create();
-    }
-    
+    LocalPlayer();
     virtual ~LocalPlayer()
     {
         _mouse->release();

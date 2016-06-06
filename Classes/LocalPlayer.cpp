@@ -17,18 +17,19 @@ USING_NS_CC;
 //
 //}
 
-std::vector<Ball*> Player::getBalls()
+std::unique_ptr<BallsCollection> Player::getBalls()
 {
-    return _balls;
+    return std::move(_balls);
 }
 
 LocalPlayer::LocalPlayer()
 {
-    std::vector<Ball*> curlings;
+    std::unique_ptr<BallsCollection> curlings;
     for( int i = 0; i < 9; ++i ) {
         auto curling = new Curling(24.0f);
         curlings.push_back(curling);
     }
+    _mouse = MouseController::create();
     _balls = curlings;
 }
 
