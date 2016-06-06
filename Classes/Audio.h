@@ -14,10 +14,14 @@
 
 class Audio {
 public:
-    Audio() = default;
+    Audio();
     virtual ~Audio() = default;
-    void playEffect(const char *fileName);
-    void playMusic(const char *fileName);
+    void preloadyMenuSceneMusic();
+    void preloadKnockEffect();
+    void playKnockEffect();
+    void playMenuSceneMusic();
+private:
+    CocosDenshion::SimpleAudioEngine* _player;
 };
 
 

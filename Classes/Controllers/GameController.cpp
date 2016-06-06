@@ -19,11 +19,16 @@ bool GameController::init(void)
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
     
-    schedule(schedule_selector(GameController::_hanleBallStatus), 1.0f, kRepeatForever, 0);
+    schedule(schedule_selector(GameController::_handleBallStatus), 1.0f, kRepeatForever, 0);
     return true;
 }
 
 void GameController::run(void)
 {
     _status = PROCESSING;
+}
+
+void GameController::_handleBallStatus(float dt)
+{
+    
 }

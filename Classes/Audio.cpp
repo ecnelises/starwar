@@ -11,7 +11,6 @@
 
 USING_NS_CC;
 
-#if 0
 
 Audio::Audio()
 {
@@ -20,22 +19,20 @@ Audio::Audio()
 
 void Audio::playMenuSceneMusic()
 {
-    _player->playBackgroundMusic(MENU_SCENE_MUSIC);
+    _player->playBackgroundMusic(menuSceneMusicFile);
 }
 
 void Audio::playKnockEffect()
 {
-    _player->playEffect(KNOCK_EFFECT);
+    _player->playEffect(knockEffectFile);
 }
 
 void Audio::preloadyMenuSceneMusic()
 {
-    _player->preloadBackgroundMusic(MENU_SCENE_MUSIC);
+    _player->preloadBackgroundMusic(menuSceneMusicFile);
 }
 
 void Audio::preloadKnockEffect()
 {
-    _player->preloadEffect(KNOCK_EFFECT);
+    _player->preloadEffect(knockEffectFile);
 }
-
-#endif

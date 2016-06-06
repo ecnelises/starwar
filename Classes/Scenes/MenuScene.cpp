@@ -34,7 +34,7 @@ bool MenuScene::init()
     if (!Node::init()) {
         return false;
     }
-    //Audio *audio = new Audio();
+    Audio *audio = new Audio();
     int i = 0;
     auto bg = Sprite::create(menuSceneFrameFile);
     auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile);
@@ -44,7 +44,7 @@ bool MenuScene::init()
     
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     
-    //audio->playMenuSceneMusic();
+    audio->playMenuSceneMusic();
     //Size visibleSize = Director::getInstance()->getVisibleSize();
     
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
