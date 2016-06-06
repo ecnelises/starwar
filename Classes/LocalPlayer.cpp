@@ -9,6 +9,7 @@
 
 
 #include "Player.h"
+#include <memory>
 
 USING_NS_CC;
 
@@ -17,14 +18,14 @@ USING_NS_CC;
 //
 //}
 
-LocalPlayer::LocalPlayer() : _balls(new std::vector<BallsCollection>)
+LocalPlayer::LocalPlayer() //: _balls(std::make_unique<BallsCollection>)
 {
     constexpr unsigned ballsNum = 9;
-
+    
     for (int i = 0; i < ballsNum; ++i) {
         _balls->push_back({
-            .ball = new Ball;
-            .moved = false;
+            .ball = std::make_unique<Ball>(),
+            .moved = false
         });
     }
 }

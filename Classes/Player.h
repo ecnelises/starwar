@@ -20,10 +20,10 @@ class NetworkController;
 
 class Player {
 public:
-    Player() = default;
+    Player() : _balls(std::make_unique<BallsCollection>()) {}
     virtual ~Player() = default;
     virtual void attack() = 0;
-    virtual std::unique_ptr<BallsCollection> getBalls();
+    //virtual std::unique_ptr<BallsCollection> getBalls();
 protected:
     std::unique_ptr<BallsCollection> _balls;
 };
@@ -37,7 +37,7 @@ public:
         _mouse->release();
     }
     
-    virtual void attack() override;
+    virtual void attack() override {}
 private:
     MouseController* _mouse;
 };
@@ -45,8 +45,8 @@ private:
 class RemotePlayer : public Player {
 public:
     RemotePlayer();
-    virtual ~RemotePlayer();
-    virtual void attack() override;
+    virtual ~RemotePlayer() {}
+    virtual void attack() override {}
 private:
     NetworkController* _net;
 };
