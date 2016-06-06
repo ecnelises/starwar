@@ -11,6 +11,8 @@
 
 USING_NS_CC;
 
+#if 0
+
 Audio::Audio()
 {
     _player = CocosDenshion::SimpleAudioEngine::getInstance();
@@ -35,3 +37,5 @@ void Audio::preloadKnockEffect()
 {
     _player->preloadEffect(KNOCK_EFFECT);
 }
+
+#endif

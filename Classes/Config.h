@@ -6,28 +6,27 @@
 //
 //
 
-#ifndef Config_h
-#define Config_h
+#ifndef CONFIG_H_
+#define CONFIG_H_
 
 #include "cocos2d.h"
 
 // Audio
-#define KNOCK_EFFECT "audio/knock.mp3"
-#define MENU_SCENE_MUSIC "audio/maple_island.mp3"
+constexpr auto knockEffectFile = "audio/knock.mp3";
+constexpr auto menuSceneMusicFile = "audio/maple_island.mp3";
 
 // Sprite frame
-#define BALL_FRAME "texture/ball.png"
-#define COMPUTER_TEXTURE "texture/computer.png"
-#define ABOUT_TEXTURE "texture/about.png"
-#define ONLINE_TEXTURE "texture/online.png"
-#define EXIT_TEXTURE "texture/exit.png"
-#define BATTLE_SCENE_FRAME "texture/background.png"
-#define MENU_SCENE_FRAME "texture/bg.png"
-#define BOMB_FRAME "texture/bomb.png"
+constexpr auto ballFrameFile = "texture/ball.png";
+constexpr auto computerTextureFile = "texture/computer.png";
+constexpr auto aboutTextureFile = "texture/about.png";
+constexpr auto onlineTextureFile = "texture/online.png";
+constexpr auto exitTextureFile = "texture/exit.png";
+constexpr auto battleSceneFrameFile = "texture/background.png";
+constexpr auto menuSceneFrameFile = "texture/bg.png";
+constexpr auto bombFrameFile = "texture/bomb.png";
 
 // Position
 #define SMALL_SPRITE Point(200, 200)
 #define MEDIUM_SPRITE Point(400, 400)
 
-
-#endif /* Config_h */
+#endif // CONFIG_H_

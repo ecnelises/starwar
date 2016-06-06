@@ -34,17 +34,17 @@ bool MenuScene::init()
     if (!Node::init()) {
         return false;
     }
-    Audio *audio = new Audio();
+    //Audio *audio = new Audio();
     int i = 0;
-    auto bg = Sprite::create(MENU_SCENE_FRAME);
-    auto computerItem = MenuItemImage::create(COMPUTER_TEXTURE, COMPUTER_TEXTURE);
-    auto onlineItem = MenuItemImage::create(ONLINE_TEXTURE, ONLINE_TEXTURE);
-    auto aboutItem = MenuItemImage::create(ABOUT_TEXTURE, ABOUT_TEXTURE);
-    auto exitItem = MenuItemImage::create(EXIT_TEXTURE, EXIT_TEXTURE);
+    auto bg = Sprite::create(menuSceneFrameFile);
+    auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile);
+    auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile);
+    auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile);
+    auto exitItem = MenuItemImage::create(exitTextureFile, exitTextureFile);
     
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     
-    audio->playMenuSceneMusic();
+    //audio->playMenuSceneMusic();
     //Size visibleSize = Director::getInstance()->getVisibleSize();
     
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen

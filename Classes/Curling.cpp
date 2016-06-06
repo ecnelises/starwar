@@ -10,7 +10,7 @@ const float Curling::Large;
 Curling::Curling(float radius) : _radius(radius)
 {
     const float fileBallSize = 24.0;
-    _sprite = cocos2d::Sprite::create(BALL_FRAME);
+    _sprite = cocos2d::Sprite::create(ballFrameFile);
     _sprite->setScale(radius / fileBallSize);
     // TODO
     // If we really want to set balls randomly?
