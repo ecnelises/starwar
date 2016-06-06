@@ -8,6 +8,7 @@
 
 #include "cocos2d.h"
 #include "Config.h"
+#include <vector>
 
 struct Force {
     Force() = delete;
