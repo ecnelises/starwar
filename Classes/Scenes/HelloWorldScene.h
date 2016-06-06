@@ -4,7 +4,8 @@
 #include "Ball.h"
 #include "cocos2d.h"
 #include "Contact.h"
-#include "Controllers/MouseController.h"
+#include "../Controllers/MouseController.h"
+
 
 class HelloWorld : public cocos2d::Layer {
 public:

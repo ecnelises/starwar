@@ -1,6 +1,6 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
-#include "Controllers/GameController.h"
+#include "../Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
 Scene* HelloWorld::createScene()
@@ -37,7 +37,7 @@ bool HelloWorld::init()
 //    
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
-    auto map = Sprite::create("background.png");
+    auto map = Sprite::create(battleSceneFrameFile);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
     auto gameController = GameController::create();
     auto contact = Contact::create();
