@@ -19,6 +19,7 @@ bool GameController::init(void)
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
     
+    schedule(schedule_selector(GameController::_hanleBallStatus), 1.0f, kRepeatForever, 0);
     return true;
 }
 

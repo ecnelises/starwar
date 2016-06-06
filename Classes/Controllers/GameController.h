@@ -26,6 +26,8 @@ private:
     // TODO: why shared_ptr?
     enum { OVER, PROCESSING, READY } _status;
     std::vector<std::shared_ptr<Player>> _players;
+    void _handleBallStatus(float);
+    
 };
 
 #endif // GAME_CONTROLLER_H_
