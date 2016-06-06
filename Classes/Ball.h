@@ -54,7 +54,7 @@ public:
         _ballBody->release();
     }
     
-    virtual void move(const Force& force);
+    virtual void move(const Force& force) {}
 private:
     const float radius = 24;
 };
