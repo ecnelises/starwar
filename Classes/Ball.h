@@ -42,7 +42,7 @@ class Bomb : public Ball {
 public:
     Bomb()
     {
-        _sprite = cocos2d::Sprite::create(BOMB_FRAME);
+        _sprite = cocos2d::Sprite::create(bombFrameFile);
         _ballBody = cocos2d::PhysicsBody::createCircle(radius);
         // TODO: Where is physics material?
         _sprite->setPhysicsBody(_ballBody);
