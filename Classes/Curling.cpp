@@ -4,19 +4,40 @@
 USING_NS_CC;
 
 
-Curling::Curling(float radius) : _radius(radius)
+Curling::Curling(ballType type, Vec2 position) : _type(type)
 {
-    _sprite = cocos2d::Sprite::create(moonFrameFile);
-    //_sprite = cocos2d::Sprite::create(moonFrameFile, Rect(rand() % 901, rand() % 901, Small, Small));
-    
-    _sprite->setScaleX(Small / _sprite->getContentSize().width);
-    _sprite->setScaleY(Small / _sprite->getContentSize().height);
+    switch(_type) {
+        case MOON:
+            _radius = moonRadius;
+            _force = moonMaxForce;
+            _mass = moonMass;
+            //_position = moonPosition;
+            _sprite = cocos2d::Sprite::create(moonFrameFile);
+            break;
+        case EARTH:
+            _radius = earthRadius;
+            _force = earthMaxForce;
+            _mass = earthMass;
+            //_position = earthPosition;
+            _sprite = cocos2d::Sprite::create(earthFrameFile);
+            break;
+        case SUN:
+            _radius = sunRadius;
+            _force = sunMaxForce;
+            _mass = sunMass;
+            //_position = sunPosition;
+            _sprite = cocos2d::Sprite::create(sunFrameFile);
+            break;
+        default:
+            break;
+    }
+
     // TODO
     // If we really want to set balls randomly?
     // If so, using C++11-style random generator is better.
-    _sprite->setPosition(cocos2d::Vec2(rand() % 901, rand() % 901));
+    _sprite->setPosition(position);
     // Arguments of PhysicsMaterial: density, restitution, friction
-    _ballBody = cocos2d::PhysicsBody::createCircle(radius,
+    _ballBody = cocos2d::PhysicsBody::createCircle(_radius,
                                                    cocos2d::PhysicsMaterial(1.0, 1.25, 1.0));
     // We just set up a non-zero value here.
     // Curlings can make collision and contact with other balls.
@@ -25,7 +46,8 @@ Curling::Curling(float radius) : _radius(radius)
     _ballBody->setContactTestBitmask(0x00000001);
     
     _ballBody->setGravityEnable(false);
-    _ballBody->setLinearDamping(5.0f);
+    _ballBody->setMass(_mass);
+    _ballBody->setLinearDamping(5.0f); // todo
     _ballBody->setRotationEnable(false);
     
     _sprite->setPhysicsBody(_ballBody);

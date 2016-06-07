@@ -10,10 +10,9 @@
 #include "cocos2d.h"
 #include "MouseController.h"
 #include "NetworkController.h"
+#include "../Player.h"
 #include <vector>
 #include <memory>
-
-class Player;
 
 /// \class GameController
 /// \brief Main dispatcher in game processing.
@@ -26,6 +25,9 @@ private:
     // TODO: why shared_ptr?
     enum { OVER, PROCESSING, READY } _status;
     std::vector<std::shared_ptr<Player>> _players;
+    Player* _currentPlayer;
+    AIPlayer* _AIplayer;
+    LocalPlayer* _localPlayer;
     void _handleBallStatus(float);
 };
 

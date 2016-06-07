@@ -22,7 +22,7 @@ public:
     
     // Status of shootMethod cannot affect others, so we set it public.
     enum { Drag, Click } shootMethod;
-    void setPlayer(LocalPlayer* player);
+//    void setPlayer(LocalPlayer* player);
 private:
     // Users can have two ways to shoot.
     void handleMouseUp(cocos2d::Event*);

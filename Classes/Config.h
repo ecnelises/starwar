@@ -12,6 +12,8 @@
 #include "cocos2d.h"
 USING_NS_CC;
 
+typedef enum {MOON, EARTH, SUN} ballType;
+
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
 constexpr auto menuSceneMusicFile = "audio/maple_island.mp3";
@@ -34,11 +36,40 @@ constexpr auto ballStatusInterval = 0.1f;
 constexpr auto menuItemDistance = 55.0f;
 constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
-// Position
-#define moonPoint Point(200.0f, 200.0f)
-#define earthPoint Point(400.0f, 400.0f)
-#define sunPoint Point(400.0f, 400.0f)
+constexpr auto ballsNumber = 7;
 
-constexpr auto moonDistance = 300.0f;
+// ball number
+constexpr auto moonNumber = 4;
+constexpr auto earthNumber = 2;
+constexpr auto sunNumber = 1;
+
+// ball radius
+// These should be defined as constant values instead of enums.
+constexpr float moonRadius = 30.0f;
+constexpr float earthRadius = 45.0f;
+constexpr float sunRadius = 60.0f;
+// ball force
+constexpr float moonMaxForce = 800.0f;
+constexpr float earthMaxForce = 1000.0f;
+constexpr float sunMaxForce = 1200.0f;
+// ball mass
+constexpr float moonMass = 20.0f;
+constexpr float earthMass = 40.0f;
+constexpr float sunMass = 80.0f;
+
+// Position
+constexpr float moonPositionX = 240.0f;
+constexpr float moonPositionY = 220.0f;
+
+constexpr float earthPositionX = 330.0f;
+constexpr float earthPositionY = 160.0f;
+
+constexpr float sunPositionX = 520.0f;
+constexpr float sunPositionY = 100.0f;
+
+// ball distance
+constexpr auto moonDistance = 180.0f;
+constexpr auto earthDistance = 360.0f;
+constexpr auto sunDistance = 20.0f;
 
 #endif // CONFIG_H_

@@ -41,11 +41,11 @@ bool MouseController::init()
     return true;
 }
 
-void MouseController::setPlayer(LocalPlayer* player)
-{
-    _localBalls = (player->_balls).get();
-    _localPlayer = player;
-}
+//void MouseController::setPlayer(LocalPlayer* player)
+//{
+//    _localBalls = (player->_balls).get();
+//    _localPlayer = player;
+//}
 
 namespace {
 
@@ -102,17 +102,17 @@ void MouseController::handleMouseMove(cocos2d::Event* event)
 
 void MouseController::handleMouseDown(cocos2d::Event* event)
 {
-    if (!_active) {
-        return;
-    }
-    
-    // Find if there is any ball the cursor in.
-    auto currentCursor = getCurrentCursor(event);
-    for (const auto& f : *_localBalls) {
-        if (!f.moved && ((f.ball)->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
-            _selectedBall = f.ball.get();
-            return;
-        }
-    }
-    _selectedBall = nullptr;
+//    if (!_active) {
+//        return;
+//    }
+//    
+//    // Find if there is any ball the cursor in.
+//    auto currentCursor = getCurrentCursor(event);
+//    for (const auto& f : *_localBalls) {
+//        if (!f.moved && ((f.ball)->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
+//            _selectedBall = f.ball.get();
+//            return;
+//        }
+//    }
+//    _selectedBall = nullptr;
 }

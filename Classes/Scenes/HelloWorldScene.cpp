@@ -7,7 +7,7 @@ Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
-    //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
+    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
     //auto itemLayer = Item::create();
@@ -29,12 +29,7 @@ bool HelloWorld::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     std::vector<Ball*> curlings;
     
-    for( int i = 0; i < 9; ++i ) {
-        auto curling = new Curling(Curling::Medium);
-        curlings.push_back(curling);
-        this->addBall(curling, 9);
-    }
-//    
+
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen

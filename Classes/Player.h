@@ -22,33 +22,35 @@ class Player {
 public:
     Player() : _balls(std::make_unique<BallsCollection>()) {}
     virtual ~Player() = default;
-    virtual void attack() = 0;
     //virtual std::unique_ptr<BallsCollection> getBalls();
 protected:
     std::unique_ptr<BallsCollection> _balls;
 };
 
-class LocalPlayer : public Player {
-    friend class MouseController;
+class LocalPlayer : public cocos2d::Node, Player {
 public:
-    LocalPlayer();
-    virtual ~LocalPlayer()
-    {
-        _mouse->release();
-    }
-    
-    virtual void attack() override {}
+    virtual bool init() override;
+    virtual ~LocalPlayer() {}
+    CREATE_FUNC(LocalPlayer);
 private:
     MouseController* _mouse;
 };
 
-class RemotePlayer : public Player {
+class RemotePlayer : public cocos2d::Node, Player {
 public:
-    RemotePlayer();
+    virtual bool init() override;
     virtual ~RemotePlayer() {}
-    virtual void attack() override {}
+    CREATE_FUNC(RemotePlayer);
 private:
     NetworkController* _net;
 };
+
+class AIPlayer : public cocos2d::Node, Player {
+public:
+    virtual bool init() override;
+    virtual ~AIPlayer() {}
+    CREATE_FUNC(AIPlayer);
+};
+
 
 #endif // PLAYER_H_

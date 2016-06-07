@@ -10,6 +10,8 @@
 #include "Config.h"
 #include <vector>
 
+
+
 struct Force {
     Force() = delete;
     Force(const cocos2d::Vec2 d, float f = 1000.0f) : direction(d), force(f) {}
@@ -22,7 +24,7 @@ struct Force {
 class Ball {
 public:
     // What's the parameters?
-    Ball() {}
+    Ball() : _moved(false) {}
     virtual ~Ball() {}
     virtual void move(const Force& force);
     cocos2d::Sprite* getSprite();
@@ -34,6 +36,7 @@ public:
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
+    bool _moved;
     //float _speed;
 };
 
@@ -66,25 +69,18 @@ class Curling : public Ball {
 public:
     Curling() = delete;
     // TODO: color of Curling should in constructor
-    Curling(float radius);
+    Curling(ballType, Vec2);
     virtual ~Curling() {}
     virtual void move(const Force&) override {}
-    
-    // These should be defined as constant values instead of enums.
-    static constexpr float Small = 40.0;
-    static constexpr float Medium = 60.0;
-    static constexpr float Large = 80.0;
 private:
+    ballType _type;
     float _radius;
+    float _force;
+    float _mass;
+    Vec2 _position;
 };
 
 
-struct BallWithStatus {
-	BallWithStatus() : ball(std::make_unique<Ball>()), moved(false) {}
-    std::unique_ptr<Ball> ball;
-    bool moved;
-};
-
-using BallsCollection = std::vector<BallWithStatus>;
+using BallsCollection = std::vector<Ball*>;
 
 #endif // BALL_H_

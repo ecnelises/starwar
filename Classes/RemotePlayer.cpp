@@ -22,9 +22,9 @@ USING_NS_CC;
 //    return _balls;
 //}
 
-RemotePlayer::RemotePlayer()
+bool RemotePlayer::init()
 {
-    
+    return true;
 }
 
 
