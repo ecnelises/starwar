@@ -20,12 +20,13 @@ class GameController : public cocos2d::Node {
 public:
     void run();
     virtual bool init() override;
+    void setCurrentPlayer(currentPlayer);
     CREATE_FUNC(GameController)
 private:
     // TODO: why shared_ptr?
     enum { OVER, PROCESSING, READY } _status;
     std::vector<std::shared_ptr<Player>> _players;
-    Player* _currentPlayer;
+    currentPlayer _currentPlayer;
     AIPlayer* _AIplayer;
     LocalPlayer* _localPlayer;
     void _handleBallStatus(float);

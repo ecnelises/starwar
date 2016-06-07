@@ -13,20 +13,20 @@
 USING_NS_CC;
 
 //bool Player::applyImpulse(const Ball* ball, const Force& force)
+////{
+////    
+////}
+//
+////std::vector<Ball*> Player::getBalls()
+////{
+////    return _balls;
+////}
+//
+//bool RemotePlayer::init()
 //{
-//    
+//    return true;
 //}
-
-//std::vector<Ball*> Player::getBalls()
-//{
-//    return _balls;
-//}
-
-bool RemotePlayer::init()
-{
-    return true;
-}
-
-
-
-
+//
+//
+//
+//

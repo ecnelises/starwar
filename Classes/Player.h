@@ -20,34 +20,40 @@ class NetworkController;
 
 class Player {
 public:
-    Player() : _balls(std::make_unique<BallsCollection>()) {}
+    Player() : _active(false) {}
     virtual ~Player() = default;
+    virtual void setActive(bool) = 0;
     //virtual std::unique_ptr<BallsCollection> getBalls();
 protected:
-    std::unique_ptr<BallsCollection> _balls;
+    BallsCollection _balls;
+    bool _active;
 };
 
 class LocalPlayer : public cocos2d::Node, Player {
 public:
     virtual bool init() override;
     virtual ~LocalPlayer() {}
+    virtual void setActive(bool) override;
+    void applyMove(Ball*, const Force&);
     CREATE_FUNC(LocalPlayer);
 private:
     MouseController* _mouse;
 };
 
-class RemotePlayer : public cocos2d::Node, Player {
-public:
-    virtual bool init() override;
-    virtual ~RemotePlayer() {}
-    CREATE_FUNC(RemotePlayer);
-private:
-    NetworkController* _net;
-};
+
+//class RemotePlayer : public cocos2d::Node, Player {
+//public:
+//    virtual bool init() override;
+//    virtual ~RemotePlayer() {}
+//    CREATE_FUNC(RemotePlayer);
+//private:
+//    NetworkController* _net;
+//};
 
 class AIPlayer : public cocos2d::Node, Player {
 public:
     virtual bool init() override;
+    virtual void setActive(bool) override;
     virtual ~AIPlayer() {}
     CREATE_FUNC(AIPlayer);
 };

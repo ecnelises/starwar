@@ -4,13 +4,14 @@
 USING_NS_CC;
 
 
-Curling::Curling(ballType type, Vec2 position) : _type(type)
+Ball::Ball(ballType type, Vec2 position) : _type(type)
 {
     switch(_type) {
         case MOON:
             _radius = moonRadius;
             _force = moonMaxForce;
             _mass = moonMass;
+            _linearDamping = moonLinearDamping;
             //_position = moonPosition;
             _sprite = cocos2d::Sprite::create(moonFrameFile);
             break;
@@ -18,6 +19,7 @@ Curling::Curling(ballType type, Vec2 position) : _type(type)
             _radius = earthRadius;
             _force = earthMaxForce;
             _mass = earthMass;
+            _linearDamping = earthLinearDamping;
             //_position = earthPosition;
             _sprite = cocos2d::Sprite::create(earthFrameFile);
             break;
@@ -25,6 +27,7 @@ Curling::Curling(ballType type, Vec2 position) : _type(type)
             _radius = sunRadius;
             _force = sunMaxForce;
             _mass = sunMass;
+            _linearDamping = sunLinearDamping;
             //_position = sunPosition;
             _sprite = cocos2d::Sprite::create(sunFrameFile);
             break;
@@ -38,7 +41,7 @@ Curling::Curling(ballType type, Vec2 position) : _type(type)
     _sprite->setPosition(position);
     // Arguments of PhysicsMaterial: density, restitution, friction
     _ballBody = cocos2d::PhysicsBody::createCircle(_radius,
-                                                   cocos2d::PhysicsMaterial(1.0, 1.25, 1.0));
+                                                   cocos2d::PhysicsMaterial(1.0, 1.1, 1.0));
     // We just set up a non-zero value here.
     // Curlings can make collision and contact with other balls.
     _ballBody->setCategoryBitmask(0x00000001);
@@ -47,7 +50,7 @@ Curling::Curling(ballType type, Vec2 position) : _type(type)
     
     _ballBody->setGravityEnable(false);
     _ballBody->setMass(_mass);
-    _ballBody->setLinearDamping(5.0f); // todo
+    _ballBody->setLinearDamping(_linearDamping);
     _ballBody->setRotationEnable(false);
     
     _sprite->setPhysicsBody(_ballBody);
@@ -66,5 +69,5 @@ cocos2d::PhysicsBody* Ball::getBallBody()
 
 void Ball::move(const Force& f)
 {
-    _ballBody->applyImpulse(f.direction * f.force);
+    _ballBody->applyImpulse(f.direction * _force);
 }

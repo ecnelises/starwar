@@ -18,10 +18,12 @@ bool GameController::init(void)
     auto localPlayer = LocalPlayer::create();
     auto AIplayer = AIPlayer::create();
     
+    _AIplayer = AIplayer;
+    _localPlayer = localPlayer;
     _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
     
-    schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval, kRepeatForever, 0);
-    
+    // schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval, kRepeatForever, 0);
+    this->setCurrentPlayer(LOCAL_PLAYER);
     this->addChild(localPlayer, 10);
     this->addChild(AIplayer, 10);
     
@@ -36,4 +38,16 @@ void GameController::run(void)
 void GameController::_handleBallStatus(float dt)
 {
     
+}
+
+void GameController::setCurrentPlayer(currentPlayer player)
+{
+    if(player == LOCAL_PLAYER) {
+        _localPlayer->setActive(true);
+        _AIplayer->setActive(false);
+    } else {
+        _AIplayer->setActive(true);
+        _localPlayer->setActive(false);
+    }
+    _currentPlayer = player;
 }

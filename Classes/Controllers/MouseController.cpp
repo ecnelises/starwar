@@ -17,13 +17,12 @@ bool MouseController::init()
     
     _active = false;
     shootMethod = Drag;
-    _localBalls = nullptr;
     _selectedBall = nullptr;
     
     auto mouseListener = cocos2d::EventListenerMouse::create();
     
     _drawer = cocos2d::DrawNode::create();
-    
+    glLineWidth(drawWidth);
     // Bind member functions to mouse listener.
     mouseListener->onMouseUp =
         std::bind(&MouseController::handleMouseUp, this, std::placeholders::_1);
@@ -37,15 +36,13 @@ bool MouseController::init()
     // XXX: Why 10 here?
     this->addChild(_drawer, 10);
     
-    // TODO: always true?
     return true;
 }
 
-//void MouseController::setPlayer(LocalPlayer* player)
-//{
-//    _localBalls = (player->_balls).get();
-//    _localPlayer = player;
-//}
+void MouseController::setPlayer(LocalPlayer* player)
+{
+    _player = player;
+}
 
 namespace {
 
@@ -64,18 +61,17 @@ void MouseController::handleMouseUp(cocos2d::Event* event)
         return;
     }
     const float maxDistance = 250;
-    const float shootForceEfficiency = 1300;
+    
     _drawer->clear();
     // TODO: static_cast is safe?
     auto destPoint = getCurrentCursor(event);
     auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
-    if (pointDiff.length() > maxDistance) {
-        _selectedBall->move(Force(pointDiff, maxDistance * shootForceEfficiency));
+    if (pointDiff.length() >= maxDistance) {
+        _player->applyMove(_selectedBall, Force(pointDiff)); // todo 无效
     } else {
-        _selectedBall->move(Force(pointDiff, pointDiff.length() * shootForceEfficiency));
+        _player->applyMove(_selectedBall, Force(pointDiff));
     }
     _selectedBall = nullptr;
-    _active = false;
 }
 
 void MouseController::handleMouseMove(cocos2d::Event* event)
@@ -85,34 +81,43 @@ void MouseController::handleMouseMove(cocos2d::Event* event)
         return;
     }
     // TODO: really need this?
-    glLineWidth(5.0);
+    
     _drawer->clear();
     auto destPoint = getCurrentCursor(event);
     auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
     
     // Distance has a limit.
-    if (pointDiff.length() > maxDistance) {
+    if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
-        pointDiff.scale(sqrtf(maxDistance));
-        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
+        pointDiff.scale(maxDistance);
+        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;;
     }
     _drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
-                         2, cocos2d::Color4F(1, 0, 0, 0.7));
+                         2, cocos2d::Color4F(1, 0, 0, 0.7)); // todo config
 }
 
 void MouseController::handleMouseDown(cocos2d::Event* event)
 {
-//    if (!_active) {
-//        return;
-//    }
-//    
-//    // Find if there is any ball the cursor in.
-//    auto currentCursor = getCurrentCursor(event);
-//    for (const auto& f : *_localBalls) {
-//        if (!f.moved && ((f.ball)->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
-//            _selectedBall = f.ball.get();
-//            return;
-//        }
-//    }
-//    _selectedBall = nullptr;
+    if (!_active) {
+        return;
+    }
+    // Find if there is any ball the cursor in.
+    auto currentCursor = getCurrentCursor(event);
+    for (const auto f : _balls) {
+        if ((f->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
+            _selectedBall = f;
+            return;
+        }
+    }
+    _selectedBall = nullptr;
+}
+
+void MouseController::setActive(bool state)
+{
+    _active = state;
+}
+
+void MouseController::addBalls(BallsCollection balls)
+{
+    _balls = balls;
 }

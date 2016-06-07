@@ -14,9 +14,8 @@
 
 struct Force {
     Force() = delete;
-    Force(const cocos2d::Vec2 d, float f = 1000.0f) : direction(d), force(f) {}
+    Force(const cocos2d::Vec2 d) : direction(d) {}
     cocos2d::Vec2 direction;
-    float force;
 };
 
 /// \class Ball
@@ -24,7 +23,7 @@ struct Force {
 class Ball {
 public:
     // What's the parameters?
-    Ball() : _moved(false) {}
+    Ball(ballType type, Vec2 position);
     virtual ~Ball() {}
     virtual void move(const Force& force);
     cocos2d::Sprite* getSprite();
@@ -37,49 +36,49 @@ protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
     bool _moved;
+    ballType _type;
+    float _radius;
+    float _force;
+    float _mass;
+    float _linearDamping;
+    Vec2 _position;
     //float _speed;
 };
 
 /// \class Bomb
 /// \brief Any bomb will explode immediately when touching another ball.
-class Bomb : public Ball {
-public:
-    Bomb()
-    {
-        _sprite = cocos2d::Sprite::create(bombFrameFile);
-        _ballBody = cocos2d::PhysicsBody::createCircle(radius);
-        // TODO: Where is physics material?
-        _sprite->setPhysicsBody(_ballBody);
-    }
-    
-    virtual ~Bomb()
-    {
-        _sprite->release();
-        _ballBody->release();
-    }
-    
-    virtual void move(const Force& force) {}
-private:
-    const float radius = 24;
-};
+//class Bomb : public Ball {
+//public:
+//    Bomb()
+//    {
+//        _sprite = cocos2d::Sprite::create(bombFrameFile);
+//        _ballBody = cocos2d::PhysicsBody::createCircle(radius);
+//        // TODO: Where is physics material?
+//        _sprite->setPhysicsBody(_ballBody);
+//    }
+//    
+//    virtual ~Bomb()
+//    {
+//        _sprite->release();
+//        _ballBody->release();
+//    }
+//    
+//    virtual void move(const Force& force) {}
+//private:
+//    const float radius = 24;
+//};
 
 /// \class Curling
 /// \brief A curling is a ordinary ball can collide with other balls.
-class Curling : public Ball {
-public:
-    Curling() = delete;
-    // TODO: color of Curling should in constructor
-    Curling(ballType, Vec2);
-    virtual ~Curling() {}
-    virtual void move(const Force&) override {}
-private:
-    ballType _type;
-    float _radius;
-    float _force;
-    float _mass;
-    Vec2 _position;
-};
-
+//class Curling : public Ball {
+//public:
+//    Curling() = default;
+//    // TODO: color of Curling should in constructor
+//    Curling(ballType, Vec2);
+//    virtual ~Curling() {}
+//    virtual void move(const Force&) override {}
+//};
+//
 
 using BallsCollection = std::vector<Ball*>;
 

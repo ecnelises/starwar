@@ -13,6 +13,7 @@
 USING_NS_CC;
 
 typedef enum {MOON, EARTH, SUN} ballType;
+typedef enum {LOCAL_PLAYER, AI_PLAYER,} currentPlayer;
 
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
@@ -49,13 +50,18 @@ constexpr float moonRadius = 30.0f;
 constexpr float earthRadius = 45.0f;
 constexpr float sunRadius = 60.0f;
 // ball force
-constexpr float moonMaxForce = 800.0f;
-constexpr float earthMaxForce = 1000.0f;
-constexpr float sunMaxForce = 1200.0f;
+constexpr float moonMaxForce = 50.0f;
+constexpr float earthMaxForce = 120.0f;
+constexpr float sunMaxForce = 200.0f;
 // ball mass
 constexpr float moonMass = 20.0f;
 constexpr float earthMass = 40.0f;
 constexpr float sunMass = 80.0f;
+
+// ball linear damping
+constexpr float moonLinearDamping = 4.2f;
+constexpr float earthLinearDamping = 5.3f;
+constexpr float sunLinearDamping = 7.0f;
 
 // Position
 constexpr float moonPositionX = 240.0f;
@@ -71,5 +77,11 @@ constexpr float sunPositionY = 100.0f;
 constexpr auto moonDistance = 180.0f;
 constexpr auto earthDistance = 360.0f;
 constexpr auto sunDistance = 20.0f;
+
+// player data
+
+// mouse controller data
+constexpr float drawWidth = 5.0f;
+
 
 #endif // CONFIG_H_
