@@ -71,9 +71,9 @@ public:
     virtual void move(const Force&) override {}
     
     // These should be defined as constant values instead of enums.
-    static constexpr float Small = 24.0;
-    static constexpr float Medium = 32.0;
-    static constexpr float Large = 48.0;
+    static constexpr float Small = 40.0;
+    static constexpr float Medium = 60.0;
+    static constexpr float Large = 80.0;
 private:
     float _radius;
 };

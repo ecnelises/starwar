@@ -37,8 +37,11 @@ bool HelloWorld::init()
 //    
 //    const int MAXFORCE = 250;
 //    const int FORCE = 1200;
-    auto map = Sprite::create(battleSceneFrameFile);
+    Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
+    auto bg = Sprite::create(battleSceneFrameFile);
+    auto map = Sprite::create(battleMapFrameFile);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
+    
     auto gameController = GameController::create();
     auto contact = Contact::create();
     
@@ -46,10 +49,15 @@ bool HelloWorld::init()
     // 设置物理对象
     map->setPhysicsBody(mapFrame);
     // 大小与位置
-    map->setScale(1.3f);
+    //map->setScale(0.65f);
+    
+    bg->setScale(1.2f);
+    
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    bg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
     this->addChild(gameController, 3);
+    this->addChild(bg, 0);
     this->addChild(map, 1);
 
     return true;

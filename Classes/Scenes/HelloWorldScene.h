@@ -17,7 +17,6 @@ private:
     std::pair<cocos2d::Sprite*, bool> selected;
     std::pair<float, float> finalPoint;
     void addBall(Ball *ball, int zIndex);
-    void createMouseListener(MouseController*);
 };
 
 #endif // HELLOWORLD_SCENE_H_

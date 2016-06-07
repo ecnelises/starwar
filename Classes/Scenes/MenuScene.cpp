@@ -57,12 +57,12 @@ bool MenuScene::init()
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
     
     bg->setScale(windowSize.width / bg->getContentSize().width, windowSize.height / bg->getContentSize().height);
-    bg->setPosition(Vec2(windowSize.width/2, windowSize.height/2));
+    bg->setPosition(Vec2(windowSize.width/ 2, windowSize.height / 2));
     
     for(const auto &child : menu->getChildren()) {
-        float offset = 36.0f * i;
-        child->setScale(0.35f);
-        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 2 - 80.0f, 95.0f - offset));
+        float offset = menuItemDistance * i;
+        child->setScale(menuItemScale);
+        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 4, menuFirstItemY - offset));
         i++;
     }
     

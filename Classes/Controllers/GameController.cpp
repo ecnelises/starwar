@@ -12,14 +12,15 @@ bool GameController::init(void)
     }
     
     _status = READY;
-    
+    auto mouseController = MouseController::create();
     auto roundSwitchListener = cocos2d::EventListenerCustom::create("RoundSwitch", [=](cocos2d::EventCustom* event){
         // TODO
     });
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
     
-    schedule(schedule_selector(GameController::_handleBallStatus), 1.0f, kRepeatForever, 0);
+    schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval, kRepeatForever, 0);
+    this->addChild(mouseController, 10);
     return true;
 }
 
