@@ -23,7 +23,6 @@ public:
     Player() : _active(false) {}
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
-    //virtual std::unique_ptr<BallsCollection> getBalls();
 protected:
     BallsCollection _balls;
     bool _active;

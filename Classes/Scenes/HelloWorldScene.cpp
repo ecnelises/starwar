@@ -3,21 +3,20 @@
 #include "../Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
-Scene* HelloWorld::createScene()
+Scene* HelloWorld::createScene(int tmp)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
-    //auto itemLayer = Item::create();
+    printf("%d", tmp);
     // add layer as a child to scene
     scene->addChild(layer);
-    //scene->addChild(itemLayer);
     // return the scene
     return scene;
 }
-// on "init" you need to initialize your instance
+
 bool HelloWorld::init()
 {
     if ( !Layer::init() )

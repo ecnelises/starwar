@@ -24,11 +24,14 @@ public:
     CREATE_FUNC(GameController)
 private:
     // TODO: why shared_ptr?
-    enum { OVER, PROCESSING, READY } _status;
+    enum { OVER, PROCESSING, READY, LOADING } _status;
     std::vector<std::shared_ptr<Player>> _players;
     currentPlayer _currentPlayer;
     AIPlayer* _AIplayer;
     LocalPlayer* _localPlayer;
+    NetworkController* _net;
+    bool _waitingDone;
+    int _timeLeft;
     void _handleBallStatus(float);
 };
 

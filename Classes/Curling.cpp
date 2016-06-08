@@ -14,6 +14,7 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
             _linearDamping = moonLinearDamping;
             //_position = moonPosition;
             _sprite = cocos2d::Sprite::create(moonFrameFile);
+            _sprite->setTag(moonTag);
             break;
         case EARTH:
             _radius = earthRadius;
@@ -22,6 +23,7 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
             _linearDamping = earthLinearDamping;
             //_position = earthPosition;
             _sprite = cocos2d::Sprite::create(earthFrameFile);
+            _sprite->setTag(earthTag);
             break;
         case SUN:
             _radius = sunRadius;
@@ -30,6 +32,7 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
             _linearDamping = sunLinearDamping;
             //_position = sunPosition;
             _sprite = cocos2d::Sprite::create(sunFrameFile);
+            _sprite->setTag(sunTag);
             break;
         default:
             break;
@@ -70,4 +73,5 @@ cocos2d::PhysicsBody* Ball::getBallBody()
 void Ball::move(const Force& f)
 {
     _ballBody->applyImpulse(f.direction * _force);
+    _moved = true;
 }
