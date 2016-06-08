@@ -51,7 +51,8 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
     _ballBody->setGravityEnable(false);
     _ballBody->setMass(_mass);
     _ballBody->setLinearDamping(_linearDamping);
-    _ballBody->setRotationEnable(false);
+    _ballBody->setAngularDamping(0.2);
+    _ballBody->setRotationEnable(true);
     
     _sprite->setPhysicsBody(_ballBody);
 }

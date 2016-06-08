@@ -10,8 +10,6 @@
 #include "Config.h"
 #include <vector>
 
-
-
 struct Force {
     Force() = delete;
     Force(const cocos2d::Vec2 d) : direction(d) {}
@@ -23,7 +21,7 @@ struct Force {
 class Ball {
 public:
     // What's the parameters?
-    Ball(ballType type, Vec2 position);
+    Ball(ballType type, cocos2d::Vec2 position);
     virtual ~Ball() {}
     virtual void move(const Force& force);
     cocos2d::Sprite* getSprite();
@@ -41,7 +39,7 @@ protected:
     float _force;
     float _mass;
     float _linearDamping;
-    Vec2 _position;
+    cocos2d::Vec2 _position;
     //float _speed;
 };
 

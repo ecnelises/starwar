@@ -10,9 +10,12 @@
 #include "cocos2d.h"
 #include "MouseController.h"
 #include "NetworkController.h"
-#include "../Player.h"
+#include "Player.h"
 #include <vector>
 #include <memory>
+
+template<typename T>
+using observer_ptr = T*;
 
 /// \class GameController
 /// \brief Main dispatcher in game processing.
@@ -27,7 +30,7 @@ private:
     enum { OVER, PROCESSING, READY } _status;
     std::vector<std::shared_ptr<Player>> _players;
     currentPlayer _currentPlayer;
-    AIPlayer* _AIplayer;
+    observer_ptr<AIPlayer> _AIplayer;
     LocalPlayer* _localPlayer;
     void _handleBallStatus(float);
 };

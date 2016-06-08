@@ -69,10 +69,9 @@ void MouseController::handleMouseUp(cocos2d::Event* event)
     if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
         pointDiff.scale(maxDistance);
-        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
-        _player->applyMove(_selectedBall, Force(destPoint)); // todo 无效
+        _player->applyMove(_selectedBall, Force(-pointDiff)); // todo 无效
     } else {
-        _player->applyMove(_selectedBall, Force(pointDiff));
+        _player->applyMove(_selectedBall, Force(-pointDiff));
     }
     _selectedBall = nullptr;
 }
