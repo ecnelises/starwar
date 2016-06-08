@@ -38,7 +38,7 @@ bool HelloWorld::init()
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
     
     auto gameController = GameController::create();
-    auto contact = Contact::create();
+    
     
     //mouseController->addBalls(curlings);
     // 设置物理对象

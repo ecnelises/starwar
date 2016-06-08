@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "Scenes/MenuScene.h"
 #include "SimpleAudioEngine.h"
+#include "Config.h"
 
 USING_NS_CC;
 
@@ -14,8 +15,8 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 AppDelegate::AppDelegate()
 {
     // audio initialize
-    CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect("knock.mp3");
-    CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic("bg1.mp3");
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(knockEffectFile);
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic(menuSceneMusicFile);
 }
 
 AppDelegate::~AppDelegate()

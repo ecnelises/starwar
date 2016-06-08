@@ -3,7 +3,8 @@
 /// This file implements interfaces of GameController.
 
 #include "GameController.h"
-#include "Player.h"
+#include "../Player.h"
+#include "../Contact.h"
 
 bool GameController::init(void)
 {
@@ -17,6 +18,7 @@ bool GameController::init(void)
     });
     auto localPlayer = LocalPlayer::create();
     auto AIplayer = AIPlayer::create();
+    auto contact = Contact::create();
     
     _AIplayer = AIplayer;
     _localPlayer = localPlayer;
@@ -26,6 +28,7 @@ bool GameController::init(void)
     this->setCurrentPlayer(LOCAL_PLAYER);
     this->addChild(localPlayer, 10);
     this->addChild(AIplayer, 10);
+    this->addChild(contact, 0);
     
     return true;
 }

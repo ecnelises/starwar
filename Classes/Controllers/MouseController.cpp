@@ -67,7 +67,10 @@ void MouseController::handleMouseUp(cocos2d::Event* event)
     auto destPoint = getCurrentCursor(event);
     auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
     if (pointDiff.length() >= maxDistance) {
-        _player->applyMove(_selectedBall, Force(pointDiff)); // todo 无效
+        pointDiff.normalize();
+        pointDiff.scale(maxDistance);
+        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
+        _player->applyMove(_selectedBall, Force(destPoint)); // todo 无效
     } else {
         _player->applyMove(_selectedBall, Force(pointDiff));
     }
@@ -90,7 +93,7 @@ void MouseController::handleMouseMove(cocos2d::Event* event)
     if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
         pointDiff.scale(maxDistance);
-        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;;
+        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
     }
     _drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
                          2, cocos2d::Color4F(1, 0, 0, 0.7)); // todo config

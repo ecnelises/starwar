@@ -46,9 +46,9 @@ constexpr auto sunNumber = 1;
 
 // ball radius
 // These should be defined as constant values instead of enums.
-constexpr float moonRadius = 30.0f;
-constexpr float earthRadius = 45.0f;
-constexpr float sunRadius = 60.0f;
+constexpr float moonRadius = 16.0f;
+constexpr float earthRadius = 25.0f;
+constexpr float sunRadius = 35.0f;
 // ball force
 constexpr float moonMaxForce = 50.0f;
 constexpr float earthMaxForce = 120.0f;
