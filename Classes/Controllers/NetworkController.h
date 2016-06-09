@@ -24,6 +24,7 @@ public:
 };
 
 class NetworkController {
+    friend class GameController;
 public:
     NetworkController()
     {
@@ -46,6 +47,7 @@ private:
     static constexpr auto _destUri = "139.129.12.132:6619";
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
+    cocos2d::EventListenerCustom* _networkListener;
 };
 
 #endif // NETWORK_CONTROLLER_H_
