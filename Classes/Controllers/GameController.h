@@ -23,12 +23,12 @@ class GameController : public cocos2d::Node {
 public:
     virtual bool init() override;
     void initNetwork(NetworkController*);
-    bool receiveData();
-    bool sendData();
+    bool _receiveData();
+    bool _sendData(char*);
     CREATE_FUNC(GameController)
 private:
     // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
-    enum { READY, LOADING, WAITING } _status;
+    enum { READY, LOADING, WAITING, BLOCKING } _status;
     currentPlayer _currentPlayer;
     //AIPlayer* _AIplayer;
     RemotePlayer* _remotePlayer;

@@ -8,10 +8,14 @@
 
 
 
-#include "Player.h"
+
 #include <memory>
+#include "json/rapidjson.h"
+#include "json/document.h"
+#include "Player.h"
 
 USING_NS_CC;
+using namespace rapidjson;
 
 bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
 {
@@ -59,30 +63,42 @@ void LocalPlayer::applyMove(Ball *ball, const Force &force)
     if(!_active) {
         return;
     }
+//    rapidjson::Document document;
+//    rapidjson::Value detailObject(rapidjson::kObjectType);
+//    rapidjson::Value forceObject(rapidjson::kObjectType);
+//    document.SetObject();
+//    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+//    
+//    forceObject.AddMember("x", force.direction.x, allocator);
+//    forceObject.AddMember("y", force.direction.y, allocator);
+//    detailObject.AddMember("ballId", ball->getId(), allocator);
+//    detailObject.AddMember("force", detailObject, allocator);
+//    
+//    document.AddMember("type", "shoot", allocator);
+//    document.AddMember("detail", detailObject, allocator);
+//
     ball->move(force);
-    EventCustom overRoundevent("moveBall");
-    _eventDispatcher->dispatchEvent(&overRoundevent);
+    EventCustom shootEvent("shoot");
+//    shootEvent.setUserData(&document);
+    _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
-    
 }
 
 void LocalPlayer::_isResting(float dt)
 {
     auto child = this->getChildren();
-    auto completed = true;
     auto lterator = child.begin();
     while(lterator != child.end()) {
-        if(!((*lterator)->getPhysicsBody()->getVelocity().length() >= 1e-4)) {
+        if((*lterator)->getTag() != mouseControllerTag && ((*lterator)->getPhysicsBody()->getVelocity().length() > 1e-4)) {
             return;
         }
         ++lterator;
     }
-    if(completed) { // 表示全部小球都不动了
-        // 发送回合结束命令 todo: 封装
-        EventCustom overRoundevent("overRound");
-        _eventDispatcher->dispatchEvent(&overRoundevent);
-        this->unschedule("isResting"); // 取消监听事件减少消耗
-    }
+    // 表示全部小球都不动了
+    // 发送回合结束命令 todo: 封装
+    EventCustom overRoundEvent("overRound");
+    _eventDispatcher->dispatchEvent(&overRoundEvent);
+    this->unschedule("isResting"); // 取消监听事件减少消耗
 }
 
 

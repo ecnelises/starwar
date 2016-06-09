@@ -7,11 +7,10 @@
 //
 
 #include "MenuScene.h"
-#include "SimpleAudioEngine.h"
 #include "HelloWorldScene.h"
 #include "Config.h"
 #include "Audio.h"
-
+#include "../Controllers/NetworkController.h"
 
 USING_NS_CC;
 
@@ -21,8 +20,8 @@ Scene* MenuScene::createScene()
     auto scene = Scene::create();
     // 'layer' is an autorelease object
     auto layer = MenuScene::create();
-
-    //auto itemLayer = Item::create();
+    auto audio = new Audio();
+    audio->playMenuSceneMusic();
     // add layer as a child to scene
     scene->addChild(layer);
     //scene->addChild(itemLayer);
@@ -35,11 +34,12 @@ bool MenuScene::init()
     if (!Node::init()) {
         return false;
     }
-    Audio *audio = new Audio();
+    
     int i = 0;
     auto bg = Sprite::create(menuSceneFrameFile);
-	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [](Ref *sender) {
-		auto battleScene = HelloWorld::createScene(3);
+    auto network = NetworkController::create();
+	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
+		auto battleScene = HelloWorld::createScene(network);
 		Director::getInstance()->replaceScene(battleScene);
 	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile);
@@ -50,8 +50,6 @@ bool MenuScene::init()
     
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     
-    audio->playMenuSceneMusic();
-    //Size visibleSize = Director::getInstance()->getVisibleSize();
     
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
     
@@ -65,6 +63,7 @@ bool MenuScene::init()
         i++;
     }
     
+    this->addChild(network);
     this->addChild(menu, 2);
     this->addChild(bg, 1);
     return true;

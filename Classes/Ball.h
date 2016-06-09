@@ -18,13 +18,14 @@ struct Force {
 
 /// \class Ball
 /// \brief Ball is the base class of all other controllable objects on arena.
-class Ball : public cocos2d::Ref {
+class Ball {
 public:
     // What's the parameters?
-    Ball(ballType type, cocos2d::Vec2 position);
+    Ball(ballType type, int id, cocos2d::Vec2 position);
     virtual ~Ball() {}
     virtual void move(const Force& force);
     virtual void initSchedule(float);
+    virtual int getId();
     cocos2d::Sprite* getSprite();
     cocos2d::PhysicsBody* getBallBody();
 protected:
@@ -37,6 +38,7 @@ protected:
     float _force;
     float _mass;
     float _linearDamping;
+    int _id;
     cocos2d::Vec2 _position;
     //float _speed;
 };

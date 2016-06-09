@@ -5,11 +5,12 @@
 #include "cocos2d.h"
 #include "Contact.h"
 #include "../Controllers/MouseController.h"
+#include "../Controllers/NetworkController.h"
 
 
 class HelloWorld : public cocos2d::Layer {
 public:
-    static cocos2d::Scene* createScene(int);
+    static cocos2d::Scene* createScene(NetworkController*);
     virtual bool init() override;
     void update(float dt) override;
     CREATE_FUNC(HelloWorld)

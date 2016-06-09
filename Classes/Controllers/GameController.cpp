@@ -6,6 +6,8 @@
 #include "NetworkController.h"
 #include "../Player.h"
 #include "../Contact.h"
+#include "json/rapidjson.h"
+#include "json/document.h"
 
 bool GameController::init(void)
 {
@@ -22,15 +24,17 @@ bool GameController::init(void)
     auto remotePlayer = RemotePlayer::create();
     //auto AIplayer = AIPlayer::create();
     auto contact = Contact::create();
-    
-//    auto overRoundListener = EventListenerCustom::create("overRound", [=](EventCustom* event){
-//        char* buf = static_cast<char*>(event->getUserData());
-//        this->_overRound();
-//    });
-//    auto moveBallListener = EventListenerCustom::create("moveBall", [=](EventCustom* event){
-//        char* buf = static_cast<char*>(event->getUserData());
-//        this->_overRound();
-//    });
+    auto overRoundListener = cocos2d::EventListenerCustom::create("overRound", [=](cocos2d::EventCustom* event){
+        printf("overRound\n");
+        this->_overRound();
+    });
+    auto moveBallListener = cocos2d::EventListenerCustom::create("shoot", [=](cocos2d::EventCustom* event){
+        rapidjson::Document* document = static_cast<rapidjson::Document*>(event->getUserData());
+        printf("shoot\n");
+        _status = BLOCKING;
+        _localPlayer->setActive(false);
+        //this->_sendData(buf);
+    });
     // _AIplayer = AIplayer;
     _localPlayer = localPlayer;
     //_net = netWorkController;
@@ -68,6 +72,7 @@ void GameController::_handleBallStatus(float dt)
         auto node = *l;
         int tag = node->getTag();
     if(_status == WAITING) {
+        printf("%d\n", _timeLeft);
         _timeLeft -= 1;
                 _timeLeft = timeLeftDefault;
     
@@ -104,10 +109,10 @@ void GameController::_handleBallStatus(float dt)
 //    }
         _currentPlayer = REMOTE_PLAYER;
         _status = LOADING; // 状态: 等待数据
-        this->sendData(); // todo 发送回合结束的信息
+        this->_sendData(buf); // todo 发送回合结束的信息
     } else {
-        _remotePlayer->setActive(true);
-        _localPlayer->setActive(false);
+        _remotePlayer->setActive(false);
+        _localPlayer->setActive(true);
         _currentPlayer = LOCAL_PLAYER;
         _status = WAITING; // 状态: 等待出招
     }
@@ -115,13 +120,13 @@ void GameController::_handleBallStatus(float dt)
 }
 
 // todo game controller给network发送数据
-bool GameController::sendData()
+bool GameController::_sendData(char *buf)
 {
     return true; // 成功: true
 }
 
 // todo game controller接受network的数据
-bool GameController::receiveData()
+bool GameController::_receiveData()
 {
     return true; // 成功: true
 }
@@ -130,4 +135,9 @@ void GameController::initNetwork(NetworkController* n)
 {
     printf("network init!");
     _status = READY;
+    // 选定谁先
+    _status = WAITING;
+    _localPlayer->setActive(true);
+    _remotePlayer->setActive(false);
+    _currentPlayer = LOCAL_PLAYER;
 }

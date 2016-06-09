@@ -3,14 +3,17 @@
 #include "../Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
-Scene* HelloWorld::createScene(int tmp)
+Scene* HelloWorld::createScene(NetworkController* network)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
     // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();
-    printf("%d", tmp);
+    // 获取netWork，初始化给gameController
+    auto gameController = GameController::create();
+    gameController->initNetwork(network);
+    scene->addChild(gameController, 3);
     // add layer as a child to scene
     scene->addChild(layer);
     // return the scene
@@ -35,7 +38,7 @@ bool HelloWorld::init()
     auto bg = Sprite::create(battleSceneFrameFile);
     auto map = Sprite::create(battleMapFrameFile);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
-    auto gameController = GameController::create();
+    
     
     //mouseController->addBalls(curlings);
     // 设置物理对象
@@ -48,7 +51,6 @@ bool HelloWorld::init()
     map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     bg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
     
-    this->addChild(gameController, 3);
     this->addChild(bg, 0);
     this->addChild(map, 1);
 
