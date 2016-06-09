@@ -32,10 +32,13 @@ private:
     currentPlayer _currentPlayer;
     observer_ptr<AIPlayer> _AIplayer;
     LocalPlayer* _localPlayer;
-    NetworkController* _net;
+    std::unique_ptr<NetworkController> _net;
     bool _waitingDone;
     int _timeLeft;
     void _handleBallStatus(float);
+    // For local game, id is set to 0.
+    // Otherwise, it's distributed from the server.
+    unsigned _currentGameId;
 };
 
 #endif // GAME_CONTROLLER_H_

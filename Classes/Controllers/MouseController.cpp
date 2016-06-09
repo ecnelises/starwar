@@ -106,8 +106,8 @@ void MouseController::handleMouseDown(cocos2d::Event* event)
     // Find if there is any ball the cursor in.
     auto currentCursor = getCurrentCursor(event);
     for (const auto f : _balls) {
-        if ((f->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
-            _selectedBall = f;
+        if (((f.ball)->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
+            _selectedBall = f.ball;
             return;
         }
     }

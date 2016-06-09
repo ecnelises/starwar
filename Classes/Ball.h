@@ -78,6 +78,11 @@ protected:
 //};
 //
 
-using BallsCollection = std::vector<Ball*>;
+struct NumberedBall {
+    Ball* ball;
+    unsigned id;
+};
+
+using BallsCollection = std::vector<NumberedBall>;
 
 #endif // BALL_H_

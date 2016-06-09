@@ -14,6 +14,7 @@
 #include "cocos2d.h"
 #include <vector>
 #include <memory>
+#include <string>
 
 class MouseController;
 class NetworkController;
@@ -26,6 +27,8 @@ public:
 protected:
     BallsCollection _balls;
     bool _active;
+    std::string _playerId;
+    std::string _nickname;
 };
 
 class LocalPlayer : public cocos2d::Node, Player {
