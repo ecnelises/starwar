@@ -15,7 +15,7 @@ template<typename T>
 using observer_ptr = T*;
 
 typedef enum {MOON, EARTH, SUN} ballType;
-typedef enum {LOCAL_PLAYER, AI_PLAYER,} currentPlayer;
+typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
 
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
@@ -41,6 +41,7 @@ constexpr auto menuItemDistance = 55.0f;
 constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
+constexpr auto isRestingInterval = 0.1f;
 
 // Tags
 constexpr int moonTag = 30;

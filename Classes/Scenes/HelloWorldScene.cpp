@@ -35,9 +35,7 @@ bool HelloWorld::init()
     auto bg = Sprite::create(battleSceneFrameFile);
     auto map = Sprite::create(battleMapFrameFile);
     auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
-    
     auto gameController = GameController::create();
-    
     
     //mouseController->addBalls(curlings);
     // 设置物理对象

@@ -13,11 +13,6 @@
 
 USING_NS_CC;
 
-//bool Player::applyImpulse(const Ball* ball, const Force& force)
-//{
-//
-//}
-
 bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
 {
     if (!Node::init()) {
@@ -65,6 +60,29 @@ void LocalPlayer::applyMove(Ball *ball, const Force &force)
         return;
     }
     ball->move(force);
+    EventCustom overRoundevent("moveBall");
+    _eventDispatcher->dispatchEvent(&overRoundevent);
+    this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
+    
+}
+
+void LocalPlayer::_isResting(float dt)
+{
+    auto child = this->getChildren();
+    auto completed = true;
+    auto lterator = child.begin();
+    while(lterator != child.end()) {
+        if(!((*lterator)->getPhysicsBody()->getVelocity().length() >= 1e-4)) {
+            return;
+        }
+        ++lterator;
+    }
+    if(completed) { // 表示全部小球都不动了
+        // 发送回合结束命令 todo: 封装
+        EventCustom overRoundevent("overRound");
+        _eventDispatcher->dispatchEvent(&overRoundevent);
+        this->unschedule("isResting"); // 取消监听事件减少消耗
+    }
 }
 
 
