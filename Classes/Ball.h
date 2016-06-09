@@ -24,7 +24,6 @@ public:
     Ball(ballType type, int id, cocos2d::Vec2 position);
     virtual ~Ball() {}
     virtual void move(const Force& force);
-    virtual void initSchedule(float);
     virtual int getId();
     cocos2d::Sprite* getSprite();
     cocos2d::PhysicsBody* getBallBody();

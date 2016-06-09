@@ -15,43 +15,57 @@ bool GameController::init(void)
         return false;
     }
     
-    
-//    auto roundSwitchListener = cocos2d::EventListenerCustom::create("RoundSwitch", [=](cocos2d::EventCustom* event){
-//        // TODO
-//    });
     auto localPlayer = LocalPlayer::create();
     auto remotePlayer = RemotePlayer::create();
-    //auto AIplayer = AIPlayer::create();
     auto contact = Contact::create();
-    auto overRoundListener = cocos2d::EventListenerCustom::create("overRound", [=](cocos2d::EventCustom* event){
-        printf("overRound\n");
-        this->_overRound();
-    });
-    auto moveBallListener = cocos2d::EventListenerCustom::create("shoot", [=](cocos2d::EventCustom* event){
-        rapidjson::Document* document = static_cast<rapidjson::Document*>(event->getUserData());
-        printf("shoot\n");
-        _status = BLOCKING;
-        _localPlayer->setActive(false);
-        //this->_sendData(buf);
-    });
-    // _AIplayer = AIplayer;
+    auto overRoundListener = cocos2d::EventListenerCustom::create("overRound", CC_CALLBACK_1(GameController::_handleOverRoundEvent, this));
+    auto shootListener = cocos2d::EventListenerCustom::create("shoot", CC_CALLBACK_1(GameController::_handleShootEvent, this));
+    auto networkListener = cocos2d::EventListenerCustom::create("init", CC_CALLBACK_1(GameController::_handleGameInitEvent, this));
+    auto resultListener = cocos2d::EventListenerCustom::create("result", CC_CALLBACK_1(GameController::_handleResultEvent, this));
+    
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
-    // _net = netWorkController;
-    // _waitingDone = false;
     _timeLeft = timeLeftDefault;
     _status = LOADING;
-    // _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(localPlayer, 10);
     this->addChild(remotePlayer, 10);
-    // this->addChild(AIplayer, 10);
     this->addChild(contact, 0);
-    // this->addChild(netWorkController, 0);
+    
     _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(moveBallListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(shootListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(networkListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(resultListener, 1);
     return true;
+}
+
+void GameController::_handleShootEvent(cocos2d::EventCustom* event)
+{
+    char *buf = static_cast<char*>(event->getUserData());
+    printf("shoot\n");
+    _status = BLOCKING;
+    _localPlayer->setActive(false);
+}
+
+void GameController::_handleOverRoundEvent(cocos2d::EventCustom* event)
+{
+    printf("overRound\n");
+    this->_overRound();
+}
+
+void GameController::_handleGameInitEvent(cocos2d::EventCustom* event)
+{
+    // 决定谁先
+    printf("ready\n");
+    _status = READY;
+}
+
+void GameController::_handleResultEvent(cocos2d::EventCustom* event)
+{
+    // 决定谁先
+    printf("end\n");
+    _status = END;
 }
 
 // 当时钟到0，就跳入下一回合
@@ -66,33 +80,6 @@ void GameController::_handleBallStatus(float dt)
     if(_timeLeft == 0 && _currentPlayer == LOCAL_PLAYER) {
         this->_overRound();
     }
-//    auto childs = _localPlayer->getChildren();
-//    auto l = childs.begin();
-//    while(l != childs.end()) {
-//        auto node = *l;
-//        int tag = node->getTag();
-//        if(tag == moonTag || tag == earthTag || tag == sunTag) {
-//            if((node->getPhysicsBody()->getVelocity()).length() > 1e-4) { // isResting
-//                _waitingDone = true;
-//                _timeLeft = timeLeftDefault;
-//                return;
-//            }
-//        }
-//        ++l;
-//    }
-//    if(_waitingDone) {
-//        _waitingDone = false;
-//        _timeLeft = timeLeftDefault;
-//        this->_overRound();
-//    } else {
-//        _timeLeft -= 1;
-//        printf("%d\n", _timeLeft);
-//        if(_timeLeft == 0) {
-//            _waitingDone = false;
-//            _timeLeft = timeLeftDefault;
-//            this->_overRound();
-//        }
-//    }
 }
 
 
@@ -130,7 +117,7 @@ bool GameController::_receiveData()
 void GameController::initNetwork(NetworkController*)
 {
     printf("network init!");
-    _status = READY;
+    
     // 选定谁先
     _status = WAITING;
     _localPlayer->setActive(true);
