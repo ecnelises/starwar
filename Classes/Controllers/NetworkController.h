@@ -13,22 +13,35 @@
 #include "SocketIO.h"
 #include "Ball.h"
 #include <string>
+#include <functional>
+
+class GameController;
 
 class GameSocketDelegate : public cocos2d::network::SocketIO::SIODelegate {
 public:
-    GameSocketDelegate() = default;
+    GameSocketDelegate() = delete;
+    GameSocketDelegate(GameController* game)
+    {
+        _game = game;
+    }
+    
     virtual ~GameSocketDelegate() = default;
     virtual void onClose(cocos2d::network::SIOClient* client) override;
     virtual void onError(cocos2d::network::SIOClient* client,
                          const std::string& data) override;
+private:
+    observer_ptr<GameController> _game;
 };
 
 class NetworkController {
     friend class GameController;
 public:
-    NetworkController()
+    NetworkController(GameController* game) : _game(game), _delegate(game)
     {
         _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
+        _client->on("message", std::bind(&NetworkController::dispatchRemoteMessage,
+                                         this, std::placeholders::_1,
+                                         std::placeholders::_2));
     }
     
     ~NetworkController()
@@ -45,9 +58,12 @@ public:
     // TODO: how to tackle with the callback?
 private:
     static constexpr auto _destUri = "139.129.12.132:6619";
+    GameController* _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
     cocos2d::EventListenerCustom* _networkListener;
+    void dispatchRemoteMessage(cocos2d::network::SIOClient* client,
+                               const std::string& message);
 };
 
 #endif // NETWORK_CONTROLLER_H_

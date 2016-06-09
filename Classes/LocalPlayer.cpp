@@ -25,6 +25,7 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
     auto mouseController = MouseController::create();
     unsigned count = 1;
     // moon 4
+    /*
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, Vec2(moonPositionX + moonDistance * i, moonPositionY));
         _balls.push_back({ball, count++});
@@ -44,7 +45,7 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
         _balls.push_back({ball, count++});
         this->addChild(ball->getSprite(), 4);
     }
-    
+    */
     mouseController->addBalls(_balls);
     _mouse = mouseController;
     _mouse->setPlayer(this);

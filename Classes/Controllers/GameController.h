@@ -23,6 +23,9 @@ class GameController : public cocos2d::Node {
 public:
     virtual bool init() override;
     void initNetwork(NetworkController*);
+    void networkError();
+    void networkClose();
+    cocos2d::EventDispatcher* getEventDispatcher();
     bool _receiveData();
     bool _sendData(char*);
     CREATE_FUNC(GameController)

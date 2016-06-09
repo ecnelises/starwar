@@ -21,6 +21,7 @@ bool RemotePlayer::init()
     }
     unsigned count = 1;
     // moon 4
+    /*
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
         _balls.push_back({ball, count++});
@@ -40,6 +41,7 @@ bool RemotePlayer::init()
         _balls.push_back({ball, count++});
         this->addChild(ball->getSprite(), 4);
     }
+     */
     
     return true;
 }

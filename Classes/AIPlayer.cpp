@@ -20,6 +20,7 @@ bool AIPlayer::init()
     }
     auto count = 0U;
     // moon 4
+#if 0
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
         _balls.push_back({ball, count++});
@@ -39,6 +40,7 @@ bool AIPlayer::init()
         _balls.push_back({ball, count++});
         this->addChild(ball->getSprite(), 4);
     }
+#endif
     
     return true;
 }

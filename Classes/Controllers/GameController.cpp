@@ -20,6 +20,7 @@ bool GameController::init(void)
 //        // TODO
 //    });
 #if 0
+    /*
     auto localPlayer = LocalPlayer::create();
     auto remotePlayer = RemotePlayer::create();
     //auto AIplayer = AIPlayer::create();
@@ -51,6 +52,7 @@ bool GameController::init(void)
     this->addChild(contact, 0);
     _status = LOADING;
     // _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
+     */
 #endif
     
     return true;
@@ -60,6 +62,7 @@ bool GameController::init(void)
 void GameController::_handleBallStatus(float dt)
 {
 #if 0
+    /*
     if(_currentPlayer == LOCAL_PLAYER) {
     // this->addChild(netWorkController, 0);
 //    _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
@@ -107,6 +110,7 @@ void GameController::_handleBallStatus(float dt)
 //            this->_overRound();
 //        }
 //    }
+        /*
         _currentPlayer = REMOTE_PLAYER;
         _status = LOADING; // 状态: 等待数据
         this->_sendData(buf); // todo 发送回合结束的信息
@@ -116,6 +120,7 @@ void GameController::_handleBallStatus(float dt)
         _currentPlayer = LOCAL_PLAYER;
         _status = WAITING; // 状态: 等待出招
     }
+         */
 #endif
 }
 
@@ -140,4 +145,9 @@ void GameController::initNetwork(NetworkController* n)
     _localPlayer->setActive(true);
     _remotePlayer->setActive(false);
     _currentPlayer = LOCAL_PLAYER;
+}
+
+cocos2d::EventDispatcher* GameController::getEventDispatcher(void)
+{
+    return this->_eventDispatcher;
 }
