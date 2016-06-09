@@ -19,6 +19,7 @@ bool RemotePlayer::init()
     if (!Node::init()) {
         return false;
     }
+    unsigned count = 1;
     // moon 4
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));

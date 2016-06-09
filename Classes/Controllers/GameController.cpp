@@ -76,7 +76,7 @@ void GameController::_handleBallStatus(float dt)
         _timeLeft -= 1;
     }
     
-// remote player 时钟到0的时候不算回合结束，可能是网络延迟的问题，只有等到接受到overRound的数据才能算回合结束
+    // remote player 时钟到0的时候不算回合结束，可能是网络延迟的问题，只有等到接受到overRound的数据才能算回合结束
     if(_timeLeft == 0 && _currentPlayer == LOCAL_PLAYER) {
         this->_overRound();
     }

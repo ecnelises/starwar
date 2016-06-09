@@ -25,11 +25,11 @@ bool MouseController::init()
     glLineWidth(drawWidth);
     // Bind member functions to mouse listener.
     mouseListener->onMouseUp =
-        std::bind(&MouseController::handleMouseUp, this, std::placeholders::_1);
+    std::bind(&MouseController::handleMouseUp, this, std::placeholders::_1);
     mouseListener->onMouseDown =
-        std::bind(&MouseController::handleMouseDown, this, std::placeholders::_1);
+    std::bind(&MouseController::handleMouseDown, this, std::placeholders::_1);
     mouseListener->onMouseMove =
-        std::bind(&MouseController::handleMouseMove, this, std::placeholders::_1);
+    std::bind(&MouseController::handleMouseMove, this, std::placeholders::_1);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
     
@@ -46,13 +46,13 @@ void MouseController::setPlayer(LocalPlayer* player)
 }
 
 namespace {
-
-cocos2d::Point getCurrentCursor(cocos2d::Event* event)
-{
-    // TODO: static is safe?
-    return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(), static_cast<cocos2d::EventMouse*>(event)->getCursorY());
-}
-
+    
+    cocos2d::Point getCurrentCursor(cocos2d::Event* event)
+    {
+        // TODO: static is safe?
+        return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(), static_cast<cocos2d::EventMouse*>(event)->getCursorY());
+    }
+    
 } // anonymous namespace
 
 // FIXME: 如果鼠标位置超出了游戏窗口会出现反方向击打的情况

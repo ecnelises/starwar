@@ -23,6 +23,7 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
         return false;
     }
     auto mouseController = MouseController::create();
+    unsigned count = 1;
     // moon 4
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, moonPositionY));

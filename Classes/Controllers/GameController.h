@@ -34,7 +34,8 @@ private:
     RemotePlayer* _remotePlayer;
 
     LocalPlayer* _localPlayer;
-    NetworkController* _net;
+    std::unique_ptr<NetworkController> _net;
+    bool _waitingDone;
     int _timeLeft;
     void _handleBallStatus(float);
     void _overRound();
