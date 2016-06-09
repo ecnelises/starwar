@@ -31,23 +31,23 @@ protected:
 class LocalPlayer : public cocos2d::Node, Player {
 public:
     virtual bool init() override;
-    virtual ~LocalPlayer() {}
+    virtual ~LocalPlayer() = default;
     virtual void setActive(bool) override;
     void applyMove(Ball*, const Force&);
     CREATE_FUNC(LocalPlayer);
 private:
+    void _isResting(float dt);
     MouseController* _mouse;
 };
 
 
-//class RemotePlayer : public cocos2d::Node, Player {
-//public:
-//    virtual bool init() override;
-//    virtual ~RemotePlayer() {}
-//    CREATE_FUNC(RemotePlayer);
-//private:
-//    NetworkController* _net;
-//};
+class RemotePlayer : public cocos2d::Node, Player {
+public:
+    virtual bool init() override;
+    virtual ~RemotePlayer() = default;
+    virtual void setActive(bool) override;
+    CREATE_FUNC(RemotePlayer);
+};
 
 class AIPlayer : public cocos2d::Node, Player {
 public:

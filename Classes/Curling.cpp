@@ -37,11 +37,11 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
         default:
             break;
     }
-
     // TODO
     // If we really want to set balls randomly?
     // If so, using C++11-style random generator is better.
     _sprite->setPosition(position);
+    _missed = true;
     // Arguments of PhysicsMaterial: density, restitution, friction
     _ballBody = cocos2d::PhysicsBody::createCircle(_radius,
                                                    cocos2d::PhysicsMaterial(1.0, 1.1, 1.0));
@@ -50,12 +50,11 @@ Ball::Ball(ballType type, Vec2 position) : _type(type)
     _ballBody->setCategoryBitmask(0x00000001);
     _ballBody->setCollisionBitmask(0x00000001);
     _ballBody->setContactTestBitmask(0x00000001);
-    
     _ballBody->setGravityEnable(false);
     _ballBody->setMass(_mass);
     _ballBody->setLinearDamping(_linearDamping);
     _ballBody->setRotationEnable(false);
-    
+
     _sprite->setPhysicsBody(_ballBody);
 }
 
@@ -74,4 +73,11 @@ void Ball::move(const Force& f)
 {
     _ballBody->applyImpulse(f.direction * _force);
     _moved = true;
+}
+
+
+void Ball::initSchedule(float interval)
+{
+    Scheduler *a;
+    
 }

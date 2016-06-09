@@ -18,21 +18,22 @@
 /// \brief Main dispatcher in game processing.
 class GameController : public cocos2d::Node {
 public:
-    void run();
     virtual bool init() override;
-    void setCurrentPlayer(currentPlayer);
+    void initNetwork(NetworkController*);
+    bool receiveData();
+    bool sendData();
     CREATE_FUNC(GameController)
 private:
-    // TODO: why shared_ptr?
-    enum { OVER, PROCESSING, READY, LOADING } _status;
-    std::vector<std::shared_ptr<Player>> _players;
+    // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
+    enum { READY, LOADING, WAITING } _status;
     currentPlayer _currentPlayer;
-    AIPlayer* _AIplayer;
+    //AIPlayer* _AIplayer;
+    RemotePlayer* _remotePlayer;
     LocalPlayer* _localPlayer;
     NetworkController* _net;
-    bool _waitingDone;
     int _timeLeft;
     void _handleBallStatus(float);
+    void _overRound();
 };
 
 #endif // GAME_CONTROLLER_H_
