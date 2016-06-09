@@ -33,7 +33,7 @@ private:
     observer_ptr<GameController> _game;
 };
 
-class NetworkController {
+class NetworkController : public cocos2d::Node {
     friend class GameController;
 public:
     NetworkController(GameController* game) : _game(game), _delegate(game)

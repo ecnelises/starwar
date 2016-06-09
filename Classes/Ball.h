@@ -24,7 +24,6 @@ public:
     Ball(ballType type, int id, cocos2d::Vec2 position);
     virtual ~Ball() {}
     virtual void move(const Force& force);
-    virtual void initSchedule(float);
     virtual int getId();
     cocos2d::Sprite* getSprite();
     cocos2d::PhysicsBody* getBallBody();
@@ -54,13 +53,13 @@ protected:
 //        // TODO: Where is physics material?
 //        _sprite->setPhysicsBody(_ballBody);
 //    }
-//    
+//
 //    virtual ~Bomb()
 //    {
 //        _sprite->release();
 //        _ballBody->release();
 //    }
-//    
+//
 //    virtual void move(const Force& force) {}
 //private:
 //    const float radius = 24;
@@ -78,11 +77,6 @@ protected:
 //};
 //
 
-struct NumberedBall {
-    Ball* ball;
-    unsigned id;
-};
-
-using BallsCollection = std::vector<NumberedBall>;
+using BallsCollection = std::vector<Ball*>;
 
 #endif // BALL_H_

@@ -88,12 +88,10 @@ void LocalPlayer::applyMove(Ball *ball, const Force &force)
 void LocalPlayer::_isResting(float dt)
 {
     auto child = this->getChildren();
-    auto lterator = child.begin();
-    while(lterator != child.end()) {
-        if((*lterator)->getTag() != mouseControllerTag && ((*lterator)->getPhysicsBody()->getVelocity().length() > 1e-4)) {
+    for (const auto& l : child) {
+        if (l->getTag() != mouseControllerTag && (l->getPhysicsBody()->getVelocity().length() > 1e-4)) {
             return;
         }
-        ++lterator;
     }
     // 表示全部小球都不动了
     // 发送回合结束命令 todo: 封装

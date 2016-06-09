@@ -77,13 +77,6 @@ void Ball::move(const Force& f)
     _moved = true;
 }
 
-
-void Ball::initSchedule(float interval)
-{
-    Scheduler *a;
-    
-}
-
 int Ball::getId()
 {
     return this->_id;

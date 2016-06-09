@@ -18,7 +18,6 @@ bool AIPlayer::init()
     if (!Node::init()) {
         return false;
     }
-    auto count = 0U;
     // moon 4
 #if 0
     for (int i = 0; i < moonNumber; ++i) {

@@ -31,7 +31,7 @@ public:
     CREATE_FUNC(GameController)
 private:
     // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
-    enum { READY, LOADING, WAITING, BLOCKING } _status;
+    enum { READY, LOADING, WAITING, BLOCKING, END } _status;
     currentPlayer _currentPlayer;
     //AIPlayer* _AIplayer;
     RemotePlayer* _remotePlayer;
@@ -41,9 +41,11 @@ private:
     bool _waitingDone;
     int _timeLeft;
     void _handleBallStatus(float);
-    // For local game, id is set to 0.
-    // Otherwise, it's distributed from the server.
-    unsigned _currentGameId;
+    void _overRound();
+    void _handleShootEvent(cocos2d::EventCustom*);
+    void _handleOverRoundEvent(cocos2d::EventCustom*);
+    void _handleGameInitEvent(cocos2d::EventCustom*);
+    void _handleResultEvent(cocos2d::EventCustom*);
 };
 
 #endif // GAME_CONTROLLER_H_
