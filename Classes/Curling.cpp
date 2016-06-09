@@ -4,7 +4,7 @@
 USING_NS_CC;
 
 
-Ball::Ball(ballType type, Vec2 position) : _type(type)
+Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
 {
     switch(_type) {
         case MOON:
@@ -82,4 +82,9 @@ void Ball::initSchedule(float interval)
 {
     Scheduler *a;
     
+}
+
+int Ball::getId()
+{
+    return this->_id;
 }

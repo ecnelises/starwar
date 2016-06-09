@@ -8,3 +8,7 @@
 
 #include "NetworkController.h"
 
+bool NetworkController::init()
+{
+    return true;
+}

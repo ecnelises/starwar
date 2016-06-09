@@ -35,6 +35,7 @@ bool MouseController::init()
     
     // XXX: Why 10 here?
     this->addChild(_drawer, 10);
+    this->setTag(mouseControllerTag);
     
     return true;
 }
@@ -117,6 +118,9 @@ void MouseController::handleMouseDown(cocos2d::Event* event)
 void MouseController::setActive(bool state)
 {
     _active = state;
+    if(!state) {
+        _drawer->clear();
+    }
 }
 
 void MouseController::addBalls(BallsCollection balls)

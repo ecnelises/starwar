@@ -50,6 +50,7 @@ constexpr int sunTag = 32;
 constexpr int AIPlayerTag = 0;
 constexpr int localPlayerTag = 1;
 constexpr int remotePlayer = 2;
+constexpr int mouseControllerTag = 20;
 
 // ball number
 constexpr auto moonNumber = 4;
