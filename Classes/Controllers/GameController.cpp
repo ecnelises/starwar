@@ -33,10 +33,20 @@ bool GameController::init(void)
     _remotePlayer = remotePlayer;
     _timeLeft = timeLeftDefault;
     _status = LOADING;
+    
+    this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
+    this->addChild(localPlayer, 10);
+    this->addChild(remotePlayer, 10);
+    this->addChild(contact, 0);
+    _status = LOADING;
     // _eventDispatcher->addEventListenerWithSceneGraphPriority(roundSwitchListener, this);
      */
 #endif
     
+    _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(shootListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(networkListener, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(resultListener, 1);
     return true;
 }
 
@@ -91,36 +101,19 @@ void GameController::_handleBallStatus(float dt)
     
     // remote player 时钟到0的时候不算回合结束，可能是网络延迟的问题，只有等到接受到overRound的数据才能算回合结束
     if(_timeLeft == 0 && _currentPlayer == LOCAL_PLAYER) {
-        //this->_overRound();
-            _timeLeft = timeLeftDefault;
-//    auto childs = _localPlayer->getChildren();
-//    auto l = childs.begin();
-//    while(l != childs.end()) {
-//        auto node = *l;
-//        int tag = node->getTag();
-//        if(tag == moonTag || tag == earthTag || tag == sunTag) {
-//            if((node->getPhysicsBody()->getVelocity()).length() > 1e-4) { // isResting
-//                _waitingDone = true;
-//                _timeLeft = timeLeftDefault;
-//                return;
-//            }
-//        }
-//        ++l;
-//    }
-//    if(_waitingDone) {
-//        _waitingDone = false;
-//        _timeLeft = timeLeftDefault;
-//        this->_overRound();
-//    } else {
-//        _timeLeft -= 1;
-//        printf("%d\n", _timeLeft);
-//        if(_timeLeft == 0) {
-//            _waitingDone = false;
-//            _timeLeft = timeLeftDefault;
-//            this->_overRound();
-//        }
-//    }
-        /*
+        this->_overRound();
+    }
+}
+
+
+// 进入下一回合
+void GameController::_overRound()
+{
+    char *buf = "overRound";
+    _timeLeft = timeLeftDefault; // 时钟重置
+    if(_currentPlayer == LOCAL_PLAYER) {
+        _localPlayer->setActive(false);
+        _remotePlayer->setActive(true);
         _currentPlayer = REMOTE_PLAYER;
         _status = LOADING; // 状态: 等待数据
         this->_sendData(buf); // todo 发送回合结束的信息

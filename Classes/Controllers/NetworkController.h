@@ -39,9 +39,7 @@ public:
     NetworkController(GameController* game) : _game(game), _delegate(game)
     {
         _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
-        _client->on("message", std::bind(&NetworkController::dispatchRemoteMessage,
-                                         this, std::placeholders::_1,
-                                         std::placeholders::_2));
+        _client->on("message", CC_CALLBACK_2(NetworkController::dispatchRemoteMessage, this));
     }
     
     ~NetworkController()
@@ -55,7 +53,6 @@ public:
     void sendSkip(int gameid, const std::string& player);
     void sendRegisteration(const std::string& player, unsigned ballNum,
                            const std::string& nickname);
-    // TODO: how to tackle with the callback?
 private:
     static constexpr auto _destUri = "139.129.12.132:6619";
     GameController* _game;

@@ -17,7 +17,6 @@ void GameSocketDelegate::onClose(cocos2d::network::SIOClient* client)
     cocos2d::EventCustom closeEvent("NetworkClose");
     closeEvent.setUserData(nullptr); // nothing to send
     _game->getEventDispatcher()->dispatchEvent(&closeEvent);
-    
 }
 
 void GameSocketDelegate::onError(cocos2d::network::SIOClient* client,
@@ -62,4 +61,22 @@ void NetworkController::sendRegisteration(const std::string& player,
            << R"("nickname":)" << "\"" << nickname << "\""
            << "}}";
     _client->send(stream.str());
+}
+
+// The fucking cocos2d-x document has no words on arguments of this
+// callback function. Here I just assume the second string argument
+// means the message sent from remote server.
+void NetworkController::dispatchRemoteMessage(cocos2d::network::SIOClient *client,
+                                              const std::string &message)
+{
+    rapidjson::Document data;
+    data.Parse(message);
+    auto& detail = data["detail"];
+    if (data["type"] == "initialization") {
+        _game->initializeGame(detail["gameid"], detail["starter"]);
+    } else if (data["type"] == "result") {
+        _game->endGame(detail["winner"]);
+    } else if (data["type"] == "round") {
+        // to next
+    }
 }

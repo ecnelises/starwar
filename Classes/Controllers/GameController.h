@@ -29,6 +29,8 @@ public:
     bool _receiveData();
     bool _sendData(char*);
     CREATE_FUNC(GameController)
+    void initializeGame(unsigned gameid, const std::string& starter);
+    void endGame(const std::string& winner);
 private:
     // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
     enum { READY, LOADING, WAITING, BLOCKING, END } _status;
