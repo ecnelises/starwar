@@ -35,11 +35,20 @@ constexpr auto earthFrameFile = "texture/earth.png";
 constexpr auto moonFrameFile = "texture/moon.png";
 constexpr auto sunFrameFile = "texture/sun.png";
 // Game data
-constexpr auto ballStatusInterval = 0.1f;
+constexpr auto timeLeftDefault = 12;
+constexpr auto ballStatusInterval = 1.0f;
 constexpr auto menuItemDistance = 55.0f;
 constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
+
+// Tags
+constexpr int moonTag = 30;
+constexpr int earthTag = 31;
+constexpr int sunTag = 32;
+constexpr int AIPlayerTag = 0;
+constexpr int localPlayerTag = 1;
+constexpr int remotePlayer = 2;
 
 // ball number
 constexpr auto moonNumber = 4;

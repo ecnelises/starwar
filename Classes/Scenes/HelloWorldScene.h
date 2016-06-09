@@ -9,7 +9,7 @@
 
 class HelloWorld : public cocos2d::Layer {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* createScene(int);
     virtual bool init() override;
     void update(float dt) override;
     CREATE_FUNC(HelloWorld)
