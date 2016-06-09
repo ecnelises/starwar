@@ -10,9 +10,12 @@
 #include "cocos2d.h"
 #include "MouseController.h"
 #include "NetworkController.h"
-#include "../Player.h"
+#include "Player.h"
 #include <vector>
 #include <memory>
+
+template<typename T>
+using observer_ptr = T*;
 
 /// \class GameController
 /// \brief Main dispatcher in game processing.
@@ -29,6 +32,7 @@ private:
     currentPlayer _currentPlayer;
     //AIPlayer* _AIplayer;
     RemotePlayer* _remotePlayer;
+
     LocalPlayer* _localPlayer;
     NetworkController* _net;
     int _timeLeft;

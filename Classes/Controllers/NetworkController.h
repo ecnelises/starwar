@@ -10,13 +10,14 @@
 #define NETWORK_CONTROLLER_H_
 
 #include "cocos2d.h"
+#include "SocketIO.h"
 
-class NetworkController {
+class NetworkController : public cocos2d::Node {
 public:
-    NetworkController() = default;
-    virtual ~NetworkController() = default;
-    bool sendData();
-    bool receiveData();
+    virtual bool init() override;
+    CREATE_FUNC(NetworkController)
+private:
+    cocos2d::network::SIOClient* _client;
 };
 
 #endif // NETWORK_CONTROLLER_H_

@@ -22,14 +22,14 @@ bool GameController::init(void)
     //auto AIplayer = AIPlayer::create();
     auto contact = Contact::create();
     
-    auto overRoundListener = EventListenerCustom::create("overRound", [=](EventCustom* event){
-        char* buf = static_cast<char*>(event->getUserData());
-        this->_overRound();
-    });
-    auto moveBallListener = EventListenerCustom::create("moveBall", [=](EventCustom* event){
-        char* buf = static_cast<char*>(event->getUserData());
-        this->_overRound();
-    });
+//    auto overRoundListener = EventListenerCustom::create("overRound", [=](EventCustom* event){
+//        char* buf = static_cast<char*>(event->getUserData());
+//        this->_overRound();
+//    });
+//    auto moveBallListener = EventListenerCustom::create("moveBall", [=](EventCustom* event){
+//        char* buf = static_cast<char*>(event->getUserData());
+//        this->_overRound();
+//    });
     // _AIplayer = AIplayer;
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
@@ -45,8 +45,8 @@ bool GameController::init(void)
     // this->addChild(AIplayer, 10);
     this->addChild(contact, 0);
     // this->addChild(netWorkController, 0);
-    _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(moveBallListener, 1);
+//    _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
+//    _eventDispatcher->addEventListenerWithFixedPriority(moveBallListener, 1);
     return true;
 }
 

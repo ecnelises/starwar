@@ -9,8 +9,10 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include "cocos2d.h"
-USING_NS_CC;
+//#include "cocos2d.h"
+
+template<typename T>
+using observer_ptr = T*;
 
 typedef enum {MOON, EARTH, SUN} ballType;
 typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
