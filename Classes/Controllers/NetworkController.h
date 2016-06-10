@@ -39,7 +39,10 @@ public:
     NetworkController(GameController* game) : _game(game), _delegate(game)
     {
         _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
-        _client->on("message", CC_CALLBACK_2(NetworkController::dispatchRemoteMessage, this));
+        _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
+        _client->on("initialization", CC_CALLBACK_2(NetworkController::dispatchInitialization, this));
+        _client->on("round", CC_CALLBACK_2(NetworkController::dispatchRound, this));
+        _client->on("round", CC_CALLBACK_2(NetworkController::dispatchResult, this));
     }
     
     ~NetworkController()
@@ -53,14 +56,22 @@ public:
     void sendSkip(int gameid, const std::string& player);
     void sendRegisteration(const std::string& player, unsigned ballNum,
                            const std::string& nickname);
+    void sendStop(int gameid, const std::string& player);
+    void sendFinish(int gameid, const std::string& winner);
 private:
     static constexpr auto _destUri = "139.129.12.132:6619";
-    GameController* _game;
+    observer_ptr<GameController> _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
     cocos2d::EventListenerCustom* _networkListener;
-    void dispatchRemoteMessage(cocos2d::network::SIOClient* client,
+    void dispatchShoot(cocos2d::network::SIOClient* client,
                                const std::string& message);
+    void dispatchInitialization(cocos2d::network::SIOClient* client,
+                                const std::string& message);
+    void dispatchRound(cocos2d::network::SIOClient* client,
+                                const std::string& message);
+    void dispatchResult(cocos2d::network::SIOClient* client,
+                                const std::string& message);
 };
 
 #endif // NETWORK_CONTROLLER_H_

@@ -30,6 +30,8 @@ public:
     bool _sendData(char*);
     CREATE_FUNC(GameController)
     void initializeGame(unsigned gameid, const std::string& starter);
+    void roundChange();
+    void enemyShoot(const std::string& enemy, unsigned ballid, Force force);
     void endGame(const std::string& winner);
 private:
     // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
