@@ -1,10 +1,7 @@
-//
-//  NetworkController.hpp
-//  bumpflow
-//
-//  Created by 邱超凡 on 16/6/2.
-//
-//
+//===--- NetworkController.h - Ball class definition ---===//
+/// \file NetworkController.h
+/// This file declares both the delegate class and controller
+/// class used in network communication of this game.
 
 #ifndef NETWORK_CONTROLLER_H_
 #define NETWORK_CONTROLLER_H_
@@ -13,10 +10,11 @@
 #include "SocketIO.h"
 #include "Ball.h"
 #include <string>
-#include <functional>
 
 class GameController;
 
+/// \class GameSocketDelegate
+/// \brief A helper class mainly used to handle error and close event.
 class GameSocketDelegate : public cocos2d::network::SocketIO::SIODelegate {
 public:
     GameSocketDelegate() = delete;
@@ -33,23 +31,13 @@ private:
     observer_ptr<GameController> _game;
 };
 
-class NetworkController : public cocos2d::Node {
+/// \class NetworkController
+/// \brief Part of gamecontroller, just receiving and sending messages to remote server.
+class NetworkController {
     friend class GameController;
 public:
-    NetworkController(GameController* game) : _game(game), _delegate(game)
-    {
-        _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
-        _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
-        _client->on("initialization", CC_CALLBACK_2(NetworkController::dispatchInitialization, this));
-        _client->on("round", CC_CALLBACK_2(NetworkController::dispatchRound, this));
-        _client->on("round", CC_CALLBACK_2(NetworkController::dispatchResult, this));
-    }
-    
-    ~NetworkController()
-    {
-        _client->disconnect();
-        delete _client;
-    }
+    NetworkController(GameController* game);
+    ~NetworkController();
     
     void sendShoot(int gameid, const std::string& player,
                    int ballid, const Force& force);

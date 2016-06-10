@@ -26,8 +26,8 @@ public:
     void networkError();
     void networkClose();
     cocos2d::EventDispatcher* getEventDispatcher();
-    bool _receiveData();
-    bool _sendData(char*);
+    //bool _receiveData();
+    //bool _sendData(char*);
     CREATE_FUNC(GameController)
     void initializeGame(unsigned gameid, const std::string& starter);
     void roundChange();

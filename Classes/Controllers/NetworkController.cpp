@@ -11,6 +11,22 @@
 #include "json/rapidjson.h"
 #include "json/document.h"
 #include <sstream>
+#include <functional>
+
+NetworkController::NetworkController(GameController* game) : _game(game), _delegate(game)
+{
+    _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
+    _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
+    _client->on("initialization", CC_CALLBACK_2(NetworkController::dispatchInitialization, this));
+    _client->on("round", CC_CALLBACK_2(NetworkController::dispatchRound, this));
+    _client->on("round", CC_CALLBACK_2(NetworkController::dispatchResult, this));
+}
+
+NetworkController::~NetworkController()
+{
+    _client->disconnect();
+    delete _client;
+}
 
 void GameSocketDelegate::onClose(cocos2d::network::SIOClient* client)
 {
