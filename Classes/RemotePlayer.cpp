@@ -42,12 +42,18 @@ bool RemotePlayer::init()
     return true;
 }
 
-void RemotePlayer::applyShoot(Ball *ball, const Force &force)
+void RemotePlayer::applyShoot(int ballId, const Force &force)
 {
     if(!_active) {
         return;
     }
-    ball->move(force);
+    Ball* selectBall;
+    for(const auto &ball : _balls) {
+        if(ball->getId() == ballId) {
+            selectBall = ball;
+        }
+    }
+    selectBall->move(force);
     this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 

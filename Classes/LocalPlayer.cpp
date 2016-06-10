@@ -60,8 +60,11 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
         return;
     }
     
-    ball->move(force);
-    EventCustom shootEvent("shoot");
+    ball->move(force * ball->getMaxForce());
+    EventCustom shootEvent("localShoot");
+    auto data = std::make_tuple(ball, force * ball->getMaxForce());
+    auto dataPoint = &data;
+    shootEvent.setUserData(dataPoint);
     _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测

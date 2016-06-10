@@ -12,6 +12,7 @@
 #include <memory>
 
 USING_NS_CC;
+#if 0
 
 bool AIPlayer::init()
 {
@@ -46,3 +47,5 @@ void AIPlayer::setActive(bool state)
 {
     _active = state;
 }
+
+#endif

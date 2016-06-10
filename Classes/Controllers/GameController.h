@@ -23,30 +23,24 @@ class GameController : public cocos2d::Node {
 public:
     virtual bool init() override;
     void initNetwork();
-    void networkError();
-    void networkClose();
-    bool _receiveData();
-    bool _sendData(char*);
-    CREATE_FUNC(GameController)
-    void initializeGame(unsigned gameid, const std::string& starter);
-    void endGame(const std::string& winner);
+    CREATE_FUNC(GameController);
 private:
-    // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招
+    // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招, BLOCKING: 等待小球停止滚动, END: 游戏结束
     enum { READY, LOADING, WAITING, BLOCKING, END } _status;
     currentPlayer _currentPlayer;
-    //AIPlayer* _AIplayer;
     RemotePlayer* _remotePlayer;
-
     LocalPlayer* _localPlayer;
+    
     std::unique_ptr<NetworkController> _net;
-    bool _waitingDone;
     int _timeLeft;
     void _handleBallStatus(float);
     void _overRound();
-    void _handleShootEvent(cocos2d::EventCustom*);
-    void _handleOverRoundEvent(cocos2d::EventCustom*);
-    void _handleGameInitEvent(cocos2d::EventCustom*);
-    void _handleResultEvent(cocos2d::EventCustom*);
+    void _localShootEvent(cocos2d::EventCustom*);
+    void _remoteShootEvent(cocos2d::EventCustom*);
+    void _localOverRoundEvent(cocos2d::EventCustom*);
+    void _remoteOverRoundEvent(cocos2d::EventCustom*);
+    void _remoteRegisterEvent(cocos2d::EventCustom*);
+    void _remoteResultEvent(cocos2d::EventCustom*);
 };
 
 #endif // GAME_CONTROLLER_H_

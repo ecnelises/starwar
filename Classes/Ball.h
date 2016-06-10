@@ -10,11 +10,7 @@
 #include "Config.h"
 #include <vector>
 
-struct Force {
-    Force() = delete;
-    Force(const cocos2d::Vec2 d) : direction(d) {}
-    cocos2d::Vec2 direction;
-};
+using Force = cocos2d::Vec2;
 
 /// \class Ball
 /// \brief Ball is the base class of all other controllable objects on arena.
@@ -23,11 +19,27 @@ public:
     // What's the parameters?
     Ball(ballType type, int id, cocos2d::Vec2 position);
     virtual ~Ball() {}
-    virtual void move(const Force& force);
-    virtual void depart();
-    virtual int getId();
-    cocos2d::Sprite* getSprite();
-    cocos2d::PhysicsBody* getBallBody();
+    void move(const Force& force) {
+        _ballBody->applyImpulse(force);
+        _moved = true;
+    }
+    void depart() {
+        _sprite->setVisible(false);
+        _ballBody->setEnabled(false);
+        _ballBody->setDynamic(false);
+    }
+    int getId() {
+        return this->_id;
+    }
+    float getMaxForce() {
+        return _force;
+    }
+    cocos2d::Sprite* getSprite() {
+        return _sprite;
+    }
+    cocos2d::PhysicsBody* getBallBody() {
+        return _ballBody;
+    }
 protected:
     cocos2d::Sprite *_sprite;
     cocos2d::PhysicsBody *_ballBody;
@@ -42,6 +54,8 @@ protected:
     cocos2d::Vec2 _position;
     //float _speed;
 };
+
+using BallsCollection = std::vector<Ball*>;
 
 /// \class Bomb
 /// \brief Any bomb will explode immediately when touching another ball.
@@ -78,6 +92,6 @@ protected:
 //};
 //
 
-using BallsCollection = std::vector<Ball*>;
+
 
 #endif // BALL_H_

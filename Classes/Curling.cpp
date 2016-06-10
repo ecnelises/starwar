@@ -60,32 +60,4 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
     _sprite->setPhysicsBody(_ballBody);
 }
 
-cocos2d::Sprite* Ball::getSprite()
-{
-    return _sprite;
-}
 
-
-cocos2d::PhysicsBody* Ball::getBallBody()
-{
-    return _ballBody;
-}
-
-void Ball::move(const Force& f)
-{
-    _ballBody->applyImpulse(f.direction * _force);
-    _moved = true;
-}
-
-// todo 如何真正去掉ball
-void Ball::depart()
-{
-    _sprite->setVisible(false);
-    _ballBody->setEnabled(false);
-    _ballBody->setDynamic(false);
-}
-
-int Ball::getId()
-{
-    return this->_id;
-}
