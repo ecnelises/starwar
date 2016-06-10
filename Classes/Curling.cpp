@@ -77,6 +77,14 @@ void Ball::move(const Force& f)
     _moved = true;
 }
 
+// todo 如何真正去掉ball
+void Ball::depart()
+{
+    _sprite->setVisible(false);
+    _ballBody->setEnabled(false);
+    _ballBody->setDynamic(false);
+}
+
 int Ball::getId()
 {
     return this->_id;

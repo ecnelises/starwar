@@ -3,7 +3,7 @@
 #include "../Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
-Scene* HelloWorld::createScene(NetworkController* network)
+Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
@@ -12,7 +12,7 @@ Scene* HelloWorld::createScene(NetworkController* network)
     auto layer = HelloWorld::create();
     // 获取netWork，初始化给gameController
     auto gameController = GameController::create();
-    gameController->initNetwork(network);
+    gameController->initNetwork();  // todo 假装已经init好了
     scene->addChild(gameController, 3);
     // add layer as a child to scene
     scene->addChild(layer);
@@ -27,29 +27,14 @@ bool HelloWorld::init()
         return false;
     }
     
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    std::vector<Ball*> curlings;
-    
-
-//    const int MAXFORCE = 250;
-//    const int FORCE = 1200;
-    Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto windowSize = Director::getInstance()->getWinSize(); // background image for full screen
     auto bg = Sprite::create(battleSceneFrameFile);
     auto map = Sprite::create(battleMapFrameFile);
-    auto mapFrame = PhysicsBody::createEdgeBox(map->getContentSize());
-    
-    
-    //mouseController->addBalls(curlings);
-    // 设置物理对象
-    map->setPhysicsBody(mapFrame);
-    // 大小与位置
-    //map->setScale(0.65f);
     
     bg->setScale(1.2f);
-    
-    map->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    bg->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+    map->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
+    bg->setPosition(Vec2(visibleSize.width/2, visibleSize.height/2));
     
     this->addChild(bg, 0);
     this->addChild(map, 1);
@@ -57,11 +42,4 @@ bool HelloWorld::init()
     return true;
 }
 
-void HelloWorld::addBall(Ball *ball, int zIndex) {
-    this->addChild(ball->getSprite(), zIndex);
-}
-void HelloWorld::update(float dt)
-{
-    
-}
 

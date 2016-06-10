@@ -40,6 +40,7 @@ public:
     CREATE_FUNC(LocalPlayer);
 private:
     void _isResting(float dt);
+    void _isDeparted(float dt);
     MouseController* _mouse;
 };
 

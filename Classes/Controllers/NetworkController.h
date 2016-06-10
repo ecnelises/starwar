@@ -36,25 +36,26 @@ private:
 class NetworkController : public cocos2d::Node {
     friend class GameController;
 public:
-    NetworkController(GameController* game) : _game(game), _delegate(game)
-    {
-        _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
-        _client->on("message", CC_CALLBACK_2(NetworkController::dispatchRemoteMessage, this));
-    }
-    
+//    NetworkController(GameController* game) : _game(game), _delegate(game)
+//    {
+//        _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
+//        _client->send("connection");
+//        _client->on("test", CC_CALLBACK_2(NetworkController::dispatchRemoteMessage, this));
+//    }
     ~NetworkController()
     {
         _client->disconnect();
         delete _client;
     }
-    
+    virtual bool init() override;
     void sendShoot(int gameid, const std::string& player,
                    int ballid, const Force& force);
     void sendSkip(int gameid, const std::string& player);
     void sendRegisteration(const std::string& player, unsigned ballNum,
                            const std::string& nickname);
+
 private:
-    static constexpr auto _destUri = "139.129.12.132:6619";
+    static constexpr auto _destUri = "127.0.0.1:6619";
     GameController* _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;

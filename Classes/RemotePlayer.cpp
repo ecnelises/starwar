@@ -19,29 +19,25 @@ bool RemotePlayer::init()
     if (!Node::init()) {
         return false;
     }
-    unsigned count = 1;
-    // moon 4
-    /*
     for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
-        _balls.push_back({ball, count++});
+        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
+        _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
     for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
-        _balls.push_back({ball, count++});
+        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
+        _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
     for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
-        _balls.push_back({ball, count++});
+        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
+        _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
-     */
     
     return true;
 }

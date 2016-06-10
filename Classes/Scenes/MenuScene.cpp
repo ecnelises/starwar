@@ -37,10 +37,10 @@ bool MenuScene::init()
     
     int i = 0;
     auto bg = Sprite::create(menuSceneFrameFile);
-    //auto network = new NetworkController;
+    //auto network = NetworkController::create();
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
-		//auto battleScene = HelloWorld::createScene(network);
-		//Director::getInstance()->replaceScene(battleScene);
+		auto battleScene = HelloWorld::createScene();
+		Director::getInstance()->replaceScene(battleScene);
 	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile);
     auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile);

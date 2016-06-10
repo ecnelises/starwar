@@ -63,6 +63,11 @@ void NetworkController::sendRegisteration(const std::string& player,
     _client->send(stream.str());
 }
 
+bool NetworkController::init()
+{
+    return true;
+}
+
 // The fucking cocos2d-x document has no words on arguments of this
 // callback function. Here I just assume the second string argument
 // means the message sent from remote server.
@@ -70,13 +75,14 @@ void NetworkController::dispatchRemoteMessage(cocos2d::network::SIOClient *clien
                                               const std::string &message)
 {
     rapidjson::Document data;
-    data.Parse(message);
-    auto& detail = data["detail"];
-    if (data["type"] == "initialization") {
-        _game->initializeGame(detail["gameid"], detail["starter"]);
-    } else if (data["type"] == "result") {
-        _game->endGame(detail["winner"]);
-    } else if (data["type"] == "round") {
-        // to next
-    }
+    data.Parse<0>(message.c_str());
+    
+//    auto detail = data["detail"];
+//    if (data["type"] == "initialization") {
+//        _game->initializeGame(detail["gameid"], detail["starter"]);
+//    } else if (data["type"] == "result") {
+//        _game->endGame(detail["winner"]);
+//    } else if (data["type"] == "round") {
+//        // to next
+//    }
 }

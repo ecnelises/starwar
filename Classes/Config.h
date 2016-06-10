@@ -42,6 +42,8 @@ constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
 constexpr auto isRestingInterval = 0.1f;
+constexpr auto mapWidth = 641.0f;
+constexpr auto mapHeight = 636.0f;
 
 // Tags
 constexpr int moonTag = 30;

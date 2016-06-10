@@ -15,7 +15,6 @@
 #include "Player.h"
 
 USING_NS_CC;
-using namespace rapidjson;
 
 bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
 {
@@ -23,9 +22,6 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
         return false;
     }
     auto mouseController = MouseController::create();
-    unsigned count = 1;
-    // moon 4
-    /*
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, moonPositionY));
         _balls.push_back(ball);
@@ -45,7 +41,6 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
-    */
     mouseController->addBalls(_balls);
     _mouse = mouseController;
     _mouse->setPlayer(this);
@@ -83,13 +78,13 @@ void LocalPlayer::applyMove(Ball *ball, const Force &force)
 //    shootEvent.setUserData(&document);
     _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
+    this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 
 void LocalPlayer::_isResting(float dt)
 {
-    auto child = this->getChildren();
-    for (const auto& l : child) {
-        if (l->getTag() != mouseControllerTag && (l->getPhysicsBody()->getVelocity().length() > 1e-4)) {
+    for (const auto& l : _balls) {
+        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
             return;
         }
     }
@@ -98,6 +93,25 @@ void LocalPlayer::_isResting(float dt)
     EventCustom overRoundEvent("overRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
+    this->unschedule("isDeparted"); // 取消监听事件减少消耗
+}
+
+// offset: 2.5f 偏移量球中心出地图才算出界
+void LocalPlayer::_isDeparted(float dt)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto lterator = _balls.begin();
+    while(lterator != _balls.end()) {
+        auto l = *lterator;
+        if (l->getSprite()->getTag() != mouseControllerTag &&
+            (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
+             l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
+                printf("depart");
+                l->depart();
+                _balls.erase(lterator);
+            }
+        ++lterator;
+    }
 }
 
 
