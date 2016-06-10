@@ -43,10 +43,10 @@ bool GameController::init(void)
      */
 #endif
     
-    _eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(shootListener, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(networkListener, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(resultListener, 1);
+    //_eventDispatcher->addEventListenerWithFixedPriority(overRoundListener, 1);
+    //_eventDispatcher->addEventListenerWithFixedPriority(shootListener, 1);
+    //_eventDispatcher->addEventListenerWithFixedPriority(networkListener, 1);
+    //_eventDispatcher->addEventListenerWithFixedPriority(resultListener, 1);
     return true;
 }
 
@@ -128,16 +128,20 @@ void GameController::_overRound()
 }
 
 // todo game controller给network发送数据
+/*
 bool GameController::_sendData(char *buf)
 {
     return true; // 成功: true
 }
+ */
 
 // todo game controller接受network的数据
+/*
 bool GameController::_receiveData()
 {
     return true; // 成功: true
 }
+ */
 
 void GameController::initNetwork(NetworkController*)
 {

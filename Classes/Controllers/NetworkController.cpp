@@ -43,7 +43,7 @@ void GameSocketDelegate::onClose(cocos2d::network::SIOClient* client)
 {
     cocos2d::EventCustom closeEvent("NetworkClose");
     closeEvent.setUserData(nullptr); // nothing to send
-    _game->getEventDispatcher()->dispatchEvent(&closeEvent);
+    _gameDispatcher->dispatchEvent(&closeEvent);
 }
 
 void GameSocketDelegate::onError(cocos2d::network::SIOClient* client,
@@ -51,7 +51,7 @@ void GameSocketDelegate::onError(cocos2d::network::SIOClient* client,
 {
     cocos2d::EventCustom errorEvent("NetworkError");
     errorEvent.setUserData(nullptr); // also, nothing to send
-    _game->getEventDispatcher()->dispatchEvent(&errorEvent);
+    _gameDispatcher->dispatchEvent(&errorEvent);
 }
 
 void NetworkController::sendShoot(int gameid, const std::string& player,

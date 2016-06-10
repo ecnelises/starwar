@@ -47,6 +47,8 @@ class ABall {
 public:
     ABall() = delete;
     void move(const cocos2d::Vec2& force);
+    cocos2d::Point centerPoint(void);
+    bool containPoint(const cocos2d::Point& p);
 protected:
     cocos2d::Sprite* _sprite;
     cocos2d::PhysicsBody* _body;
@@ -78,6 +80,7 @@ protected:
 class Bomb : public ABall {
 public:
     Bomb(cocos2d::Vec2 pos);
+    virtual ~Bomb() = default;
 };
 
 /// \class Curling
@@ -88,7 +91,6 @@ public:
     Curling() = delete;
     Curling(const std::string& file, cocos2d::Vec2 pos);
     Curling(BallType t, cocos2d::Vec2 pos);
-    
     virtual ~Curling() = default;
 private:
     float _size;

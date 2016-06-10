@@ -4,9 +4,10 @@
 #include "Ball.h"
 #include "cocos2d.h"
 #include "Contact.h"
-#include "Controllers/MouseController.h"
-#include "Controllers/NetworkController.h"
+//#include "Controllers/MouseController.h"
+//#include "Controllers/NetworkController.h"
 
+class NetworkController;
 
 class HelloWorld : public cocos2d::Layer {
 public:

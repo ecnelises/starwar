@@ -1,6 +1,8 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
 #include "../Controllers/GameController.h"
+#include "../Controllers/MouseController.h"
+
 //#include "Item.h"
 USING_NS_CC;
 Scene* HelloWorld::createScene(NetworkController* network)

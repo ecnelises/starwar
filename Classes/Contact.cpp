@@ -30,6 +30,9 @@ bool Contact::init()
 bool Contact::_onContactBegin(PhysicsContact &contact)
 {
     // TODO: Bombs should explode.
+    // How to explode?
+    // Define a explosion distance. When touching,
+    // find everyball in the distance and apply forces to them.
     _audio->playKnockEffect();
     return true;
 }
