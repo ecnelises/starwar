@@ -25,15 +25,18 @@ public:
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
     virtual void applyShoot(Ball*, const Force&) = 0;
+    virtual int getBallsNumber()
+    {
+        return _balls.size();
+    }
 protected:
-    
     BallsCollection _balls;
     bool _active;
     std::string _playerId;
     std::string _nickname;
 };
 
-class LocalPlayer : public cocos2d::Node, Player {
+class LocalPlayer : public cocos2d::Node, public Player {
 public:
     virtual bool init() override;
     virtual ~LocalPlayer() = default;
@@ -47,7 +50,7 @@ private:
 };
 
 
-class RemotePlayer : public cocos2d::Node, Player {
+class RemotePlayer : public cocos2d::Node, public Player {
 public:
     virtual bool init() override;
     virtual ~RemotePlayer() = default;

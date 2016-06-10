@@ -50,8 +50,22 @@ void GameController::_handleShootEvent(cocos2d::EventCustom* event)
 
 void GameController::_handleOverRoundEvent(cocos2d::EventCustom* event)
 {
-    printf("overRound\n");
-    this->_overRound();
+    
+    // 在这里判断球数
+    int localPlayerBalls = _localPlayer->getBallsNumber();
+    int remotePlayerBalls = _remotePlayer->getBallsNumber();
+    if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
+        // 平局
+    } else if(localPlayerBalls == 0) {
+        // 我方赢
+    } else if(remotePlayerBalls == 0) {
+        // 对方赢
+    } else {
+        // 未分胜负，下一回合
+        printf("overRound\n");
+        this->_overRound();
+    }
+    
 }
 
 void GameController::_handleGameInitEvent(cocos2d::EventCustom* event)
