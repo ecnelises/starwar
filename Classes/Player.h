@@ -24,7 +24,9 @@ public:
     Player() : _active(false) {}
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
+    virtual void applyShoot(Ball*, const Force&) = 0;
 protected:
+    
     BallsCollection _balls;
     bool _active;
     std::string _playerId;
@@ -36,11 +38,11 @@ public:
     virtual bool init() override;
     virtual ~LocalPlayer() = default;
     virtual void setActive(bool) override;
-    void applyMove(Ball*, const Force&);
+    virtual void applyShoot(Ball*, const Force&) override;
     CREATE_FUNC(LocalPlayer);
 private:
-    void _isResting(float dt);
-    void _isDeparted(float dt);
+    void _isResting(float);
+    void _isDeparted(float);
     MouseController* _mouse;
 };
 
@@ -49,13 +51,17 @@ class RemotePlayer : public cocos2d::Node, Player {
 public:
     virtual bool init() override;
     virtual ~RemotePlayer() = default;
+    virtual void applyShoot(Ball*, const Force&) override;
     virtual void setActive(bool) override;
     CREATE_FUNC(RemotePlayer);
+private:
+    void _isDeparted(float);
 };
 
 class AIPlayer : public cocos2d::Node, Player {
 public:
     virtual bool init() override;
+    virtual void applyShoot(Ball*, const Force&) override {}
     virtual void setActive(bool) override;
     virtual ~AIPlayer() {}
     CREATE_FUNC(AIPlayer);

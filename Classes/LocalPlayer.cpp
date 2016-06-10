@@ -54,28 +54,14 @@ void LocalPlayer::setActive(bool state)
     _mouse->setActive(state);
 }
 
-void LocalPlayer::applyMove(Ball *ball, const Force &force)
+void LocalPlayer::applyShoot(Ball *ball, const Force &force)
 {
     if(!_active) {
         return;
     }
-//    rapidjson::Document document;
-//    rapidjson::Value detailObject(rapidjson::kObjectType);
-//    rapidjson::Value forceObject(rapidjson::kObjectType);
-//    document.SetObject();
-//    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-//    
-//    forceObject.AddMember("x", force.direction.x, allocator);
-//    forceObject.AddMember("y", force.direction.y, allocator);
-//    detailObject.AddMember("ballId", ball->getId(), allocator);
-//    detailObject.AddMember("force", detailObject, allocator);
-//    
-//    document.AddMember("type", "shoot", allocator);
-//    document.AddMember("detail", detailObject, allocator);
-//
+    
     ball->move(force);
     EventCustom shootEvent("shoot");
-//    shootEvent.setUserData(&document);
     _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
@@ -96,7 +82,6 @@ void LocalPlayer::_isResting(float dt)
     this->unschedule("isDeparted"); // 取消监听事件减少消耗
 }
 
-// offset: 2.5f 偏移量球中心出地图才算出界
 void LocalPlayer::_isDeparted(float dt)
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -113,6 +98,10 @@ void LocalPlayer::_isDeparted(float dt)
         ++lterator;
     }
 }
+
+
+// offset: 2.5f 偏移量球中心出地图才算出界
+
 
 
 
