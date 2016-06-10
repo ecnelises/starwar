@@ -29,6 +29,7 @@ bool Contact::init()
 
 bool Contact::_onContactBegin(PhysicsContact &contact)
 {
+    // TODO: Bombs should explode.
     _audio->playKnockEffect();
     return true;
 }

@@ -10,6 +10,7 @@
 #define PLAYER_H_
 
 #include "Ball.h"
+#include "Item.h"
 #include "Controllers/MouseController.h"
 #include "cocos2d.h"
 #include <vector>
@@ -29,6 +30,8 @@ protected:
     bool _active;
     std::string _playerId;
     std::string _nickname;
+    unsigned _exp;
+    std::vector<Item> _inventory;
 };
 
 class LocalPlayer : public cocos2d::Node, Player {

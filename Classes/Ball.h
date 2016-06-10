@@ -22,7 +22,7 @@ class Ball {
 public:
     // What's the parameters?
     Ball(ballType type, int id, cocos2d::Vec2 position);
-    virtual ~Ball() {}
+    virtual ~Ball() = default;
     virtual void move(const Force& force);
     virtual int getId();
     cocos2d::Sprite* getSprite();
@@ -40,6 +40,16 @@ protected:
     int _id;
     cocos2d::Vec2 _position;
     //float _speed;
+};
+
+// In fact 'move' can be non-pure-virtual function, even non-virtual!
+class ABall {
+public:
+    ABall() = delete;
+    void move(const cocos2d::Vec2& force);
+protected:
+    cocos2d::Sprite* _sprite;
+    cocos2d::PhysicsBody* _body;
 };
 
 /// \class Bomb
@@ -65,17 +75,24 @@ protected:
 //    const float radius = 24;
 //};
 
+class Bomb : public ABall {
+public:
+    Bomb(cocos2d::Vec2 pos);
+};
+
 /// \class Curling
 /// \brief A curling is a ordinary ball can collide with other balls.
-//class Curling : public Ball {
-//public:
-//    Curling() = default;
-//    // TODO: color of Curling should in constructor
-//    Curling(ballType, Vec2);
-//    virtual ~Curling() {}
-//    virtual void move(const Force&) override {}
-//};
-//
+class Curling : public ABall {
+public:
+    enum BallType { Sun, Moon, Earth };
+    Curling() = delete;
+    Curling(const std::string& file, cocos2d::Vec2 pos);
+    Curling(BallType t, cocos2d::Vec2 pos);
+    
+    virtual ~Curling() = default;
+private:
+    float _size;
+};
 
 using BallsCollection = std::vector<Ball*>;
 
