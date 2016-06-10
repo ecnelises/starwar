@@ -18,9 +18,9 @@ class GameController;
 class GameSocketDelegate : public cocos2d::network::SocketIO::SIODelegate {
 public:
     GameSocketDelegate() = delete;
-    GameSocketDelegate(GameController* game)
+    GameSocketDelegate(cocos2d::EventDispatcher* dispatcher)
     {
-        _game = game;
+        _gameDispatcher = dispatcher;
     }
     
     virtual ~GameSocketDelegate() = default;
@@ -28,7 +28,7 @@ public:
     virtual void onError(cocos2d::network::SIOClient* client,
                          const std::string& data) override;
 private:
-    observer_ptr<GameController> _game;
+    cocos2d::EventDispatcher* _gameDispatcher;
 };
 
 /// \class NetworkController
@@ -37,6 +37,7 @@ class NetworkController {
     friend class GameController;
 public:
     NetworkController(GameController* game);
+    NetworkController(cocos2d::EventDispatcher* dispatcher);
     ~NetworkController();
     
     void sendShoot(int gameid, const std::string& player,
@@ -51,7 +52,8 @@ private:
     observer_ptr<GameController> _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
-    cocos2d::EventListenerCustom* _networkListener;
+    cocos2d::EventDispatcher* _gameDispatcher;
+    //cocos2d::EventListenerCustom* _networkListener;
     void dispatchShoot(cocos2d::network::SIOClient* client,
                                const std::string& message);
     void dispatchInitialization(cocos2d::network::SIOClient* client,

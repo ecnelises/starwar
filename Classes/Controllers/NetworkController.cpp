@@ -13,13 +13,24 @@
 #include <sstream>
 #include <functional>
 
-NetworkController::NetworkController(GameController* game) : _game(game), _delegate(game)
+NetworkController::NetworkController(cocos2d::EventDispatcher* dispatcher) : _delegate(dispatcher), _gameDispatcher(dispatcher)
 {
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
-    _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
-    _client->on("initialization", CC_CALLBACK_2(NetworkController::dispatchInitialization, this));
-    _client->on("round", CC_CALLBACK_2(NetworkController::dispatchRound, this));
-    _client->on("round", CC_CALLBACK_2(NetworkController::dispatchResult, this));
+    _client->on("shoot", [=](auto client, const std::string& message){
+        cocos2d::EventCustom shootEvent("EnemyShoot");
+        //shootEvent.setUserData(message.c_str());
+        dispatcher->dispatchEvent(&shootEvent);
+    });
+    _client->on("initialization", [=](auto client, const std::string& message){
+        cocos2d::EventCustom initEvent("Initialization");
+        //
+        dispatcher->dispatchEvent(&initEvent);
+    });
+    _client->on("round", [=](auto client, const std::string& message){
+        cocos2d::EventCustom roundEvent("RoundChange");
+        //
+        dispatcher->dispatchEvent(&roundEvent);
+    });
 }
 
 NetworkController::~NetworkController()
@@ -47,23 +58,20 @@ void NetworkController::sendShoot(int gameid, const std::string& player,
                                   int ballid, const Force& force)
 {
     std::ostringstream stream;
-    stream << R"({"type":"shoot","detail":{)";
-    stream << R"("gameid":)" << gameid << ","
+    stream << R"({)" << R"("gameid":)" << gameid << ","
            << R"("player":)" << "\"" << player << "\","
            << R"("ball":)"   << ballid << ","
            << R"("force":[)" << force.direction.x << "," << force.direction.y
-           << "]}}";
-    _client->send(stream.str());
+           << "]}";
+    _client->emit("shoot", stream.str());
 }
 
 void NetworkController::sendSkip(int gameid, const std::string& player)
 {
     std::ostringstream stream;
-    stream << R"({"type":"skip","detail":{)";
-    stream << R"("gameid":)" << gameid << ","
-           << R"("player":)" << "\"" << player << "\""
-           << "}}";
-    _client->send(stream.str());
+    stream << R"({)" << R"("gameid":)" << gameid << ","
+           << R"("player":)" << "\"" << player << "\"" << "}";
+    _client->emit("skip", stream.str());
 }
 
 void NetworkController::sendRegisteration(const std::string& player,
@@ -71,30 +79,26 @@ void NetworkController::sendRegisteration(const std::string& player,
                                           const std::string& nickname)
 {
     std::ostringstream stream;
-    stream << R"({"type":"registration","detail":{)";
-    stream << R"("player":)" << "\"" << player << "\","
+    stream << R"({)" << R"("player":)" << "\"" << player << "\","
            << R"("ballnum":)" << ballNum << ","
-           << R"("nickname":)" << "\"" << nickname << "\""
-           << "}}";
-    _client->send(stream.str());
+           << R"("nickname":)" << "\"" << nickname << "\"" << "}";
+    _client->emit("registration", stream.str());
 }
 
 void NetworkController::sendStop(int gameid, const std::string& player)
 {
     std::ostringstream stream;
-    stream << R"({"type":"stop","detail":{)";
-    stream << R"("player":)" <<  "\"" << player << "\","
-           << R"("gameid":)" << gameid << "}}";
-    _client->send(stream.str());
+    stream << R"({)" << R"("player":)" <<  "\"" << player << "\","
+           << R"("gameid":)" << gameid << "}";
+    _client->emit("stop", stream.str());
 }
 
 void NetworkController::sendFinish(int gameid, const std::string& winner)
 {
     std::ostringstream stream;
-    stream << R"({"type":"finish","detail":{)";
-    stream << R"("player":)" << "\"" << winner << "\","
-           << R"("gameid":)" << gameid << "}}";
-    _client->send(stream.str());
+    stream << R"({)" << R"("player":)" << "\"" << winner << "\","
+           << R"("gameid":)" << gameid << "}";
+    _client->emit("finish", stream.str());
 }
 
 // The fucking cocos2d-x document has no words on arguments of this
