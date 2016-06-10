@@ -18,7 +18,7 @@ public:
     virtual bool init() override;
     CREATE_FUNC(Contact);
 private:
-    bool _onContactBegin(cocos2d::PhysicsContact& contact);
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
     Audio *_audio;
 };
 
