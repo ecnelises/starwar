@@ -32,12 +32,11 @@ public:
     NetworkController(GameController* game);
     ~NetworkController();
     
-    void sendShoot(int gameid, const std::string& player,
-                   int ballid, const Force& force);
-    void sendSkip(int gameid, const std::string& player);
+    void sendShoot(int ballid, const Force& force);
+    void sendOverRound();
     void sendRegisteration(const std::string& playerToken);
-    void sendStop(int gameid, const std::string& player);
-    void sendFinish(int gameid, const std::string& winner);
+    void sendStop(const std::string& player);
+    void sendFinish(const std::string& winner);
 private:
     static constexpr auto _destUri = "127.0.0.1:6619";
     observer_ptr<GameController> _game;
@@ -46,13 +45,14 @@ private:
     void dispatchShoot(cocos2d::network::SIOClient* client,
                        const std::string& message);
     void dispatchReady(cocos2d::network::SIOClient* client,
-                                const std::string& message);
+                       const std::string& message);
     void dispatchRound(cocos2d::network::SIOClient* client,
                        const std::string& message);
     void dispatchResult(cocos2d::network::SIOClient* client,
                         const std::string& message);
     void dispatchWait(cocos2d::network::SIOClient* client);
     void dispatchConnect(cocos2d::network::SIOClient* client);
+    std::string _room;
 };
 
 #endif // NETWORK_CONTROLLER_H_

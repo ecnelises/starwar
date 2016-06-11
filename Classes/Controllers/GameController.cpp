@@ -19,24 +19,7 @@ bool GameController::init(void)
     auto currentTime = std::chrono::system_clock::now();
     auto localPlayer = LocalPlayer::create();
     auto remotePlayer = RemotePlayer::create();
-    auto contact = Contact::create();
     
-    auto connect = cocos2d::EventListenerCustom::create("connect", CC_CALLBACK_1(GameController::_connect, this));
-    auto waitEvent = cocos2d::EventListenerCustom::create("wait", [=](cocos2d::EventCustom* event) {
-        printf("wait event ...\n");
-    });
-    auto readyEvent = cocos2d::EventListenerCustom::create("ready", [=](cocos2d::EventCustom* event) {
-        
-    });
-    
-    auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
-    auto remoteOverRound = cocos2d::EventListenerCustom::create("remoteOverRound", CC_CALLBACK_1(GameController::_remoteOverRoundEvent, this));
-    
-    auto localShoot = cocos2d::EventListenerCustom::create("localShoot", CC_CALLBACK_1(GameController::_localShootEvent, this));
-    auto remoteShoot = cocos2d::EventListenerCustom::create("remoteShoot", CC_CALLBACK_1(GameController::_remoteShootEvent, this));
-    
-    auto remoteRegister = cocos2d::EventListenerCustom::create("remoteRegister", CC_CALLBACK_1(GameController::_remoteRegisterEvent, this));
-    auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
     std::default_random_engine re; // 妈的概率论学的不好，这里的分布律是可以调的
     std::uniform_int_distribution<int> rdis(619, 414124121);
     
@@ -47,6 +30,41 @@ bool GameController::init(void)
     _status = LOADING;
     _network = new NetworkController(this);
     _token = std::to_string(std::chrono::system_clock::to_time_t(currentTime)) + std::to_string(rdis(re)); // 时间戳+随机 = token
+    
+    
+    auto contact = Contact::create();
+    
+    auto connect = cocos2d::EventListenerCustom::create("connect", CC_CALLBACK_1(GameController::_connect, this));
+    auto waitEvent = cocos2d::EventListenerCustom::create("wait", [=](cocos2d::EventCustom* event) {
+        printf("wait event ...\n");
+    });
+    auto readyEvent = cocos2d::EventListenerCustom::create("ready", [=](cocos2d::EventCustom* event) {
+        auto data = static_cast<std::tuple<char*>*>(event->getUserData());
+        auto starter = std::get<0>(*data);
+        //auto room = std::get<1>(*data);
+        //_room = room;
+        if(_token == starter) {
+            _status = WAITING;
+            _localPlayer->setActive(true);
+            _remotePlayer->setActive(false);
+            _currentPlayer = LOCAL_PLAYER;
+        } else {
+            _localPlayer->setActive(false);
+            _remotePlayer->setActive(true);
+            _currentPlayer = REMOTE_PLAYER;
+        }
+        printf("ready\n");
+    });
+    
+    auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
+    auto remoteOverRound = cocos2d::EventListenerCustom::create("remoteOverRound", CC_CALLBACK_1(GameController::_remoteOverRoundEvent, this));
+    
+    auto localShoot = cocos2d::EventListenerCustom::create("localShoot", CC_CALLBACK_1(GameController::_localShootEvent, this));
+    auto remoteShoot = cocos2d::EventListenerCustom::create("remoteShoot", CC_CALLBACK_1(GameController::_remoteShootEvent, this));
+    
+    auto remoteRegister = cocos2d::EventListenerCustom::create("remoteRegister", CC_CALLBACK_1(GameController::_remoteRegisterEvent, this));
+    auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
+    
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(localPlayer, 10);
@@ -79,14 +97,18 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
     printf("local shoot\n");
     _status = BLOCKING;
     _localPlayer->setActive(false);
+    _network->sendShoot(ballId, force);
 }
 
 void::GameController::_remoteShootEvent(cocos2d::EventCustom* event)
 {
-    auto data = *static_cast<std::tuple<int, Force>*>(event->getUserData());
-    auto force = std::get<1>(data);
-    auto ballId = std::get<0>(data);
-    _remotePlayer->applyShoot(ballId, force);
+    auto message = static_cast<std::string*>(event->getUserData());
+    rapidjson::Document d;
+    d.Parse(message->c_str());
+    auto ballId = d["ballId"].GetInt();
+    auto forceX = d["force"][0].GetDouble();
+    auto forceY = d["force"][1].GetDouble();
+    _remotePlayer->applyShoot(ballId, cocos2d::Vec2(forceX, forceY));
     printf("remote shoot");
     _status = BLOCKING;
     _remotePlayer->setActive(false);
@@ -106,6 +128,7 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
     } else {
         // 未分胜负，下一回合
         printf("overRound\n");
+        _network->sendOverRound();
         this->_overRound();
     }
     
@@ -140,7 +163,8 @@ void GameController::_handleBallStatus(float dt)
     
     // remote player 时钟到0的时候不算回合结束，可能是网络延迟的问题，只有等到接受到overRound的数据才能算回合结束
     if(_timeLeft == 0 && _currentPlayer == LOCAL_PLAYER) {
-        this->_overRound();
+        cocos2d::EventCustom *event;
+        this->_localOverRoundEvent(event);
     }
 }
 
@@ -166,12 +190,6 @@ void GameController::_overRound()
 void GameController::initNetwork()
 {
     printf("network init!");
-    
-    // 选定谁先
-    _status = WAITING;
-    _localPlayer->setActive(true);
-    _remotePlayer->setActive(false);
-    _currentPlayer = LOCAL_PLAYER;
 }
 
 //void GameController::connected()
