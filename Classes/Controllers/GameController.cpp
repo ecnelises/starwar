@@ -4,8 +4,8 @@
 
 #include "GameController.h"
 #include "NetworkController.h"
-#include "../Player.h"
-#include "../Contact.h"
+#include "Player.h"
+#include "Contact.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 
@@ -28,6 +28,8 @@ bool GameController::init(void)
     auto shootListener = cocos2d::EventListenerCustom::create("shoot", CC_CALLBACK_1(GameController::_handleShootEvent, this));
     auto networkListener = cocos2d::EventListenerCustom::create("init", CC_CALLBACK_1(GameController::_handleGameInitEvent, this));
     auto resultListener = cocos2d::EventListenerCustom::create("result", CC_CALLBACK_1(GameController::_handleResultEvent, this));
+    auto bombListener = cocos2d::EventListenerCustom::create("BombContact",
+        CC_CALLBACK_1(GameController::_handleBombContact, this));
     
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
@@ -47,6 +49,7 @@ bool GameController::init(void)
     //_eventDispatcher->addEventListenerWithFixedPriority(shootListener, 1);
     //_eventDispatcher->addEventListenerWithFixedPriority(networkListener, 1);
     //_eventDispatcher->addEventListenerWithFixedPriority(resultListener, 1);
+    //_eventDispatcher->addEventListenerWithFixedPriority(bombListener, 1);
     return true;
 }
 
@@ -143,7 +146,7 @@ bool GameController::_receiveData()
 }
  */
 
-void GameController::initNetwork(NetworkController*)
+void GameController::initNetwork(NetworkController* net)
 {
     printf("network init!");
     
@@ -152,6 +155,37 @@ void GameController::initNetwork(NetworkController*)
     _localPlayer->setActive(true);
     _remotePlayer->setActive(false);
     _currentPlayer = LOCAL_PLAYER;
+}
+
+void GameController::_handleBombContact(cocos2d::EventCustom* event)
+{
+    constexpr float explosionRadius = 48.0f;
+    int bombTag = *(static_cast<int*>(event->getUserData()));
+    //delete event->getUserData();
+    ABall* bomb = nullptr;
+    cocos2d::Point bombCenter;
+    cocos2d::Point explosionDistance;
+    for (auto i : *_balls) {
+        if (i->ballTag() == bombTag) {
+            bombCenter = i->centerPoint();
+            bomb = i;
+            break;
+        }
+    }
+    for (auto i : *_balls) {
+        explosionDistance = i->centerPoint() - bombCenter;
+        if (explosionDistance.length() > 1e-2 &&
+            explosionDistance.length() < explosionRadius) {
+            // XXX: how to explode?
+            i->move(explosionDistance);
+        }
+    }
+    for (auto i = _balls->begin(); i != _balls->end(); ++i) {
+        if (*i == bomb) {
+            _balls->erase(i);
+            break;
+        }
+    }
 }
 
 cocos2d::EventDispatcher* GameController::getEventDispatcher(void)

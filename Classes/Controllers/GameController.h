@@ -39,7 +39,7 @@ private:
     currentPlayer _currentPlayer;
     //AIPlayer* _AIplayer;
     RemotePlayer* _remotePlayer;
-
+    observer_ptr<std::vector<ABall*>> _balls; // need init
     LocalPlayer* _localPlayer;
     std::unique_ptr<NetworkController> _net;
     bool _waitingDone;
@@ -50,6 +50,7 @@ private:
     void _handleOverRoundEvent(cocos2d::EventCustom*);
     void _handleGameInitEvent(cocos2d::EventCustom*);
     void _handleResultEvent(cocos2d::EventCustom*);
+    void _handleBombContact(cocos2d::EventCustom*);
 };
 
 #endif // GAME_CONTROLLER_H_

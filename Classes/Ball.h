@@ -46,9 +46,19 @@ protected:
 class ABall {
 public:
     ABall() = delete;
+    virtual ~ABall() // dtor remove the sprite and body
+    {
+        _sprite->removeFromParentAndCleanup(true);
+        _body->removeFromWorld();
+    }
+    
     void move(const cocos2d::Vec2& force);
     cocos2d::Point centerPoint(void);
     bool containPoint(const cocos2d::Point& p);
+    int ballTag(void) const
+    {
+        return _body->getTag();
+    }
 protected:
     cocos2d::Sprite* _sprite;
     cocos2d::PhysicsBody* _body;

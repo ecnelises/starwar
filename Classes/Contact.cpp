@@ -27,7 +27,7 @@ bool Contact::init()
     return true;
 }
 
-bool Contact::onContactBegin(PhysicsContact &contact)
+bool Contact::onContactBegin(PhysicsContact& contact)
 {
     // TODO: Bombs should explode.
     // How to explode?
@@ -42,8 +42,16 @@ bool Contact::onContactBegin(PhysicsContact &contact)
         // assuming that here's explosion
         // raising event of explosion
         contact.getShapeA()->getCenter();
+        EventCustom bombContact("BombContact");
+        //int* bombInfo = new int(contact.getShapeA()->getTag());
+        int bombInfo = contact.getShapeA()->getBody()->getTag();
+        bombContact.setUserData(&bombInfo);
     } else if (bitB == 0x10) {
         contact.getShapeB()->getCenter();
+        EventCustom bombContact("BombContact");
+        //int* bombInfo = new int(contact.getShapeB()->getTag());
+        int bombInfo = contact.getShapeB()->getBody()->getTag();
+        bombContact.setUserData(&bombInfo);
     }
     return true;
 }

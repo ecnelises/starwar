@@ -59,7 +59,8 @@ bool HelloWorld::init()
     return true;
 }
 
-void HelloWorld::addBall(Ball *ball, int zIndex) {
+void HelloWorld::addBall(Ball *ball, int zIndex)
+{
     this->addChild(ball->getSprite(), zIndex);
 }
 void HelloWorld::update(float dt)
