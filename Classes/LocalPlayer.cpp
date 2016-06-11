@@ -97,8 +97,9 @@ void LocalPlayer::_isDeparted(float dt)
                 printf("depart");
                 l->depart();
                 _balls.erase(lterator);
-            }
+            } else {
         ++lterator;
+            }
     }
 }
 

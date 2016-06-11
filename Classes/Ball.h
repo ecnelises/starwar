@@ -25,8 +25,7 @@ public:
     }
     void depart() {
         _sprite->setVisible(false);
-        _ballBody->setEnabled(false);
-        _ballBody->setDynamic(false);
+        _sprite->removeFromParentAndCleanup(true);
     }
     int getId() {
         return this->_id;
