@@ -13,13 +13,15 @@
 #include <sstream>
 #include <functional>
 
-NetworkController::NetworkController(GameController* game) : _game(game), _delegate(game)
+NetworkController::NetworkController(GameController* game) : _game(game), _delegate()
 {
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
     _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
-    _client->on("initialization", CC_CALLBACK_2(NetworkController::dispatchInitialization, this));
+    _client->on("wait", CC_CALLBACK_1(NetworkController::dispatchWait, this));
+    _client->on("ready", CC_CALLBACK_2(NetworkController::dispatchReady, this));
     _client->on("round", CC_CALLBACK_2(NetworkController::dispatchRound, this));
-    _client->on("round", CC_CALLBACK_2(NetworkController::dispatchResult, this));
+    _client->on("result", CC_CALLBACK_2(NetworkController::dispatchResult, this));
+    _client->on("connect", CC_CALLBACK_1(NetworkController::dispatchConnect, this));
 }
 
 NetworkController::~NetworkController()
@@ -30,17 +32,13 @@ NetworkController::~NetworkController()
 
 void GameSocketDelegate::onClose(cocos2d::network::SIOClient* client)
 {
-    cocos2d::EventCustom closeEvent("NetworkClose");
-    closeEvent.setUserData(nullptr); // nothing to send
-    _game->getEventDispatcher()->dispatchEvent(&closeEvent);
+    printf("network close \n");
 }
 
 void GameSocketDelegate::onError(cocos2d::network::SIOClient* client,
                                  const std::string& data)
 {
-    cocos2d::EventCustom errorEvent("NetworkError");
-    errorEvent.setUserData(nullptr); // also, nothing to send
-    _game->getEventDispatcher()->dispatchEvent(&errorEvent);
+    printf("network error \n");
 }
 
 void NetworkController::sendShoot(int gameid, const std::string& player,
@@ -56,27 +54,20 @@ void NetworkController::sendShoot(int gameid, const std::string& player,
     _client->send(stream.str());
 }
 
-void NetworkController::sendSkip(int gameid, const std::string& player)
+void NetworkController::sendSkip(int gameId, const std::string& player)
 {
     std::ostringstream stream;
-    stream << R"({"type":"skip","detail":{)";
-    stream << R"("gameid":)" << gameid << ","
+    stream << R"({"gameId":)" << gameId << ","
     << R"("player":)" << "\"" << player << "\""
     << "}}";
-    _client->send(stream.str());
+    _client->emit("overRound", stream.str());
 }
 
-void NetworkController::sendRegisteration(const std::string& player,
-                                          unsigned ballNum,
-                                          const std::string& nickname)
+void NetworkController::sendRegisteration(const std::string& playerToken)
 {
     std::ostringstream stream;
-    stream << R"({"type":"registration","detail":{)";
-    stream << R"("player":)" << "\"" << player << "\","
-    << R"("ballnum":)" << ballNum << ","
-    << R"("nickname":)" << "\"" << nickname << "\""
-    << "}}";
-    _client->send(stream.str());
+    stream << R"({"player":)" << R"(")" << playerToken << R"("})";
+    _client->emit("register", stream.str());
 }
 
 void NetworkController::sendStop(int gameid, const std::string& player)
@@ -109,11 +100,12 @@ void NetworkController::dispatchShoot(cocos2d::network::SIOClient* client,
     //_game->enemyShoot(d["player"].GetString(), d["ball"].GetUint(), cocos2d::Vec2(d["force"][0].GetDouble(), d["force"][1].GetDouble()));
 }
 
-void NetworkController::dispatchInitialization(cocos2d::network::SIOClient* client,
+void NetworkController::dispatchReady(cocos2d::network::SIOClient* client,
                                                const std::string& message)
 {
     rapidjson::Document d;
-    d.Parse(message.c_str());
+    //d.Parse(message.c_str());
+    printf("%s\n", message.c_str());
     //_game->initializeGame(d["gameid"].GetUint(), d["starter"].GetString());
 }
 
@@ -121,6 +113,19 @@ void NetworkController::dispatchRound(cocos2d::network::SIOClient* client,
                                       const std::string& message)
 {
     //_game->roundChange();
+}
+void NetworkController::dispatchConnect(cocos2d::network::SIOClient* client)
+{
+    cocos2d::EventCustom connectEvent("connect");
+    _eventDispatcher->dispatchEvent(&connectEvent);
+}
+                                                             
+                                                             
+void NetworkController::dispatchWait(cocos2d::network::SIOClient* client)
+{
+    printf("waiting...\n");
+    cocos2d::EventCustom waitEvent("wait");
+    _eventDispatcher->dispatchEvent(&waitEvent);
 }
 
 void NetworkController::dispatchResult(cocos2d::network::SIOClient* client,

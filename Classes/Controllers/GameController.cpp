@@ -2,6 +2,8 @@
 /// \file GameController.cpp
 /// This file implements interfaces of GameController.
 
+#include <chrono>
+#include <random>
 #include "GameController.h"
 #include "NetworkController.h"
 #include "../Player.h"
@@ -14,10 +16,19 @@ bool GameController::init(void)
     if (!Node::init()) {
         return false;
     }
-    
+    auto currentTime = std::chrono::system_clock::now();
     auto localPlayer = LocalPlayer::create();
     auto remotePlayer = RemotePlayer::create();
     auto contact = Contact::create();
+    
+    auto connect = cocos2d::EventListenerCustom::create("connect", CC_CALLBACK_1(GameController::_connect, this));
+    auto waitEvent = cocos2d::EventListenerCustom::create("wait", [=](cocos2d::EventCustom* event) {
+        printf("wait event ...\n");
+    });
+    auto readyEvent = cocos2d::EventListenerCustom::create("ready", [=](cocos2d::EventCustom* event) {
+        
+    });
+    
     auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
     auto remoteOverRound = cocos2d::EventListenerCustom::create("remoteOverRound", CC_CALLBACK_1(GameController::_remoteOverRoundEvent, this));
     
@@ -26,17 +37,25 @@ bool GameController::init(void)
     
     auto remoteRegister = cocos2d::EventListenerCustom::create("remoteRegister", CC_CALLBACK_1(GameController::_remoteRegisterEvent, this));
     auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
+    std::default_random_engine re; // 妈的概率论学的不好，这里的分布律是可以调的
+    std::uniform_int_distribution<int> rdis(619, 414124121);
+    
     
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
     _timeLeft = timeLeftDefault;
     _status = LOADING;
+    _network = new NetworkController(this);
+    _token = std::to_string(std::chrono::system_clock::to_time_t(currentTime)) + std::to_string(rdis(re)); // 时间戳+随机 = token
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(localPlayer, 10);
     this->addChild(remotePlayer, 10);
     this->addChild(contact, 0);
     
+    _eventDispatcher->addEventListenerWithFixedPriority(connect, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(waitEvent, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(readyEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localShoot, 1);
@@ -44,6 +63,12 @@ bool GameController::init(void)
     _eventDispatcher->addEventListenerWithFixedPriority(remoteRegister, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteResult, 1);
     return true;
+}
+
+void GameController::_connect(cocos2d::EventCustom* event)
+{
+    printf("connect!\n");
+    _network->sendRegisteration(_token); // connect --> get token --> server
 }
 
 void GameController::_localShootEvent(cocos2d::EventCustom* event)
@@ -69,7 +94,6 @@ void::GameController::_remoteShootEvent(cocos2d::EventCustom* event)
 
 void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
 {
-    
     // 在这里判断球数
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _remotePlayer->getBallsNumber();
@@ -149,3 +173,8 @@ void GameController::initNetwork()
     _remotePlayer->setActive(false);
     _currentPlayer = LOCAL_PLAYER;
 }
+
+//void GameController::connected()
+//{
+//    _network->sendRegisteration(_token);
+//}

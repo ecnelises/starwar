@@ -17,24 +17,17 @@ class GameController;
 /// \brief A helper class mainly used to handle error and close event.
 class GameSocketDelegate : public cocos2d::network::SocketIO::SIODelegate {
 public:
-    GameSocketDelegate() = delete;
-    GameSocketDelegate(GameController* game)
-    {
-        _game = game;
-    }
+    GameSocketDelegate() = default;
     
     virtual ~GameSocketDelegate() = default;
     virtual void onClose(cocos2d::network::SIOClient* client) override;
     virtual void onError(cocos2d::network::SIOClient* client,
                          const std::string& data) override;
-private:
-    observer_ptr<GameController> _game;
 };
 
 /// \class NetworkController
 /// \brief Part of gamecontroller, just receiving and sending messages to remote server.
-class NetworkController {
-    friend class GameController;
+class NetworkController : public cocos2d::Node {
 public:
     NetworkController(GameController* game);
     ~NetworkController();
@@ -42,24 +35,24 @@ public:
     void sendShoot(int gameid, const std::string& player,
                    int ballid, const Force& force);
     void sendSkip(int gameid, const std::string& player);
-    void sendRegisteration(const std::string& player, unsigned ballNum,
-                           const std::string& nickname);
+    void sendRegisteration(const std::string& playerToken);
     void sendStop(int gameid, const std::string& player);
     void sendFinish(int gameid, const std::string& winner);
 private:
-    static constexpr auto _destUri = "139.129.12.132:6619";
+    static constexpr auto _destUri = "127.0.0.1:6619";
     observer_ptr<GameController> _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
-    cocos2d::EventListenerCustom* _networkListener;
     void dispatchShoot(cocos2d::network::SIOClient* client,
                        const std::string& message);
-    void dispatchInitialization(cocos2d::network::SIOClient* client,
+    void dispatchReady(cocos2d::network::SIOClient* client,
                                 const std::string& message);
     void dispatchRound(cocos2d::network::SIOClient* client,
                        const std::string& message);
     void dispatchResult(cocos2d::network::SIOClient* client,
                         const std::string& message);
+    void dispatchWait(cocos2d::network::SIOClient* client);
+    void dispatchConnect(cocos2d::network::SIOClient* client);
 };
 
 #endif // NETWORK_CONTROLLER_H_

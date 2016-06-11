@@ -79,7 +79,7 @@ void LocalPlayer::_isResting(float dt)
     }
     // 表示全部小球都不动了
     // 发送回合结束命令 todo: 封装
-    EventCustom overRoundEvent("overRound");
+    EventCustom overRoundEvent("localOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
     this->unschedule("isDeparted"); // 取消监听事件减少消耗
