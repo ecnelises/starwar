@@ -44,7 +44,7 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
     _missed = true;
     // Arguments of PhysicsMaterial: density, restitution, friction
     _ballBody = cocos2d::PhysicsBody::createCircle(_radius,
-                                                   cocos2d::PhysicsMaterial(1.0, 1.1, 1.0));
+                                                   cocos2d::PhysicsMaterial(1.0, 0, 1.0));
     // We just set up a non-zero value here.
     // Curlings can make collision and contact with other balls.
     _ballBody->setCategoryBitmask(0x00000001);
@@ -54,8 +54,8 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
     _ballBody->setMass(_mass);
     _ballBody->setLinearDamping(_linearDamping);
 
-    _ballBody->setAngularDamping(0.2);
-    _ballBody->setRotationEnable(true);
+    //_ballBody->setAngularDamping(0.2);
+    _ballBody->setRotationEnable(false);
 
     _sprite->setPhysicsBody(_ballBody);
 }

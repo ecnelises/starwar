@@ -16,6 +16,7 @@ Scene* HelloWorld::createScene()
     scene->addChild(gameController, 3);
     // add layer as a child to scene
     scene->addChild(layer);
+    scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
     // return the scene
     return scene;
 }

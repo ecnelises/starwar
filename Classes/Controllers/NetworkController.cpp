@@ -13,7 +13,7 @@
 #include <sstream>
 #include <functional>
 
-NetworkController::NetworkController(GameController* game) : _game(game), _delegate()
+NetworkController::NetworkController(GameController* game) : _game(game)
 {
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
     _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));

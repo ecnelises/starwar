@@ -60,9 +60,11 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
         return;
     }
     
-    ball->move(force * ball->getMaxForce());
+    ball->move(Vec2(0, force.y * ball->getMaxForce()));
+    //ball->move(Vec2(0, 10000));
     EventCustom shootEvent("localShoot");
-    auto data = std::make_tuple(ball, force * ball->getMaxForce());
+    //auto data = std::make_tuple(ball, force * ball->getMaxForce());
+    auto data = std::make_tuple(ball, Vec2(0, 10000));
     auto dataPoint = &data;
     shootEvent.setUserData(dataPoint);
     _eventDispatcher->dispatchEvent(&shootEvent);
