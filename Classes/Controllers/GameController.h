@@ -22,7 +22,7 @@ using observer_ptr = T*;
 class GameController : public cocos2d::Node {
 public:
     virtual bool init() override;
-    void initNetwork();
+    void initNetwork(NetworkController*);
     CREATE_FUNC(GameController);
 private:
     // READY: 游戏初始化成功, LOADING: 正在加载或等待数据到达, WAITING: 等待player出招, BLOCKING: 等待小球停止滚动, END: 游戏结束

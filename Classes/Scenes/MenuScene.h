@@ -9,7 +9,9 @@
 #ifndef MENU_SCENE_H_
 #define MENU_SCENE_H_
 
+
 #include "cocos2d.h"
+#include "../Controllers/NetworkController.h"
 
 class MenuScene : public cocos2d::Layer {
 public:
@@ -17,6 +19,9 @@ public:
     virtual ~MenuScene() {};
     virtual bool init() override;
     CREATE_FUNC(MenuScene)
+private:
+    void _intoBattleScene(cocos2d::EventCustom*);
+    NetworkController *_network;
 };
 
 #endif // MENU_SCENE_H_

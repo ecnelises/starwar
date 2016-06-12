@@ -64,6 +64,7 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
     EventCustom shootEvent("localShoot");
     auto data = std::make_tuple(ball, force * ball->getMaxForce());
     auto dataPoint = &data;
+    printf("sdasdad: %f  %f\n", (force * ball->getMaxForce()).x, (force * ball->getMaxForce()).y);
     shootEvent.setUserData(dataPoint);
     _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
@@ -73,7 +74,12 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
 void LocalPlayer::_isResting(float dt)
 {
     for (const auto& l : _balls) {
-        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
+        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-2) {
+            auto data = std::make_tuple(l, l->getSprite()->getPosition());
+            auto dataPoint = &data;
+            EventCustom shootEvent("localShoot");
+            shootEvent.setUserData(dataPoint);
+            _eventDispatcher->dispatchEvent(&shootEvent);
             return;
         }
     }

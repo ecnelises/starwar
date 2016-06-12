@@ -53,7 +53,7 @@ class RemotePlayer : public cocos2d::Node, public Player {
 public:
     virtual bool init() override;
     virtual ~RemotePlayer() = default;
-    void applyShoot(int, const Force&);
+    void applyShoot(int, const cocos2d::Vec2&);
     virtual void setActive(bool) override;
     CREATE_FUNC(RemotePlayer);
 private:

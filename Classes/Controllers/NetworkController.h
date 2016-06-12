@@ -29,16 +29,17 @@ public:
 /// \brief Part of gamecontroller, just receiving and sending messages to remote server.
 class NetworkController : public cocos2d::Node {
 public:
-    NetworkController(GameController* game);
+    NetworkController();
     ~NetworkController();
     
+    std::string getStarter();
     void sendShoot(int ballid, const Force& force);
     void sendOverRound();
     void sendRegisteration(const std::string& playerToken);
     void sendStop(const std::string& player);
     void sendFinish(const std::string& winner);
 private:
-    static constexpr auto _destUri = "127.0.0.1:6619";
+    static constexpr auto _destUri = "http://115.159.189.232:6619/";
     observer_ptr<GameController> _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
@@ -53,6 +54,8 @@ private:
     void dispatchWait(cocos2d::network::SIOClient* client);
     void dispatchConnect(cocos2d::network::SIOClient* client);
     std::string _room;
+    std::string _starter;
+    std::string _token;
 };
 
 #endif // NETWORK_CONTROLLER_H_

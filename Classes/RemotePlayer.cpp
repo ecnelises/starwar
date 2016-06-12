@@ -19,22 +19,22 @@ bool RemotePlayer::init()
     if (!Node::init()) {
         return false;
     }
-    for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
+    for (int i = moonNumber - 1; i >= 0; --i) {
+        auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
-    for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
+    for (int i = earthNumber - 1; i >= 0; --i) {
+        auto ball = new Ball(EARTH, earthNumber - i + 4, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
-    for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
+    for (int i = sunNumber - 1; i >= 0; --i) {
+        auto ball = new Ball(SUN, sunNumber - i + 6, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
@@ -42,20 +42,18 @@ bool RemotePlayer::init()
     return true;
 }
 
-void RemotePlayer::applyShoot(int ballId, const Force &force)
+void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
 {
     if(!_active) {
         return;
     }
-    Ball* selectBall;
-    float forceY = -force.y;
     for(const auto &ball : _balls) {
         if(ball->getId() == ballId) {
-            selectBall = ball;
+            ball->getSprite()->setPosition(position);
+            break;
         }
     }
-    selectBall->move(Force(force.x, forceY));
-    this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
+    // this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 
 void RemotePlayer::_isDeparted(float dt)

@@ -16,21 +16,14 @@ bool GameController::init(void)
     if (!Node::init()) {
         return false;
     }
-    auto currentTime = std::chrono::system_clock::now();
+
     auto localPlayer = LocalPlayer::create();
     auto remotePlayer = RemotePlayer::create();
-    
-    std::default_random_engine re; // 妈的概率论学的不好，这里的分布律是可以调的
-    std::uniform_int_distribution<int> rdis(619, 414124121);
-    
     
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
     _timeLeft = timeLeftDefault;
     _status = LOADING;
-    _network = new NetworkController(this);
-    _token = std::to_string(std::chrono::system_clock::to_time_t(currentTime)) + std::to_string(rdis(re)); // 时间戳+随机 = token
-    
     
     auto contact = Contact::create();
     
@@ -43,17 +36,7 @@ bool GameController::init(void)
         auto starter = std::get<0>(*data);
         //auto room = std::get<1>(*data);
         //_room = room;
-        if(_token == starter) {
-            _status = WAITING;
-            _localPlayer->setActive(true);
-            _remotePlayer->setActive(false);
-            _currentPlayer = LOCAL_PLAYER;
-        } else {
-            _localPlayer->setActive(false);
-            _remotePlayer->setActive(true);
-            _currentPlayer = REMOTE_PLAYER;
-        }
-        printf("ready\n");
+
     });
     
     auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
@@ -91,7 +74,7 @@ void GameController::_connect(cocos2d::EventCustom* event)
 
 void GameController::_localShootEvent(cocos2d::EventCustom* event)
 {
-    auto data = *static_cast<std::tuple<Ball*, Force>*>(event->getUserData());
+    auto data = *static_cast<std::tuple<Ball*, cocos2d::Vec2>*>(event->getUserData());
     auto force = std::get<1>(data);
     auto ballId = std::get<0>(data)->getId();
     printf("local shoot\n");
@@ -187,9 +170,21 @@ void GameController::_overRound()
     }
 }
 
-void GameController::initNetwork()
+void GameController::initNetwork(NetworkController *network)
 {
-    printf("network init!");
+    _network = network;
+    std::string starter = _network->getStarter();
+    if(_token == starter) {
+        _status = WAITING;
+        _localPlayer->setActive(true);
+        _remotePlayer->setActive(false);
+        _currentPlayer = LOCAL_PLAYER;
+    } else {
+        _localPlayer->setActive(false);
+        _remotePlayer->setActive(true);
+        _currentPlayer = REMOTE_PLAYER;
+    }
+    printf("ready\n");
 }
 
 //void GameController::connected()
