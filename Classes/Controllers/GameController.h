@@ -20,6 +20,7 @@ using observer_ptr = T*;
 /// \class GameController
 /// \brief Main dispatcher in game processing.
 class GameController : public cocos2d::Node {
+    friend class AIPlayer;
 public:
     virtual bool init() override;
     void initNetwork();

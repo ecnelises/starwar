@@ -50,7 +50,7 @@ bool AppDelegate::applicationDidFinishLaunching()
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || \
     (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) ||   \
     (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-         glview = GLViewImpl::createWithRect("ball", Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+         glview = GLViewImpl::createWithRect("ball", Rect(0, 0, developmentResolutionSize.width, developmentResolutionSize.height));
         // XXX: Full Screen Here!
         // glview =  GLViewImpl::createWithFullScreen("ball");
 #else

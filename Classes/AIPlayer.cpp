@@ -6,46 +6,85 @@
 //
 //
 
-
 #include "Player.h"
 #include "Config.h"
 #include <memory>
+#include <utility>
+#include <algorithm>
 
 USING_NS_CC;
 #if 0
 
-bool AIPlayer::init()
+class Player {
+public:
+    Player() : _active(false) {}
+    virtual ~Player() = default;
+    virtual void setActive(bool) = 0;
+    int getBallsNumber() const
+    {
+        return _balls.size();
+    }
+protected:
+    BallsCollection _balls;
+    bool _active;
+    std::string _playerId;
+    std::string _nickname;
+};
+
+class AIPlayer : public cocos2d::Node, Player {
+public:
+    virtual ~AIPlayer() = default;
+    virtual bool init() override;
+    void applyShoot(Ball*, const Force&) {}
+    virtual void setActive(bool) override;
+    CREATE_FUNC(AIPlayer);
+private:
+    void _isDeparted(float);
+};
+
+#endif
+
+bool AIPlayer::init(void)
 {
     if (!Node::init()) {
         return false;
     }
-//        for (int i = 0; i < moonNumber; ++i) {
-//            auto ball = new Ball(MOON, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
-//            _balls.push_back(ball);
-//            this->addChild(ball->getSprite(), 4); // Why 4 ? todo
-//        }
-//    
-//        // earth 2
-//        for (int i = 0; i < earthNumber; ++i) {
-//            auto ball = new Ball(EARTH, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
-//            _balls.push_back(ball);
-//            this->addChild(ball->getSprite(), 4);
-//        }
-//    
-//        // sun 1
-//        for (int i = 0; i < sunNumber; ++i) {
-//            auto ball = new Ball(SUN, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
-//            _balls.push_back(ball);
-//            this->addChild(ball->getSprite(), 4);
-//        }
     
+    // place balls.
     
     return true;
 }
 
-void AIPlayer::setActive(bool state)
+void AIPlayer::applyShoot(Ball* ball, const Force& force)
 {
-    _active = state;
+    if (!_active) {
+        return;
+    }
+    // TODO: Need shoot event
 }
 
-#endif
+namespace {
+    float shortestDistanceToBorder(Vec2 pos)
+    {
+        // TODO
+        return 0.0;
+    }
+    
+    bool compareBallWithDistanceToBorder(Ball* b1, Ball* b2)
+    {
+        return shortestDistanceToBorder(b1->getSprite()->getPosition()) < shortestDistanceToBorder(b2->getSprite()->getPosition());
+    }
+} // anonymous namespace
+
+void AIPlayer::findAndShoot(observer_ptr<BallsCollection> aiBalls,
+                            observer_ptr<BallsCollection> enemyBalls)
+{
+    // Find the ball of the enemy nearest to border
+    // Find a ball of us nearest to that ball
+    // Shoot our ball to the direction of that ball
+    auto targetEnemyBall = *std::min_element(enemyBalls->begin(), enemyBalls->end(),
+                                             compareBallWithDistanceToBorder);
+    auto targetAIBall = *std::min_element(aiBalls->begin(), aiBalls->end(),
+                                          compareBallWithDistanceToBorder);
+    this->applyShoot(targetAIBall, targetEnemyBall->getSprite()->getPosition() - targetAIBall->getSprite()->getPosition());
+}
