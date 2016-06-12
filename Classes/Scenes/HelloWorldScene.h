@@ -10,7 +10,7 @@
 
 class HelloWorld : public cocos2d::Layer {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* createScene(NetworkController*);
     virtual bool init() override;
     CREATE_FUNC(HelloWorld)
 };

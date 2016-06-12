@@ -10,7 +10,7 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
 #include "Audio.h"
-#include "../Controllers/NetworkController.h"
+
 
 USING_NS_CC;
 
@@ -37,19 +37,20 @@ bool MenuScene::init()
     
     int i = 0;
     auto bg = Sprite::create(menuSceneFrameFile);
-    //auto network = NetworkController::create();
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
-		auto battleScene = HelloWorld::createScene();
-		Director::getInstance()->replaceScene(battleScene);
+		
 	});
-    auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile);
+    auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
+        auto network = new NetworkController();
+        _network = network;
+    });
     auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile);
     auto exitItem = MenuItemImage::create(exitTextureFile, exitTextureFile, [](Ref *sender) {
 		Director::getInstance()->end();
 	});
     
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
-    
+    auto intoBattleScene = cocos2d::EventListenerCustom::create("intoBattleScene", CC_CALLBACK_1(MenuScene::_intoBattleScene, this));
     
     Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
     
@@ -63,8 +64,16 @@ bool MenuScene::init()
         i++;
     }
     
-    //this->addChild(network);
+    _eventDispatcher->addEventListenerWithFixedPriority(intoBattleScene, 1);
+    
     this->addChild(menu, 2);
     this->addChild(bg, 1);
     return true;
 }
+
+void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)
+{
+    auto battleScene = HelloWorld::createScene(_network);
+    Director::getInstance()->pushScene(battleScene);
+}
+

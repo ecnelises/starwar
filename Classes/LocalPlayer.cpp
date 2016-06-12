@@ -16,11 +16,8 @@
 
 USING_NS_CC;
 
-bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
+LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollection>)
 {
-    if (!Node::init()) {
-        return false;
-    }
     auto mouseController = MouseController::create();
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, moonPositionY));
@@ -45,7 +42,6 @@ bool LocalPlayer::init() //: _balls(std::make_unique<BallsCollection>)
     _mouse = mouseController;
     _mouse->setPlayer(this);
     this->addChild(mouseController, 10); // Why 10 ? todo
-    return true;
 }
 
 void LocalPlayer::setActive(bool state)
@@ -61,13 +57,6 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
     }
     
     ball->move(Vec2(0, force.y * ball->getMaxForce()));
-    //ball->move(Vec2(0, 10000));
-    EventCustom shootEvent("localShoot");
-    //auto data = std::make_tuple(ball, force * ball->getMaxForce());
-    auto data = std::make_tuple(ball, Vec2(0, 10000));
-    auto dataPoint = &data;
-    shootEvent.setUserData(dataPoint);
-    _eventDispatcher->dispatchEvent(&shootEvent);
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
@@ -75,7 +64,12 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
 void LocalPlayer::_isResting(float dt)
 {
     for (const auto& l : _balls) {
-        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
+        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-2) {
+            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
+            auto dataPoint = &data;
+            EventCustom shootEvent("localShoot");
+            shootEvent.setUserData(dataPoint);
+            _eventDispatcher->dispatchEvent(&shootEvent);
             return;
         }
     }

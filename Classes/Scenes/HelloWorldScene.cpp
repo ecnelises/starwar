@@ -3,7 +3,7 @@
 #include "../Controllers/GameController.h"
 //#include "Item.h"
 USING_NS_CC;
-Scene* HelloWorld::createScene()
+Scene* HelloWorld::createScene(NetworkController *network)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
@@ -12,8 +12,9 @@ Scene* HelloWorld::createScene()
     auto layer = HelloWorld::create();
     // 获取netWork，初始化给gameController
     auto gameController = GameController::create();
-    gameController->initNetwork();  // todo 假装已经init好了
+    gameController->initNetwork(network);
     scene->addChild(gameController, 3);
+    scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
     // add layer as a child to scene
     scene->addChild(layer);
     scene->getPhysicsWorld()->setGravity(Vec2(0, 0));

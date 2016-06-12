@@ -11,11 +11,8 @@
 USING_NS_CC;
 
 
-bool RemotePlayer::init()
+RemotePlayer::RemotePlayer(bool isStarter)
 {
-    if (!Node::init()) {
-        return false;
-    }
     constexpr auto screenHeight = 768.0f;
     for (int i = moonNumber - 1; i >= 0; --i) {
         auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, screenHeight - moonPositionY));
@@ -37,24 +34,20 @@ bool RemotePlayer::init()
         this->addChild(ball->getSprite(), 4);
     }
     
-    return true;
 }
 
-void RemotePlayer::applyShoot(int ballId, const Force &force)
+void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
 {
     if(!_active) {
         return;
     }
-    Ball* selectBall;
-    float forceY = -force.y;
     for(const auto &ball : _balls) {
         if(ball->getId() == ballId) {
-            selectBall = ball;
+            ball->getSprite()->setPosition(position);
             break;
         }
     }
-    selectBall->move(Force(-force.x, forceY));
-    this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
+    // this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 
 void RemotePlayer::_isDeparted(float dt)

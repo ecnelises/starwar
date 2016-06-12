@@ -46,10 +46,9 @@ void MouseController::setPlayer(LocalPlayer* player)
 }
 
 namespace {
-    
+
     cocos2d::Point getCurrentCursor(cocos2d::Event* event)
     {
-        // TODO: static is safe?
         return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(), static_cast<cocos2d::EventMouse*>(event)->getCursorY());
     }
     

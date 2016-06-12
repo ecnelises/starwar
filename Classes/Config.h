@@ -45,7 +45,7 @@ constexpr auto menuItemDistance = 55.0f;
 constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
-constexpr auto isRestingInterval = 0.619;
+constexpr auto isRestingInterval = 0.1;
 constexpr auto mapWidth = 641.0f;
 constexpr auto mapHeight = 636.0f;
 
