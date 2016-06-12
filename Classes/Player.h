@@ -58,14 +58,16 @@ private:
     void _isDeparted(float);
 };
 
-//class AIPlayer : public cocos2d::Node, Player {
-//public:
-//    virtual bool init() override;
-//    void applyShoot(Ball*, const Force&) {}
-//    virtual void setActive(bool) override;
-//    virtual ~AIPlayer() {}
-//    CREATE_FUNC(AIPlayer);
-//};
-
+class AIPlayer : public cocos2d::Node, Player {
+public:
+    virtual ~AIPlayer() = default;
+    virtual bool init() override;
+    void applyShoot(Ball*, const Force&);
+    virtual void setActive(bool) override {}
+    void findAndShoot(observer_ptr<BallsCollection> aiBalls, observer_ptr<BallsCollection> enemyBalls);
+    CREATE_FUNC(AIPlayer);
+private:
+    void _isDeparted(float);
+};
 
 #endif // PLAYER_H_
