@@ -6,12 +6,9 @@
 //
 //
 
-
-
 #include "Player.h"
 
 USING_NS_CC;
-
 
 
 bool RemotePlayer::init()
@@ -19,22 +16,23 @@ bool RemotePlayer::init()
     if (!Node::init()) {
         return false;
     }
+    constexpr auto screenHeight = 768.0f;
     for (int i = moonNumber - 1; i >= 0; --i) {
-        auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, 750.0f - moonPositionY));
+        auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, screenHeight - moonPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
     for (int i = earthNumber - 1; i >= 0; --i) {
-        auto ball = new Ball(EARTH, earthNumber - i + 4, Vec2(earthPositionX + earthDistance * i, 750.0f - earthPositionY));
+        auto ball = new Ball(EARTH, earthNumber - i + 4, Vec2(earthPositionX + earthDistance * i, screenHeight - earthPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
-    for (int i = sunNumber - 1; i >= 0; --i) {
-        auto ball = new Ball(SUN, sunNumber - i + 6, Vec2(sunPositionX + sunDistance * i, 750.0f - sunPositionY));
+    for (int i = sunNumber - 1; i >= 0;  --i) {
+        auto ball = new Ball(SUN, sunNumber - i + 6, Vec2(sunPositionX + sunDistance * i, screenHeight - sunPositionY));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }

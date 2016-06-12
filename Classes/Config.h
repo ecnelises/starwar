@@ -28,7 +28,11 @@ constexpr auto aboutTextureFile = "texture/about.png";
 constexpr auto onlineTextureFile = "texture/online.png";
 constexpr auto exitTextureFile = "texture/exit.png";
 constexpr auto battleSceneFrameFile = "texture/battle_bg.jpg";
+constexpr auto battleSceneFrameSizeX = 1024;
+constexpr auto battleSceneFrameSizeY = 678;
 constexpr auto battleMapFrameFile = "texture/battle_map.png";
+constexpr auto battleMapFrameSizeX = 641;
+constexpr auto battleMapFrameSizeY = 636;
 constexpr auto menuSceneFrameFile = "texture/bg.png";
 constexpr auto bombFrameFile = "texture/bomb.png";
 constexpr auto earthFrameFile = "texture/earth.png";
@@ -80,13 +84,13 @@ constexpr float sunLinearDamping = 7.0f;
 
 // Position
 constexpr float moonPositionX = 240.0f;
-constexpr float moonPositionY = 220.0f;
+constexpr float moonPositionY = 240.0f;
 
 constexpr float earthPositionX = 330.0f;
-constexpr float earthPositionY = 160.0f;
+constexpr float earthPositionY = 180.0f;
 
 constexpr float sunPositionX = 520.0f;
-constexpr float sunPositionY = 100.0f;
+constexpr float sunPositionY = 120.0f;
 
 // ball distance
 constexpr auto moonDistance = 180.0f;

@@ -23,15 +23,18 @@ public:
         _ballBody->applyImpulse(force);
         _moved = true;
     }
-    void depart() {
+    void depart()
+    {
         _sprite->setVisible(false);
         _ballBody->setDynamic(false);
         _ballBody->setEnabled(false);
     }
-    int getId() {
+    int getId()
+    {
         return this->_id;
     }
-    float getMaxForce() {
+    float getMaxForce()
+    {
         return _force;
     }
     cocos2d::Sprite* getSprite() {

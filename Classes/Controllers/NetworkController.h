@@ -39,7 +39,7 @@ public:
     void sendStop(const std::string& player);
     void sendFinish(const std::string& winner);
 private:
-    static constexpr auto _destUri = "http://115.159.189.232:6619/";
+    static constexpr auto _destUri = "115.159.189.232:6619";
     observer_ptr<GameController> _game;
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
