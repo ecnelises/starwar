@@ -11,11 +11,8 @@
 USING_NS_CC;
 
 
-bool RemotePlayer::init()
+RemotePlayer::RemotePlayer(bool isStarter)
 {
-    if (!Node::init()) {
-        return false;
-    }
     constexpr auto screenHeight = 768.0f;
     for (int i = moonNumber - 1; i >= 0; --i) {
         auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, screenHeight - moonPositionY));
@@ -37,7 +34,6 @@ bool RemotePlayer::init()
         this->addChild(ball->getSprite(), 4);
     }
     
-    return true;
 }
 
 void RemotePlayer::applyShoot(int ballId, const Vec2 &position)

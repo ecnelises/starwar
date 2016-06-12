@@ -37,11 +37,10 @@ protected:
 
 class LocalPlayer : public cocos2d::Node, public Player {
 public:
-    virtual bool init() override;
+    LocalPlayer(bool isStarter);
     virtual ~LocalPlayer() = default;
     virtual void setActive(bool) override;
     void applyShoot(Ball*, const Force&);
-    CREATE_FUNC(LocalPlayer);
 private:
     void _isResting(float);
     void _isDeparted(float);
@@ -51,11 +50,10 @@ private:
 
 class RemotePlayer : public cocos2d::Node, public Player {
 public:
-    virtual bool init() override;
+    RemotePlayer(bool isStarter);
     virtual ~RemotePlayer() = default;
     void applyShoot(int, const cocos2d::Vec2&);
     virtual void setActive(bool) override;
-    CREATE_FUNC(RemotePlayer);
 private:
     void _isDeparted(float);
 };

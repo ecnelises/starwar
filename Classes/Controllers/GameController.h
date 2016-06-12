@@ -33,16 +33,13 @@ private:
     
     std::unique_ptr<NetworkController> _net;
     int _timeLeft;
-    std::string _token;
     void _handleBallStatus(float);
     void _overRound();
     void _localShootEvent(cocos2d::EventCustom*);
     void _remoteShootEvent(cocos2d::EventCustom*);
     void _localOverRoundEvent(cocos2d::EventCustom*);
     void _remoteOverRoundEvent(cocos2d::EventCustom*);
-    void _remoteRegisterEvent(cocos2d::EventCustom*);
     void _remoteResultEvent(cocos2d::EventCustom*);
-    void _connect(cocos2d::EventCustom*);
     NetworkController* _network;
 };
 

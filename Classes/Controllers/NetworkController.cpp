@@ -138,8 +138,3 @@ void NetworkController::dispatchResult(cocos2d::network::SIOClient* client, cons
     d.Parse(message.c_str());
  //_game->endGame(d["winner"].GetString());
 }
-
-std::string NetworkController::getStarter()
-{
-    return _starter;
-}

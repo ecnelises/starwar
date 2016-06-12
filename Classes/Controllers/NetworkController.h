@@ -32,7 +32,12 @@ public:
     NetworkController();
     ~NetworkController();
     
-    std::string getStarter();
+    std::string getStarter() {
+        return _starter;
+    }
+    std::string getToken() {
+        return _token;
+    }
     void sendShoot(int ballid, const Force& force);
     void sendOverRound();
     void sendRegisteration(const std::string& playerToken);
