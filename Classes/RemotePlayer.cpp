@@ -64,7 +64,7 @@ void RemotePlayer::_isDeparted(float dt)
         if (l->getSprite()->getTag() != mouseControllerTag &&
             (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
              l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
-                printf("depart");
+                printf("remote depart");
                 l->depart();
                 _balls.erase(lterator);
             } else {

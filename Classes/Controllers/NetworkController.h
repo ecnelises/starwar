@@ -40,6 +40,7 @@ public:
     }
     void sendShoot(int ballid, const Force& force);
     void sendOverRound();
+    void sendEndFixed();
     void sendFixed(int ballId, cocos2d::Vec2);
     void sendRegisteration(const std::string& playerToken);
     void sendStop(const std::string& player);
@@ -58,6 +59,8 @@ private:
     void dispatchRound(cocos2d::network::SIOClient* client,
                        const std::string& message);
     void dispatchResult(cocos2d::network::SIOClient* client,
+                        const std::string& message);
+    void dispatchEndFixed(cocos2d::network::SIOClient* client,
                         const std::string& message);
     void dispatchWait(cocos2d::network::SIOClient* client);
     void dispatchConnect(cocos2d::network::SIOClient* client);

@@ -23,6 +23,7 @@ NetworkController::NetworkController()
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
     _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
     _client->on("fix", CC_CALLBACK_2(NetworkController::dispatchFixed, this));
+    _client->on("endFix", CC_CALLBACK_2(NetworkController::dispatchEndFixed, this));
     _client->on("wait", CC_CALLBACK_1(NetworkController::dispatchWait, this));
     _client->on("ready", CC_CALLBACK_2(NetworkController::dispatchReady, this));
     _client->on("overRound", CC_CALLBACK_2(NetworkController::dispatchRound, this));
@@ -62,6 +63,13 @@ void NetworkController::sendOverRound()
     std::ostringstream stream;
     stream << R"({"room":)" << "\"" << _room << "\"}";
     _client->emit("overRound", stream.str());
+}
+
+void NetworkController::sendEndFixed()
+{
+    std::ostringstream stream;
+    stream << R"({"room":)" << "\"" << _room << "\"}";
+    _client->emit("endFix", stream.str());
 }
 
 void NetworkController::sendFixed(int ballId, cocos2d::Vec2 pos)
@@ -135,6 +143,12 @@ void NetworkController::dispatchRound(cocos2d::network::SIOClient *client, const
     //    }
     cocos2d::EventCustom overRoundEvent("remoteOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
+}
+
+void NetworkController::dispatchEndFixed(cocos2d::network::SIOClient *client, const std::string &message)
+{
+    cocos2d::EventCustom endFixEvent("endFix");
+    _eventDispatcher->dispatchEvent(&endFixEvent);
 }
 
 void NetworkController::dispatchFixed(cocos2d::network::SIOClient *client, const std::string &message)

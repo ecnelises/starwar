@@ -40,6 +40,7 @@ private:
     void _remoteShootEvent(cocos2d::EventCustom*);
     void _localOverRoundEvent(cocos2d::EventCustom*);
     void _fixEvent(cocos2d::EventCustom*);
+    void _endFixEvent(cocos2d::EventCustom*);
     void _remoteOverRoundEvent(cocos2d::EventCustom*);
     void _remoteResultEvent(cocos2d::EventCustom*);
     NetworkController* _network;

@@ -30,11 +30,13 @@ bool GameController::init(void)
     auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
     
     auto fixEvent = cocos2d::EventListenerCustom::create("fix", CC_CALLBACK_1(GameController::_fixEvent, this));
+    auto endFixEvent = cocos2d::EventListenerCustom::create("endFix", CC_CALLBACK_1(GameController::_endFixEvent, this));
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(contact, 0);
     
     _eventDispatcher->addEventListenerWithFixedPriority(fixEvent, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(endFixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localShoot, 1);
@@ -79,10 +81,15 @@ void GameController::_fixEvent(cocos2d::EventCustom* event)
     auto ballY = d["position"][1].GetDouble();
     _localPlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
     _remotePlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
-    printf("fixed");
+    printf("fixed\n");
     _fixTimes += 1;
+    printf("times :: %d\n", _fixTimes);
     _status = FIXED;
-    if(_fixTimes >= 12 && _status == FIXED) { // 超过12个球才能发送回合结束，以防丢包和过早发送
+}
+
+void GameController::_endFixEvent(cocos2d::EventCustom *event)
+{
+    if(_status == FIXED) {
         _network->sendOverRound();
         this->_overRound();
     }
@@ -103,13 +110,13 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
         auto remoteBalls = _remotePlayer->getBalls();
-        printf("fafafa");
         for(const auto &ball : localBalls) {
             _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
         }
         for(const auto &ball : remoteBalls) {
             _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
         }
+        _network->sendEndFixed();
     }
     
 }
