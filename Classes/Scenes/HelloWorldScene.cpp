@@ -1,8 +1,9 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
 #include "../Controllers/GameController.h"
-//#include "Item.h"
+
 USING_NS_CC;
+
 Scene* HelloWorld::createScene(NetworkController *network)
 {
     // 'scene' is an autorelease object
@@ -43,5 +44,3 @@ bool HelloWorld::init()
 
     return true;
 }
-
-

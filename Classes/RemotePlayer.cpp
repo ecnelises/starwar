@@ -13,26 +13,27 @@ USING_NS_CC;
 
 RemotePlayer::RemotePlayer(bool isStarter)
 {
-    constexpr auto screenHeight = 768.0f;
-    for (int i = moonNumber - 1; i >= 0; --i) {
-        auto ball = new Ball(MOON, moonNumber - i, Vec2(moonPositionX + moonDistance * i, screenHeight - moonPositionY));
+    float diff = isStarter ? 0 : 768.0f;
+    for (int i = 0; i < moonNumber; ++i) {
+        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
-    for (int i = earthNumber - 1; i >= 0; --i) {
-        auto ball = new Ball(EARTH, earthNumber - i + 4, Vec2(earthPositionX + earthDistance * i, screenHeight - earthPositionY));
+    for (int i = 0; i < earthNumber; ++i) {
+        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
-    for (int i = sunNumber - 1; i >= 0;  --i) {
-        auto ball = new Ball(SUN, sunNumber - i + 6, Vec2(sunPositionX + sunDistance * i, screenHeight - sunPositionY));
+    for (int i = 0; i < sunNumber; ++i) {
+        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
+    this->setActive(isStarter);
     
 }
 
@@ -41,13 +42,16 @@ void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
     if(!_active) {
         return;
     }
+    printf("remote shoot");
     for(const auto &ball : _balls) {
         if(ball->getId() == ballId) {
-            ball->getSprite()->setPosition(position);
+//            auto moveTo =  cocos2d::MoveTo::create(isRestingInterval * 3, position);
+//            ball->getSprite()->runAction(moveTo);
+            ball->move(position);
             break;
         }
     }
-    // this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
+    this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 
 void RemotePlayer::_isDeparted(float dt)
@@ -63,7 +67,7 @@ void RemotePlayer::_isDeparted(float dt)
                 l->depart();
                 _balls.erase(lterator);
             } else {
-        ++lterator;
+                ++lterator;
             }
     }
 }

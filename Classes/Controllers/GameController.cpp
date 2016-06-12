@@ -65,7 +65,6 @@ void::GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     _remotePlayer->applyShoot(ballId, cocos2d::Vec2(forceX, forceY));
     printf("remote shoot");
     _status = BLOCKING;
-    _remotePlayer->setActive(false);
 }
 
 void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
@@ -139,15 +138,16 @@ void GameController::initNetwork(NetworkController *network)
 {
     std::string starter = network->getStarter();
     std::string token = network->getToken();
-    auto localPlayer = new LocalPlayer(token == starter);
-    auto remotePlayer = new RemotePlayer(!(token == starter));
+    bool first = token == starter;
+    auto localPlayer = new LocalPlayer(first);
+    auto remotePlayer = new RemotePlayer(!first);
     
     _network = network;
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
-    _status = WAITING;
+    _status =  first ? WAITING : LOADING;
     
-    _currentPlayer = token == starter ? LOCAL_PLAYER : REMOTE_PLAYER;
+    _currentPlayer = first ? LOCAL_PLAYER : REMOTE_PLAYER;
     
     this->addChild(localPlayer, 10);
     this->addChild(remotePlayer, 10);

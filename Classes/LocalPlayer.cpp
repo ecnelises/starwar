@@ -19,28 +19,31 @@ USING_NS_CC;
 LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollection>)
 {
     auto mouseController = MouseController::create();
+    float diff = isStarter ? 0 : 768.0f;
     for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, moonPositionY));
+        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
         _balls.push_back(ball);
-        this->addChild(ball->getSprite(), 4);
+        this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
     for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, earthPositionY));
+        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
     for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, sunPositionY));
+        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
+    
     mouseController->addBalls(_balls);
     _mouse = mouseController;
     _mouse->setPlayer(this);
+    this->setActive(isStarter);
     this->addChild(mouseController, 10); // Why 10 ? todo
 }
 
@@ -56,7 +59,14 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
         return;
     }
     
-    ball->move(Vec2(0, force.y * ball->getMaxForce()));
+    ball->move(force * ball->getMaxForce());
+    
+    auto data = std::make_tuple(ball->getId(), force * ball->getMaxForce());
+    auto dataPoint = &data;
+    EventCustom shootEvent("localShoot");
+    shootEvent.setUserData(dataPoint);
+    _eventDispatcher->dispatchEvent(&shootEvent);
+    
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
@@ -64,12 +74,12 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
 void LocalPlayer::_isResting(float dt)
 {
     for (const auto& l : _balls) {
-        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-2) {
-            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
-            auto dataPoint = &data;
-            EventCustom shootEvent("localShoot");
-            shootEvent.setUserData(dataPoint);
-            _eventDispatcher->dispatchEvent(&shootEvent);
+        if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
+//            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
+//            auto dataPoint = &data;
+//            EventCustom shootEvent("localShoot");
+//            shootEvent.setUserData(dataPoint);
+//            _eventDispatcher->dispatchEvent(&shootEvent);
             return;
         }
     }
@@ -94,7 +104,7 @@ void LocalPlayer::_isDeparted(float dt)
                 l->depart();
                 _balls.erase(lterator);
             } else {
-        ++lterator;
+                ++lterator;
             }
     }
 }
