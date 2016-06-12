@@ -20,22 +20,23 @@ LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollec
 {
     auto mouseController = MouseController::create();
     float diff = isStarter ? 0 : 768.0f;
+    int initNumber = isStarter ? 0 : 7;
     for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
+        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
     for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
+        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
     for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
+        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
@@ -60,7 +61,6 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
     }
     
     ball->move(force * ball->getMaxForce());
-    
     auto data = std::make_tuple(ball->getId(), force * ball->getMaxForce());
     auto dataPoint = &data;
     EventCustom shootEvent("localShoot");
@@ -75,11 +75,11 @@ void LocalPlayer::_isResting(float dt)
 {
     for (const auto& l : _balls) {
         if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
-//            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
-//            auto dataPoint = &data;
-//            EventCustom shootEvent("localShoot");
-//            shootEvent.setUserData(dataPoint);
-//            _eventDispatcher->dispatchEvent(&shootEvent);
+            //            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
+            //            auto dataPoint = &data;
+            //            EventCustom shootEvent("localShoot");
+            //            shootEvent.setUserData(dataPoint);
+            //            _eventDispatcher->dispatchEvent(&shootEvent);
             return;
         }
     }

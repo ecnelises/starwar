@@ -14,22 +14,23 @@ USING_NS_CC;
 RemotePlayer::RemotePlayer(bool isStarter)
 {
     float diff = isStarter ? 0 : 768.0f;
+    int initNumber = isStarter ? 0 : 7;
     for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
+        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4); // Why 4 ? todo
     }
     
     // earth 2
     for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
+        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
     
     // sun 1
     for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
+        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
         _balls.push_back(ball);
         this->addChild(ball->getSprite(), 4);
     }
@@ -42,11 +43,11 @@ void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
     if(!_active) {
         return;
     }
-    printf("remote shoot");
     for(const auto &ball : _balls) {
         if(ball->getId() == ballId) {
-//            auto moveTo =  cocos2d::MoveTo::create(isRestingInterval * 3, position);
-//            ball->getSprite()->runAction(moveTo);
+            //            auto moveTo =  cocos2d::MoveTo::create(isRestingInterval * 3, position);
+            //            ball->getSprite()->runAction(moveTo);
+            printf("position: %.4f  %.4f\n", position.x, position.y);
             ball->move(position);
             break;
         }

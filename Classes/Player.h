@@ -24,9 +24,21 @@ public:
     Player() : _active(false) {}
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
+    virtual BallsCollection getBalls()
+    {
+        return _balls;
+    }
     virtual int getBallsNumber()
     {
         return _balls.size();
+    }
+    virtual void fixBall(int ballId, cocos2d::Vec2 pos)
+    {
+        for(const auto &ball : _balls) {
+            if(ball->getId() == ballId) {
+                ball->getSprite()->setPosition(pos);
+            }
+        }
     }
 protected:
     BallsCollection _balls;

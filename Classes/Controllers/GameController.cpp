@@ -16,7 +16,7 @@ bool GameController::init(void)
     if (!Node::init()) {
         return false;
     }
-
+    
     _timeLeft = timeLeftDefault;
     _status = LOADING;
     
@@ -29,10 +29,12 @@ bool GameController::init(void)
     
     auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
     
+    auto fixEvent = cocos2d::EventListenerCustom::create("fix", CC_CALLBACK_1(GameController::_fixEvent, this));
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(contact, 0);
     
+    _eventDispatcher->addEventListenerWithFixedPriority(fixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localShoot, 1);
@@ -54,7 +56,7 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
     _network->sendShoot(ballId, force);
 }
 
-void::GameController::_remoteShootEvent(cocos2d::EventCustom* event)
+void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
 {
     auto message = static_cast<std::string*>(event->getUserData());
     rapidjson::Document d;
@@ -65,6 +67,25 @@ void::GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     _remotePlayer->applyShoot(ballId, cocos2d::Vec2(forceX, forceY));
     printf("remote shoot");
     _status = BLOCKING;
+}
+
+void GameController::_fixEvent(cocos2d::EventCustom* event)
+{
+    auto message = static_cast<std::string*>(event->getUserData());
+    rapidjson::Document d;
+    d.Parse(message->c_str());
+    auto ballId = d["ballId"].GetInt();
+    auto ballX = d["position"][0].GetDouble();
+    auto ballY = d["position"][1].GetDouble();
+    _localPlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
+    _remotePlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
+    printf("fixed");
+    _fixTimes += 1;
+    _status = FIXED;
+    if(_fixTimes >= 12 && _status == FIXED) { // 超过12个球才能发送回合结束，以防丢包和过早发送
+        _network->sendOverRound();
+        this->_overRound();
+    }
 }
 
 void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
@@ -80,15 +101,23 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         // 对方赢
     } else {
         // 未分胜负，下一回合
-        printf("overRound\n");
-        _network->sendOverRound();
-        this->_overRound();
+        auto localBalls = _localPlayer->getBalls();
+        auto remoteBalls = _remotePlayer->getBalls();
+        printf("fafafa");
+        for(const auto &ball : localBalls) {
+            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+        }
+        for(const auto &ball : remoteBalls) {
+            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+        }
     }
     
 }
 
 void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
 {
+    
+    _fixTimes = 0;
     this->_overRound();
 }
 
@@ -154,8 +183,3 @@ void GameController::initNetwork(NetworkController *network)
     
     printf("ready\n");
 }
-
-//void GameController::connected()
-//{
-//    _network->sendRegisteration(_token);
-//}

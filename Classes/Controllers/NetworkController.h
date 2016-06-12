@@ -40,6 +40,7 @@ public:
     }
     void sendShoot(int ballid, const Force& force);
     void sendOverRound();
+    void sendFixed(int ballId, cocos2d::Vec2);
     void sendRegisteration(const std::string& playerToken);
     void sendStop(const std::string& player);
     void sendFinish(const std::string& winner);
@@ -49,6 +50,8 @@ private:
     cocos2d::network::SIOClient* _client;
     GameSocketDelegate _delegate;
     void dispatchShoot(cocos2d::network::SIOClient* client,
+                       const std::string& message);
+    void dispatchFixed(cocos2d::network::SIOClient* client,
                        const std::string& message);
     void dispatchReady(cocos2d::network::SIOClient* client,
                        const std::string& message);
