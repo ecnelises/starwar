@@ -16,6 +16,7 @@ private:
     void _inZoom(float);
     void _outZoom(float);
     float _scale;
+    bool _waiting;
     NetworkController *_network;
     cocos2d::Sprite *_bg;
 };

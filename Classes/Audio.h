@@ -12,6 +12,11 @@ public:
     void preloadKnockEffect();
     void playKnockEffect();
     void playMenuSceneMusic();
+    void playEnterBattleEffect();
+    void playItemClickEffect();
+    void stopAllMusic();
+    void playDefeatEffect();
+    void playVictoryEffect();
 private:
     CocosDenshion::SimpleAudioEngine* _player;
 };

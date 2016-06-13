@@ -16,6 +16,8 @@ AppDelegate::AppDelegate()
 {
     // audio initialize
     CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(knockEffectFile);
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(enterBattleEffectFile);
+    CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect(itemClickEffectFile);
     CocosDenshion::SimpleAudioEngine::getInstance()->preloadBackgroundMusic(menuSceneMusicFile);
 }
 

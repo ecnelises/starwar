@@ -12,17 +12,22 @@ typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
 constexpr auto menuSceneMusicFile = "audio/bg1.mp3";
+constexpr auto enterBattleEffectFile = "audio/enter_battle.mp3";
+constexpr auto itemClickEffectFile = "audio/item_click.mp3";
+constexpr auto defeatEffectFile = "audio/defeat.mp3";
+constexpr auto victoryEffectFile = "audio/victory.mp3";
 
 // Sprite frame
 constexpr auto beginSceneFrameFile = "texture/begin_bg.png";
 constexpr auto computerTextureFile = "texture/computer.png";
 constexpr auto aboutTextureFile = "texture/about.png";
 constexpr auto onlineTextureFile = "texture/online.png";
+constexpr auto connectingTextureFile = "texture/connecting.png";
 constexpr auto exitTextureFile = "texture/exit.png";
 constexpr auto battleSceneFrameFile = "texture/battle_bg.jpg";
 constexpr auto timerFrameFile = "texture/timer.png";
 constexpr auto cursorFrameFile = "texture/cursor.png";
-constexpr auto timerContentFrameFile = "texture/timer.png";
+constexpr auto timerContentFrameFile = "texture/timer_content.png";
 constexpr auto battleSceneFrameSizeX = 1024;
 constexpr auto battleSceneFrameSizeY = 678;
 constexpr auto battleMapFrameFile = "texture/battle_map.png";

@@ -9,10 +9,12 @@ public:
     virtual bool init() override;
     int timeGo();
     bool isTimeOut();
+    void revertTime();
     CREATE_FUNC(Timer)
 private:
     cocos2d::Sprite *_timer;
     cocos2d::Sprite *_content;
+    cocos2d::Size _originPosition;
     int _timeLeft;
 };
 

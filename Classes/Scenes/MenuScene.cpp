@@ -21,22 +21,32 @@ bool MenuScene::init()
     }
     
     int i = 0;
+    auto audio = new Audio();
+    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
 	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
-        auto network = new NetworkController();
-        _network = network;
+        //if(!_waiting) {
+            auto network = new NetworkController();
+            auto connectLayer = Layer::create();
+            auto connectBg = Sprite::create(connectingTextureFile);
+            connectBg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
+            connectLayer->addChild(connectBg, 2);
+            audio->playItemClickEffect();
+            _network = network;
+            _waiting = true;
+            this->addChild(connectLayer, 3);
+        //}
     });
-    auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile);
+    auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile, [=](Ref *sender) {
+        audio->playItemClickEffect();
+    });
     auto exitItem = MenuItemImage::create(exitTextureFile, exitTextureFile, [](Ref *sender) {
 		Director::getInstance()->end();
 	});
-    
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     auto intoBattleScene = cocos2d::EventListenerCustom::create("intoBattleScene", CC_CALLBACK_1(MenuScene::_intoBattleScene, this));
     
-    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-
     _bg = Sprite::create(menuSceneFrameFile);
     _bg->setScale(visibleSize.width / _bg->getContentSize().width, visibleSize.height / _bg->getContentSize().height);
     _bg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
@@ -47,11 +57,10 @@ bool MenuScene::init()
         i++;
     }
     
-    _eventDispatcher->addEventListenerWithFixedPriority(intoBattleScene, 1);
-    
     this->addChild(menu, 2);
     this->addChild(_bg, 1);
     this->schedule(schedule_selector(MenuScene::_inZoom), 1/25);
+    _eventDispatcher->addEventListenerWithFixedPriority(intoBattleScene, 1);
     return true;
 }
 
