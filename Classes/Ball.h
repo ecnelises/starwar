@@ -37,10 +37,10 @@ public:
     {
         return _force;
     }
-    cocos2d::Sprite* getSprite() {
+    cocos2d::Sprite *getSprite() {
         return _sprite;
     }
-    cocos2d::PhysicsBody* getBallBody() {
+    cocos2d::PhysicsBody *getBallBody() {
         return _ballBody;
     }
 protected:

@@ -10,7 +10,8 @@
 #include "cocos2d.h"
 #include "MouseController.h"
 #include "NetworkController.h"
-#include "Player.h"
+#include "../Player.h"
+#include "../Timer.h"
 #include <vector>
 #include <memory>
 
@@ -32,9 +33,9 @@ private:
     LocalPlayer* _localPlayer;
     
     std::unique_ptr<NetworkController> _net;
-    int _timeLeft;
+    Timer *_timer;
     int _fixTimes;
-    void _handleBallStatus(float);
+    void _handleTime(float);
     void _overRound();
     void _localShootEvent(cocos2d::EventCustom*);
     void _remoteShootEvent(cocos2d::EventCustom*);

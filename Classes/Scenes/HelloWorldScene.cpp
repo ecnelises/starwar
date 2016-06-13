@@ -8,6 +8,7 @@ Scene* HelloWorld::createScene(NetworkController *network)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
+    auto audio = new Audio;
     // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
     // 'layer' is an autorelease object
     auto layer = HelloWorld::create();

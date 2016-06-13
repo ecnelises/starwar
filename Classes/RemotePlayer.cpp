@@ -37,9 +37,6 @@ void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
     }
     for(const auto &ball : _balls) {
         if(ball->getId() == ballId) {
-            //            auto moveTo =  cocos2d::MoveTo::create(isRestingInterval * 3, position);
-            //            ball->getSprite()->runAction(moveTo);
-            printf("position: %.4f  %.4f\n", position.x, position.y);
             ball->move(position);
             break;
         }

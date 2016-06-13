@@ -66,16 +66,10 @@ void LocalPlayer::_isResting(float dt)
 {
     for (const auto& l : _balls) {
         if (l->getSprite()->getTag() != mouseControllerTag && l->getBallBody()->getVelocity().length() > 1e-1) {
-            //            auto data = std::make_tuple(l->getId(), l->getSprite()->getPosition());
-            //            auto dataPoint = &data;
-            //            EventCustom shootEvent("localShoot");
-            //            shootEvent.setUserData(dataPoint);
-            //            _eventDispatcher->dispatchEvent(&shootEvent);
             return;
         }
     }
     // 表示全部小球都不动了
-    // 发送回合结束命令 todo: 封装
     EventCustom overRoundEvent("localOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
@@ -111,6 +105,7 @@ void LocalPlayer::unlistenDepart()
     this->unschedule("isDeparted"); // 取消监听事件减少消耗
 }
 
+// offset: 2.5f 偏移量球中心出地图才算出界
 void Player::_isDeparted(float dt)
 {
     auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
@@ -128,11 +123,3 @@ void Player::_isDeparted(float dt)
             }
     }
 }
-
-
-
-// offset: 2.5f 偏移量球中心出地图才算出界
-
-
-
-
