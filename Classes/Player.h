@@ -35,6 +35,7 @@ public:
             }
         }
     }
+    virtual void applyShoot(Ball*, const Force&) = 0;
 protected:
     BallsCollection _balls;
     bool _active;
@@ -48,7 +49,7 @@ public:
     LocalPlayer(bool isStarter);
     virtual ~LocalPlayer() = default;
     virtual void setActive(bool) override;
-    void applyShoot(Ball*, const Force&);
+    virtual void applyShoot(Ball*, const Force&) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;
 private:
@@ -62,7 +63,7 @@ class RemotePlayer : public cocos2d::Node, public Player {
 public:
     RemotePlayer(bool isStarter);
     virtual ~RemotePlayer() = default;
-    void applyShoot(int, const cocos2d::Vec2&);
+    virtual void applyShoot(Ball*, const cocos2d::Vec2&) override; // TODO: parameter
     virtual void setActive(bool) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;
@@ -70,12 +71,15 @@ public:
 
 class AIPlayer : public cocos2d::Node, public Player {
 public:
+    AIPlayer(bool isStarter);
     virtual ~AIPlayer() = default;
-    void applyShoot(Ball*, const Force&);
-    virtual void setActive(bool) override {}
-    virtual void listenDepart() override {}
-    virtual void unlistenDepart() override {}
+    virtual void applyShoot(Ball*, const Force&) override;
+    virtual void setActive(bool) override;
+    virtual void listenDepart() override;
+    virtual void unlistenDepart() override;
     void findAndShoot(observer_ptr<BallsCollection> aiBalls, observer_ptr<BallsCollection> enemyBalls);
+private:
+    void _isResting(float);
 };
 
 #endif // PLAYER_H_

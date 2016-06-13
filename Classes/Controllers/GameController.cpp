@@ -21,13 +21,38 @@ bool GameController::init(void)
     _timeLeft = timeLeftDefault;
     _status = LOADING;
     
+    // --- ai start
+    // TODO: move to other place
+    if (!_isNetworkGame) {
+        std::default_random_engine dre;
+        std::uniform_int_distribution<> uid(0, 1);
+        bool first = uid(dre);
+        auto localPlayer = new LocalPlayer(first);
+        auto aiPlayer = new AIPlayer(!first);
+        
+        _localPlayer = localPlayer;
+        _enemy = aiPlayer;
+        _status =  first ? WAITING : LOADING;
+        
+        _currentPlayer = first ? LOCAL_PLAYER : AI_PLAYER;
+        
+        this->addChild(localPlayer, 10);
+        this->addChild(aiPlayer, 10);
+        
+        printf("ready\n");
+    }
+    
+    // --- ai end
+    
     auto contact = Contact::create();
     auto timer = Timer::create();
     auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
     auto remoteOverRound = cocos2d::EventListenerCustom::create("remoteOverRound", CC_CALLBACK_1(GameController::_remoteOverRoundEvent, this));
+    auto aiOverRound = cocos2d::EventListenerCustom::create("aiOverRound", CC_CALLBACK_1(GameController::_aiOverRoundEvent, this));
     
     auto localShoot = cocos2d::EventListenerCustom::create("localShoot", CC_CALLBACK_1(GameController::_localShootEvent, this));
     auto remoteShoot = cocos2d::EventListenerCustom::create("remoteShoot", CC_CALLBACK_1(GameController::_remoteShootEvent, this));
+    auto aiShoot = cocos2d::EventListenerCustom::create("aiShoot", CC_CALLBACK_1(GameController::_aiShootEvent, this));
     
     auto gameOverEvent = cocos2d::EventListenerCustom::create("gameOver", CC_CALLBACK_1(GameController::_gameOverEvent, this));
     
@@ -42,8 +67,10 @@ bool GameController::init(void)
     _eventDispatcher->addEventListenerWithFixedPriority(endFixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(aiOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localShoot, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteShoot, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(aiShoot, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(gameOverEvent, 1);
     
     return true;
@@ -59,9 +86,20 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
     _status = BLOCKING;
     // 开始监听消失事件
     _localPlayer->listenDepart();
-    _remotePlayer->listenDepart();
+    _enemy->listenDepart();
     _localPlayer->setActive(false);
-    _network->sendShoot(ballId, force);
+    if (_isNetworkGame) {
+        _network->sendShoot(ballId, force);
+    }
+}
+
+void GameController::_aiShootEvent(cocos2d::EventCustom* event)
+{
+    _status = BLOCKING;
+    _localPlayer->listenDepart();
+    printf("AI shoot!\n");
+    _enemy->listenDepart();
+    _enemy->setActive(false);
 }
 
 void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
@@ -72,10 +110,18 @@ void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     auto ballId = d["ballId"].GetInt();
     auto forceX = d["force"][0].GetDouble();
     auto forceY = d["force"][1].GetDouble();
-    _remotePlayer->applyShoot(ballId, cocos2d::Vec2(forceX, forceY));
+    
+    Ball* target = nullptr;
+    for (auto i : _enemy->getBalls()) {
+        if (i->getId() == ballId) {
+            target = i;
+            break;
+        }
+    }
+    _enemy->applyShoot(target, cocos2d::Vec2(forceX, forceY));
     // 开始监听消失事件
     _localPlayer->listenDepart();
-    _remotePlayer->listenDepart();
+    _enemy->listenDepart();
     printf("remote shoot");
     _status = BLOCKING;
 }
@@ -89,7 +135,7 @@ void GameController::_fixEvent(cocos2d::EventCustom* event)
     auto ballX = d["position"][0].GetDouble();
     auto ballY = d["position"][1].GetDouble();
     _localPlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
-    _remotePlayer->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
+    _enemy->fixBall(ballId, cocos2d::Vec2(ballX, ballY));
     printf("fixed\n");
     _fixTimes += 1;
     printf("times :: %d\n", _fixTimes);
@@ -108,7 +154,7 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
 {
     // 在这里判断球数
     int localPlayerBalls = _localPlayer->getBallsNumber();
-    int remotePlayerBalls = _remotePlayer->getBallsNumber();
+    int remotePlayerBalls = _enemy->getBallsNumber();
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
         _network->sendGameOver(DRAW);
     } else if(localPlayerBalls == 0) {
@@ -118,7 +164,7 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
     } else {
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
-        auto remoteBalls = _remotePlayer->getBalls();
+        auto remoteBalls = _enemy->getBalls();
         for(const auto &ball : localBalls) {
             _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
         }
@@ -127,7 +173,11 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         }
         _network->sendEndFixed();
     }
-    
+}
+
+void GameController::_aiOverRoundEvent(cocos2d::EventCustom* event)
+{
+    this->_overRound();
 }
 
 void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
@@ -136,7 +186,6 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
     _fixTimes = 0;
     this->_overRound();
 }
-
 
 void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
@@ -182,18 +231,21 @@ void GameController::_overRound()
     _timeLeft = timeLeftDefault;
     // 停止监听消失事件
     _localPlayer->unlistenDepart();
-    _remotePlayer->unlistenDepart();
-    if(_currentPlayer == LOCAL_PLAYER) {
+    _enemy->unlistenDepart();
+    if (_currentPlayer == LOCAL_PLAYER) {
         _localPlayer->setActive(false);
-        _remotePlayer->setActive(true);
-        _currentPlayer = REMOTE_PLAYER;
-        _status = LOADING; // 状态: 等待数据
-        //this->_sendData(buf); // todo 发送回合结束的信息
+        _enemy->setActive(true);
+        if (_isNetworkGame) {
+            _currentPlayer = REMOTE_PLAYER;
+        } else {
+            _currentPlayer = AI_PLAYER;
+        }
+        _status = LOADING;
     } else {
-        _remotePlayer->setActive(false);
+        _enemy->setActive(false);
         _localPlayer->setActive(true);
         _currentPlayer = LOCAL_PLAYER;
-        _status = WAITING; // 状态: 等待出招
+        _status = WAITING;
     }
 }
 
@@ -207,7 +259,7 @@ void GameController::initNetwork(NetworkController *network)
     
     _network = network;
     _localPlayer = localPlayer;
-    _remotePlayer = remotePlayer;
+    _enemy = remotePlayer;
     _status =  first ? WAITING : LOADING;
     
     _currentPlayer = first ? LOCAL_PLAYER : REMOTE_PLAYER;

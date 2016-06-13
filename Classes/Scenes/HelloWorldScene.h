@@ -6,11 +6,12 @@
 #include "Contact.h"
 #include "../Controllers/MouseController.h"
 #include "../Controllers/NetworkController.h"
+#include <tuple>
 
 
 class HelloWorld : public cocos2d::Layer {
 public:
-    static cocos2d::Scene* createScene(NetworkController*);
+    static cocos2d::Scene* createScene(std::tuple<bool, NetworkController*>);
     virtual bool init() override;
     CREATE_FUNC(HelloWorld)
 };

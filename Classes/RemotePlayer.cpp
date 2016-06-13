@@ -27,23 +27,14 @@ RemotePlayer::RemotePlayer(bool isStarter)
         this->addChild(ball->getSprite(), 4);
     }
     this->setActive(isStarter);
-    
 }
 
-void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
+void RemotePlayer::applyShoot(Ball* ball, const Vec2 &position)
 {
     if(!_active) {
         return;
     }
-    for(const auto &ball : _balls) {
-        if(ball->getId() == ballId) {
-            //            auto moveTo =  cocos2d::MoveTo::create(isRestingInterval * 3, position);
-            //            ball->getSprite()->runAction(moveTo);
-            printf("position: %.4f  %.4f\n", position.x, position.y);
-            ball->move(position);
-            break;
-        }
-    }
+    ball->move(position);
 }
 
 void RemotePlayer::listenDepart()
@@ -55,7 +46,6 @@ void RemotePlayer::unlistenDepart()
 {
     this->unschedule("isDeparted");
 }
-
 
 void RemotePlayer::setActive(bool state)
 {

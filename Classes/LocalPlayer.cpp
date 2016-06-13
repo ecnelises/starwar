@@ -5,7 +5,7 @@
 
 USING_NS_CC;
 
-LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollection>)
+LocalPlayer::LocalPlayer(bool isStarter)
 {
     auto applyShoot = cocos2d::EventListenerCustom::create("applyShoot", CC_CALLBACK_1(LocalPlayer::_applyShoot, this));
     auto mouseController = MouseController::create();
@@ -79,7 +79,6 @@ void LocalPlayer::_isResting(float dt)
     EventCustom overRoundEvent("localOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
-    
 }
 
 void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
@@ -129,10 +128,4 @@ void Player::_isDeparted(float dt)
     }
 }
 
-
-
 // offset: 2.5f 偏移量球中心出地图才算出界
-
-
-
-

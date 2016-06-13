@@ -4,18 +4,23 @@
 
 USING_NS_CC;
 
-Scene* HelloWorld::createScene(NetworkController *network)
+Scene* HelloWorld::createScene(std::tuple<bool, NetworkController*> arg)
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
-    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
-    // 'layer' is an autorelease object
+    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+    
+    bool& isNetworkGame = std::get<0>(arg);
+    NetworkController* network = std::get<1>(arg);
+    
     auto layer = HelloWorld::create();
-    // 获取netWork，初始化给gameController
-    auto gameController = GameController::create();
-    gameController->initNetwork(network);
+    auto gameController = GameController::create(isNetworkGame);
+    
+    if (isNetworkGame) {
+        gameController->initNetwork(network);
+    }
     scene->addChild(gameController, 3);
-    scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
+    //scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
     // add layer as a child to scene
     scene->addChild(layer);
     scene->getPhysicsWorld()->setGravity(Vec2(0, 0));

@@ -22,7 +22,6 @@ bool MenuScene::init()
     
     int i = 0;
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
-		
 	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
         auto network = new NetworkController();

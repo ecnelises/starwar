@@ -6,20 +6,54 @@
 
 USING_NS_CC;
 
+AIPlayer::AIPlayer(bool isStarter)
+{
+    float diff = isStarter ? 0 : 768.0f;
+    int initNumber = isStarter ? 0 : 7;
+    for (int i = 0; i < moonNumber; ++i) {
+        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
+        _balls.push_back(ball);
+        this->addChild(ball->getSprite(), 4); // Why 4 ? todo
+    }
+    
+    // earth 2
+    for (int i = 0; i < earthNumber; ++i) {
+        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
+        _balls.push_back(ball);
+        this->addChild(ball->getSprite(), 4);
+    }
+    
+    // sun 1
+    for (int i = 0; i < sunNumber; ++i) {
+        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
+        _balls.push_back(ball);
+        this->addChild(ball->getSprite(), 4);
+    }
+    
+    this->setActive(isStarter);
+}
 
 void AIPlayer::applyShoot(Ball* ball, const Force& force)
 {
     if (!_active) {
         return;
     }
-    // TODO: Need shoot event
+    EventCustom aiShootEvent("aiShoot");
+    ball->move(force * ball->getMaxForce());
+    aiShootEvent.setUserData(nullptr);
+    _eventDispatcher->dispatchEvent(&aiShootEvent);
+    this->schedule(CC_CALLBACK_1(AIPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting");
 }
 
 namespace {
     float shortestDistanceToBorder(Vec2 pos)
     {
-        // TODO
-        return 0.0;
+        return std::min({
+            fabsf(pos.x - mapLeftBorder),
+            fabsf(pos.x - mapRightBorder),
+            fabsf(pos.y - mapTopBorder),
+            fabsf(pos.y - mapBottomBorder)
+        });
     }
     
     bool compareBallWithDistanceToBorder(Ball* b1, Ball* b2)
@@ -41,3 +75,30 @@ void AIPlayer::findAndShoot(observer_ptr<BallsCollection> aiBalls,
     this->applyShoot(targetAIBall, targetEnemyBall->getSprite()->getPosition() - targetAIBall->getSprite()->getPosition());
 }
 
+void AIPlayer::setActive(bool activity)
+{
+    _active = activity;
+}
+
+void AIPlayer::_isResting(float dt)
+{
+    for (const auto& ballIter : _balls) {
+        if (ballIter->getSprite()->getTag() != mouseControllerTag &&
+            ballIter->getBallBody()->getVelocity().length() > 1e-1) {
+            return;
+        }
+    }
+    EventCustom overRoundEvent("aiOverRound");
+    _eventDispatcher->dispatchEvent(&overRoundEvent);
+    this->unschedule("isResting");
+}
+
+void AIPlayer::listenDepart()
+{
+    this->schedule(CC_CALLBACK_1(AIPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted");
+}
+
+void AIPlayer::unlistenDepart()
+{
+    this->unschedule("isDeparted"); // 取消监听事件减少消耗
+}

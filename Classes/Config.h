@@ -33,6 +33,13 @@ constexpr auto bombFrameFile = "texture/bomb.png";
 constexpr auto earthFrameFile = "texture/earth.png";
 constexpr auto moonFrameFile = "texture/moon.png";
 constexpr auto sunFrameFile = "texture/sun.png";
+
+// left is larger?
+constexpr auto mapLeftBorder = (battleSceneFrameSizeX - battleMapFrameSizeX) / 2.0f;
+constexpr auto mapRightBorder = battleMapFrameSizeX + mapLeftBorder;
+constexpr auto mapTopBorder = (battleSceneFrameSizeY - battleMapFrameSizeY) / 2.0f;
+constexpr auto mapBottomBorder = battleMapFrameSizeY + mapTopBorder;
+
 // Game data
 constexpr auto timeLeftDefault = 12;
 constexpr auto ballStatusInterval = 1.0f;
