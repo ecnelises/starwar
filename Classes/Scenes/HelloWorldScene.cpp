@@ -25,8 +25,7 @@ Scene* HelloWorld::createScene(NetworkController *network)
 
 bool HelloWorld::init()
 {
-    if ( !Layer::init() )
-    {
+    if (!Layer::init()) {
         return false;
     }
     

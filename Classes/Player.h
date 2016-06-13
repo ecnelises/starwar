@@ -1,11 +1,4 @@
-//
-//  Player.h
-//  ball
-//
-//  Created by Dcalsky on 16/5/31.
-//
-//
-// Player 功能: 1、向GameController发送请求；2、接受MouseController或者NetworkController发送的请求；3、管理所有属于自己的ball状态;
+// Player 功能: 1、向GameController发送请求；2、接受MouseController发送的请求；3、管理所有属于自己的ball状态;
 #ifndef PLAYER_H_
 #define PLAYER_H_
 

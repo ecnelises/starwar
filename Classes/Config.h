@@ -1,11 +1,3 @@
-//
-//  Config.h
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
@@ -19,10 +11,10 @@ typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
 
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
-constexpr auto menuSceneMusicFile = "audio/maple_island.mp3";
+constexpr auto menuSceneMusicFile = "audio/bg1.mp3";
 
 // Sprite frame
-constexpr auto ballFrameFile = "texture/ball.png";
+constexpr auto beginSceneFrameFile = "texture/begin_bg.png";
 constexpr auto computerTextureFile = "texture/computer.png";
 constexpr auto aboutTextureFile = "texture/about.png";
 constexpr auto onlineTextureFile = "texture/online.png";
@@ -36,7 +28,7 @@ constexpr auto battleSceneFrameSizeY = 678;
 constexpr auto battleMapFrameFile = "texture/battle_map.png";
 constexpr auto battleMapFrameSizeX = 641;
 constexpr auto battleMapFrameSizeY = 636;
-constexpr auto menuSceneFrameFile = "texture/bg.png";
+constexpr auto menuSceneFrameFile = "texture/menu_bg.jpg";
 constexpr auto bombFrameFile = "texture/bomb.png";
 constexpr auto earthFrameFile = "texture/earth.png";
 constexpr auto moonFrameFile = "texture/moon.png";

@@ -1,11 +1,3 @@
-//
-//  MenuScene.cpp
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #include "MenuScene.h"
 #include "HelloWorldScene.h"
 #include "Config.h"
@@ -16,16 +8,9 @@ USING_NS_CC;
 
 Scene* MenuScene::createScene()
 {
-    // 'scene' is an autorelease object
     auto scene = Scene::create();
-    // 'layer' is an autorelease object
     auto layer = MenuScene::create();
-    auto audio = new Audio();
-    audio->playMenuSceneMusic();
-    // add layer as a child to scene
     scene->addChild(layer);
-    //scene->addChild(itemLayer);
-    // return the scene
     return scene;
 }
 
@@ -36,7 +21,6 @@ bool MenuScene::init()
     }
     
     int i = 0;
-    auto bg = Sprite::create(menuSceneFrameFile);
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
 		
 	});
@@ -52,23 +36,46 @@ bool MenuScene::init()
     auto menu = Menu::create(computerItem, onlineItem, aboutItem, exitItem, nullptr);
     auto intoBattleScene = cocos2d::EventListenerCustom::create("intoBattleScene", CC_CALLBACK_1(MenuScene::_intoBattleScene, this));
     
-    Size windowSize = Director::getInstance()->getWinSize(); // background image for full screen
-    
-    bg->setScale(windowSize.width / bg->getContentSize().width, windowSize.height / bg->getContentSize().height);
-    bg->setPosition(Vec2(windowSize.width/ 2, windowSize.height / 2));
-    
+    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
+
+    _bg = Sprite::create(menuSceneFrameFile);
+    _bg->setScale(visibleSize.width / _bg->getContentSize().width, visibleSize.height / _bg->getContentSize().height);
+    _bg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
     for(const auto &child : menu->getChildren()) {
         float offset = menuItemDistance * i;
         child->setScale(menuItemScale);
-        child->setPosition(Vec2(-windowSize.width / 2 + child->getContentSize().width / 4, menuFirstItemY - offset));
+        child->setPosition(Vec2(-visibleSize.width / 2 + child->getContentSize().width / 4, menuFirstItemY - offset));
         i++;
     }
     
     _eventDispatcher->addEventListenerWithFixedPriority(intoBattleScene, 1);
     
     this->addChild(menu, 2);
-    this->addChild(bg, 1);
+    this->addChild(_bg, 1);
+    this->schedule(schedule_selector(MenuScene::_inZoom), 1/25);
     return true;
+}
+
+void MenuScene::_inZoom(float dt)
+{
+    _scale += 0.0005;
+    if(_scale >= 0.51) {
+        this->unschedule(schedule_selector(MenuScene::_inZoom));
+        this->schedule(schedule_selector(MenuScene::_outZoom));
+    }
+    _bg->setOpacity(_scale * 500);
+    _bg->setScale(_bg->getScaleX() + 0.0005, _bg->getScaleY() + 0.0005);
+}
+
+void MenuScene::_outZoom(float dt)
+{
+    _scale -= 0.0005;
+    if(_scale <= 0.20) {
+        this->unschedule(schedule_selector(MenuScene::_outZoom));
+        this->schedule(schedule_selector(MenuScene::_inZoom));
+    }
+    _bg->setOpacity(_scale * 500);
+    _bg->setScale(_bg->getScaleX() - 0.0005, _bg->getScaleY() - 0.0005);
 }
 
 void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)

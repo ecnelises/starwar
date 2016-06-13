@@ -1,11 +1,3 @@
-//
-//  Contact.cpp
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #include "Contact.h"
 #include "Audio.h"
 

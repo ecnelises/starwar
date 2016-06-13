@@ -1,11 +1,3 @@
-//
-//  AIPlayer.cpp
-//  ball
-//
-//  Created by Dcalsky on 16/6/7.
-//
-//
-
 #include "Player.h"
 #include "Config.h"
 #include <memory>

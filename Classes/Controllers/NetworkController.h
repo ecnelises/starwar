@@ -12,7 +12,7 @@
 #include <string>
 
 class GameController;
-
+using Socket = cocos2d::network::SIOClient;
 /// \class GameSocketDelegate
 /// \brief A helper class mainly used to handle error and close event.
 class GameSocketDelegate : public cocos2d::network::SocketIO::SIODelegate {
@@ -20,9 +20,8 @@ public:
     GameSocketDelegate() = default;
     
     virtual ~GameSocketDelegate() = default;
-    virtual void onClose(cocos2d::network::SIOClient* client) override;
-    virtual void onError(cocos2d::network::SIOClient* client,
-                         const std::string& data) override;
+    virtual void onClose(Socket*) override;
+    virtual void onError(Socket*, const std::string&) override;
 };
 
 /// \class NetworkController
@@ -38,30 +37,24 @@ public:
     std::string getToken() {
         return _token;
     }
-    void sendShoot(int ballid, const Force& force);
+    void sendShoot(int ballid, const Force&);
     void sendOverRound();
     void sendEndFixed();
     void sendGameOver(int);
     void sendFixed(int ballId, cocos2d::Vec2);
-    void sendRegisteration(const std::string& playerToken);
-    void sendStop(const std::string&);
 private:
     static constexpr auto _destUri = "115.159.189.232:6619";
     observer_ptr<GameController> _game;
-    cocos2d::network::SIOClient* _client;
+    Socket* _client;
     GameSocketDelegate _delegate;
-    void dispatchShoot(cocos2d::network::SIOClient* client,
-                       const std::string& message);
-    void dispatchFixed(cocos2d::network::SIOClient* client,
-                       const std::string& message);
-    void dispatchReady(cocos2d::network::SIOClient* client,
-                       const std::string& message);
-    void dispatchRound(cocos2d::network::SIOClient* client);
-    void dispatchGameOver(cocos2d::network::SIOClient* client,
-                        const std::string& message);
-    void dispatchEndFixed(cocos2d::network::SIOClient* client);
-    void dispatchWait(cocos2d::network::SIOClient* client);
-    void dispatchConnect(cocos2d::network::SIOClient* client);
+    void dispatchShoot(Socket*, const std::string&);
+    void dispatchFixed(Socket*, const std::string&);
+    void dispatchReady(Socket*, const std::string&);
+    void dispatchGameOver(Socket*, const std::string&);
+    void dispatchRound(Socket*);
+    void dispatchEndFixed(Socket*);
+    void dispatchWait(Socket*);
+    void dispatchConnect(Socket*);
     std::string _room;
     std::string _starter;
     std::string _token;

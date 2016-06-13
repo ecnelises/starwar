@@ -1,14 +1,3 @@
-//
-//  Player.cpp
-//  ball1
-//
-//  Created by Dcalsky on 16/5/31.
-//
-//
-
-
-
-
 #include <memory>
 #include "json/rapidjson.h"
 #include "json/document.h"

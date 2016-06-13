@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "Scenes/MenuScene.h"
+#include "Scenes/BeginScene.h"
 #include "SimpleAudioEngine.h"
 #include "Config.h"
 
@@ -86,8 +86,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     // create a scene. it's an autorelease object
     //auto scene = MenuScene::createScene();
-    auto scene = MenuScene::createScene();
-
+    auto scene = TransitionFade::create(1.0f, BeginScene::createScene());
     // run
     director->runWithScene(scene);
 

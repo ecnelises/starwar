@@ -1,11 +1,3 @@
-//
-//  Contact.hpp
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #ifndef CONTACT_H_
 #define CONTACT_H_
 

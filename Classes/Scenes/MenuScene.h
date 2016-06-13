@@ -1,11 +1,3 @@
-//
-//  MenuScene.h
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #ifndef MENU_SCENE_H_
 #define MENU_SCENE_H_
 
@@ -21,7 +13,11 @@ public:
     CREATE_FUNC(MenuScene)
 private:
     void _intoBattleScene(cocos2d::EventCustom*);
+    void _inZoom(float);
+    void _outZoom(float);
+    float _scale;
     NetworkController *_network;
+    cocos2d::Sprite *_bg;
 };
 
 #endif // MENU_SCENE_H_

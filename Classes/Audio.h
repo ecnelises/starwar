@@ -1,11 +1,3 @@
-//
-//  Sound.h
-//  ball
-//
-//  Created by Dcalsky on 16/6/1.
-//
-//
-
 #ifndef AUDIO_H_
 #define AUDIO_H_
 

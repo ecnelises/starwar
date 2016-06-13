@@ -1,11 +1,3 @@
-//
-//  NetworkController.cpp
-//  bumpflow
-//
-//  Created by 邱超凡 on 16/6/2.
-//
-//
-
 #include "GameController.h"
 #include "NetworkController.h"
 #include "json/rapidjson.h"
@@ -82,27 +74,9 @@ void NetworkController::sendFixed(int ballId, cocos2d::Vec2 pos)
     _client->emit("fix", stream.str());
 }
 
-void NetworkController::sendRegisteration(const std::string &playerToken)
-{
-    
-}
-
-void NetworkController::sendStop(const std::string& player)
-{
-    //    std::ostringstream stream;
-    //    stream << R"({"type":"stop","detail":{)";
-    //    stream << R"("player":)" <<  "\"" << player << "\","
-    //    << R"("gameid":)" << gameid << "}}";
-    //    _client->send(stream.str());
-}
 
 void NetworkController::sendGameOver(int status)
 {
-    //    std::ostringstream stream;
-    //    stream << R"({"type":"finish","detail":{)";
-    //    stream << R"("player":)" << "\"" << winner << "\","
-    //    << R"("gameid":)" << gameid << "}}";
-    //    _client->send(stream.str());
     std::ostringstream stream;
     stream << R"({"winner":)" << status << ","
     << R"("room":)" << "\"" <<  _room << "\"}";
@@ -145,16 +119,6 @@ void NetworkController::dispatchGameOver(cocos2d::network::SIOClient *client, co
 
 void NetworkController::dispatchRound(cocos2d::network::SIOClient *client)
 {
-    //    rapidjson::Document d;
-    //    d.Parse(message.c_str());
-    //    const rapidjson::Value &balls = d["balls"];
-    //    for (rapidjson::Value::ConstValueIterator itrObject = balls.Begin(); itrObject != balls.End(); ++itrObject) {
-    //        auto ball = itrObject->MemberBegin();
-    //        int ballId = ball->value.GetInt();
-    //        int x = ((ball + 1)->value[0]).GetDouble();
-    //        int y = ((ball + 1)->value[1]).GetDouble();
-    //        printf("%d   %d\n", x, y);
-    //    }
     cocos2d::EventCustom overRoundEvent("remoteOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
 }
