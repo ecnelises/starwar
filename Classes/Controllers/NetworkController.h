@@ -41,10 +41,10 @@ public:
     void sendShoot(int ballid, const Force& force);
     void sendOverRound();
     void sendEndFixed();
+    void sendGameOver(int);
     void sendFixed(int ballId, cocos2d::Vec2);
     void sendRegisteration(const std::string& playerToken);
-    void sendStop(const std::string& player);
-    void sendFinish(const std::string& winner);
+    void sendStop(const std::string&);
 private:
     static constexpr auto _destUri = "115.159.189.232:6619";
     observer_ptr<GameController> _game;
@@ -56,12 +56,10 @@ private:
                        const std::string& message);
     void dispatchReady(cocos2d::network::SIOClient* client,
                        const std::string& message);
-    void dispatchRound(cocos2d::network::SIOClient* client,
-                       const std::string& message);
-    void dispatchResult(cocos2d::network::SIOClient* client,
+    void dispatchRound(cocos2d::network::SIOClient* client);
+    void dispatchGameOver(cocos2d::network::SIOClient* client,
                         const std::string& message);
-    void dispatchEndFixed(cocos2d::network::SIOClient* client,
-                        const std::string& message);
+    void dispatchEndFixed(cocos2d::network::SIOClient* client);
     void dispatchWait(cocos2d::network::SIOClient* client);
     void dispatchConnect(cocos2d::network::SIOClient* client);
     std::string _room;

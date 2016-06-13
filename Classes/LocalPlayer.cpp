@@ -1,6 +1,6 @@
 //
 //  Player.cpp
-//  ball
+//  ball1
 //
 //  Created by Dcalsky on 16/5/31.
 //
@@ -18,6 +18,7 @@ USING_NS_CC;
 
 LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollection>)
 {
+    auto applyShoot = cocos2d::EventListenerCustom::create("applyShoot", CC_CALLBACK_1(LocalPlayer::_applyShoot, this));
     auto mouseController = MouseController::create();
     float diff = isStarter ? 0 : 768.0f;
     int initNumber = isStarter ? 0 : 7;
@@ -43,7 +44,8 @@ LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollec
     
     mouseController->addBalls(_balls);
     _mouse = mouseController;
-    _mouse->setPlayer(this);
+    _eventDispatcher->addEventListenerWithFixedPriority(applyShoot, 1);
+    
     this->setActive(isStarter);
     this->addChild(mouseController, 10); // Why 10 ? todo
 }
@@ -59,6 +61,7 @@ void LocalPlayer::setActive(bool state)
             }
         }
     } else {
+        _mouse->addBalls(_balls); // 同步mouseController能控制的球
         for(const auto &ball : _balls) {
             auto cursor = Sprite::create(cursorFrameFile);
             cursor->setPosition(Vec2(ball->getSprite()->getPositionX(), ball->getSprite()->getPositionY() + 20));
@@ -68,23 +71,6 @@ void LocalPlayer::setActive(bool state)
     }
     _active = state;
     _mouse->setActive(state);
-}
-
-void LocalPlayer::applyShoot(Ball *ball, const Force &force)
-{
-    if(!_active) {
-        return;
-    }
-    
-    ball->move(force * ball->getMaxForce());
-    auto data = std::make_tuple(ball->getId(), force * ball->getMaxForce());
-    auto dataPoint = &data;
-    EventCustom shootEvent("localShoot");
-    shootEvent.setUserData(dataPoint);
-    _eventDispatcher->dispatchEvent(&shootEvent);
-    
-    this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
-    
 }
 
 void LocalPlayer::_isResting(float dt)
@@ -104,6 +90,25 @@ void LocalPlayer::_isResting(float dt)
     EventCustom overRoundEvent("localOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
+    
+}
+
+void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
+{
+    if(!_active) {
+        return;
+    }
+    auto message = *static_cast<std::tuple<Ball*, Force>*>(event->getUserData());
+    auto ball = std::get<0>(message);
+    auto force = std::get<1>(message);
+    auto data = std::make_tuple(ball->getId(), force * ball->getMaxForce());
+    EventCustom shootEvent("localShoot");
+    
+    ball->move(force * ball->getMaxForce());
+    shootEvent.setUserData(&data);
+    _eventDispatcher->dispatchEvent(&shootEvent);
+    
+    this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
     
 }
 
@@ -134,6 +139,8 @@ void Player::_isDeparted(float dt)
             }
     }
 }
+
+
 
 // offset: 2.5f 偏移量球中心出地图才算出界
 

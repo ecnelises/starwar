@@ -30,6 +30,7 @@ constexpr auto exitTextureFile = "texture/exit.png";
 constexpr auto battleSceneFrameFile = "texture/battle_bg.jpg";
 constexpr auto timerFrameFile = "texture/timer.png";
 constexpr auto cursorFrameFile = "texture/cursor.png";
+constexpr auto timerContentFrameFile = "texture/timer.png";
 constexpr auto battleSceneFrameSizeX = 1024;
 constexpr auto battleSceneFrameSizeY = 678;
 constexpr auto battleMapFrameFile = "texture/battle_map.png";
@@ -50,6 +51,9 @@ constexpr auto ballsNumber = 7;
 constexpr auto isRestingInterval = 0.1;
 constexpr auto mapWidth = 641.0f;
 constexpr auto mapHeight = 636.0f;
+constexpr auto WIN = 1;
+constexpr auto LOSE = 0;
+constexpr auto DRAW = 2;
 
 // Tags
 constexpr int moonTag = 30;
@@ -72,9 +76,9 @@ constexpr float moonRadius = 16.0f;
 constexpr float earthRadius = 25.0f;
 constexpr float sunRadius = 35.0f;
 // ball force
-constexpr float moonMaxForce = 50.0f;
-constexpr float earthMaxForce = 120.0f;
-constexpr float sunMaxForce = 200.0f;
+constexpr float moonMaxForce = 80.0f;
+constexpr float earthMaxForce = 150.0f;
+constexpr float sunMaxForce = 250.0f;
 // ball mass
 constexpr float moonMass = 20.0f;
 constexpr float earthMass = 40.0f;

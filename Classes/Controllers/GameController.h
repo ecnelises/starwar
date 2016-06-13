@@ -43,6 +43,7 @@ private:
     void _endFixEvent(cocos2d::EventCustom*);
     void _remoteOverRoundEvent(cocos2d::EventCustom*);
     void _remoteResultEvent(cocos2d::EventCustom*);
+    void _gameOverEvent(cocos2d::EventCustom*);
     NetworkController* _network;
 };
 

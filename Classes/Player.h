@@ -60,6 +60,7 @@ public:
     virtual void unlistenDepart() override;
 private:
     void _isResting(float);
+    void _applyShoot(cocos2d::EventCustom*);
     MouseController* _mouse;
 };
 

@@ -40,11 +40,6 @@ bool MouseController::init()
     return true;
 }
 
-void MouseController::setPlayer(LocalPlayer* player)
-{
-    _player = player;
-}
-
 namespace {
 
     cocos2d::Point getCurrentCursor(cocos2d::Event* event)
@@ -54,25 +49,27 @@ namespace {
     
 } // anonymous namespace
 
-// FIXME: 如果鼠标位置超出了游戏窗口会出现反方向击打的情况
 void MouseController::handleMouseUp(cocos2d::Event* event)
 {
     if (!_active || _selectedBall == nullptr) {
         return;
     }
     const float maxDistance = 250;
-    
+    cocos2d::EventCustom applyShoot("applyShoot");
     _drawer->clear();
-    // TODO: static_cast is safe?
+    
     auto destPoint = getCurrentCursor(event);
     auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
+    auto force = Force(-pointDiff);
     if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
         pointDiff.scale(maxDistance);
-        _player->applyShoot(_selectedBall, Force(-pointDiff)); // todo 无效
-    } else {
-        _player->applyShoot(_selectedBall, Force(-pointDiff));
+        force = Force(-pointDiff);
     }
+    
+    auto data = std::make_tuple(_selectedBall, force);
+    applyShoot.setUserData(&data);
+    _eventDispatcher->dispatchEvent(&applyShoot);
     _selectedBall = nullptr;
 }
 

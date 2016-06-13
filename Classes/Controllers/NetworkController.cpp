@@ -23,11 +23,11 @@ NetworkController::NetworkController()
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
     _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
     _client->on("fix", CC_CALLBACK_2(NetworkController::dispatchFixed, this));
-    _client->on("endFix", CC_CALLBACK_2(NetworkController::dispatchEndFixed, this));
+    _client->on("endFix", CC_CALLBACK_1(NetworkController::dispatchEndFixed, this));
     _client->on("wait", CC_CALLBACK_1(NetworkController::dispatchWait, this));
+    _client->on("gameOver", CC_CALLBACK_2(NetworkController::dispatchGameOver, this));
     _client->on("ready", CC_CALLBACK_2(NetworkController::dispatchReady, this));
-    _client->on("overRound", CC_CALLBACK_2(NetworkController::dispatchRound, this));
-    _client->on("result", CC_CALLBACK_2(NetworkController::dispatchResult, this));
+    _client->on("overRound", CC_CALLBACK_1(NetworkController::dispatchRound, this));
     _client->on("connect", CC_CALLBACK_1(NetworkController::dispatchConnect, this));
     _client->on("disconnect", CC_CALLBACK_1(NetworkController::dispatchConnect, this));
 }
@@ -96,13 +96,17 @@ void NetworkController::sendStop(const std::string& player)
     //    _client->send(stream.str());
 }
 
-void NetworkController::sendFinish(const std::string& winner)
+void NetworkController::sendGameOver(int status)
 {
     //    std::ostringstream stream;
     //    stream << R"({"type":"finish","detail":{)";
     //    stream << R"("player":)" << "\"" << winner << "\","
     //    << R"("gameid":)" << gameid << "}}";
     //    _client->send(stream.str());
+    std::ostringstream stream;
+    stream << R"({"winner":)" << status << ","
+    << R"("room":)" << "\"" <<  _room << "\"}";
+    _client->emit("gameOver", stream.str());
 }
 
 // The fucking cocos2d-x document has no words on arguments of this
@@ -129,7 +133,17 @@ void NetworkController::dispatchReady(cocos2d::network::SIOClient *client, const
     _eventDispatcher->dispatchEvent(&intoBattleScene);
 }
 
-void NetworkController::dispatchRound(cocos2d::network::SIOClient *client, const std::string &message)
+void NetworkController::dispatchGameOver(cocos2d::network::SIOClient *client, const std::string &message)
+{
+    rapidjson::Document d;
+    d.Parse(message.c_str());
+    cocos2d::EventCustom gameOverEvent("gameOver");
+    auto winner = d["winner"].GetInt();
+    gameOverEvent.setUserData(&winner);
+    _eventDispatcher->dispatchEvent(&gameOverEvent);
+}
+
+void NetworkController::dispatchRound(cocos2d::network::SIOClient *client)
 {
     //    rapidjson::Document d;
     //    d.Parse(message.c_str());
@@ -145,7 +159,7 @@ void NetworkController::dispatchRound(cocos2d::network::SIOClient *client, const
     _eventDispatcher->dispatchEvent(&overRoundEvent);
 }
 
-void NetworkController::dispatchEndFixed(cocos2d::network::SIOClient *client, const std::string &message)
+void NetworkController::dispatchEndFixed(cocos2d::network::SIOClient *client)
 {
     cocos2d::EventCustom endFixEvent("endFix");
     _eventDispatcher->dispatchEvent(&endFixEvent);
@@ -164,21 +178,14 @@ void NetworkController::dispatchConnect(cocos2d::network::SIOClient *client)
     // 连接成功就加入房间
     std::ostringstream stream;
     stream << R"({"player":)" << R"(")" << _token << R"("})";
-                                                        _client->emit("register", stream.str());
-                                                        }
-                                                        
-                                                        
-                                                        void NetworkController::dispatchWait(cocos2d::network::SIOClient *client)
-                                                        {
-                                                            // 等待其他人进入房间
-                                                            printf("waiting...\n");
-                                                            cocos2d::EventCustom waitEvent("wait");
-                                                            _eventDispatcher->dispatchEvent(&waitEvent);
-                                                        }
-                                                        
-                                                        void NetworkController::dispatchResult(cocos2d::network::SIOClient* client, const std::string& message)
-                                                        {
-                                                            rapidjson::Document d;
-                                                            d.Parse(message.c_str());
-                                                            //_game->endGame(d["winner"].GetString());
-                                                        }
+    _client->emit("register", stream.str());
+}
+
+
+void NetworkController::dispatchWait(cocos2d::network::SIOClient *client)
+{
+    // 等待其他人进入房间
+    printf("waiting...\n");
+    cocos2d::EventCustom waitEvent("wait");
+    _eventDispatcher->dispatchEvent(&waitEvent);
+}

@@ -8,6 +8,7 @@
 #include "NetworkController.h"
 #include "../Player.h"
 #include "../Contact.h"
+#include "../Timer.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 
@@ -21,19 +22,21 @@ bool GameController::init(void)
     _status = LOADING;
     
     auto contact = Contact::create();
+    auto timer = Timer::create();
     auto localOverRound = cocos2d::EventListenerCustom::create("localOverRound", CC_CALLBACK_1(GameController::_localOverRoundEvent, this));
     auto remoteOverRound = cocos2d::EventListenerCustom::create("remoteOverRound", CC_CALLBACK_1(GameController::_remoteOverRoundEvent, this));
     
     auto localShoot = cocos2d::EventListenerCustom::create("localShoot", CC_CALLBACK_1(GameController::_localShootEvent, this));
     auto remoteShoot = cocos2d::EventListenerCustom::create("remoteShoot", CC_CALLBACK_1(GameController::_remoteShootEvent, this));
     
-    auto remoteResult = cocos2d::EventListenerCustom::create("remoteResult", CC_CALLBACK_1(GameController::_remoteResultEvent, this));
+    auto gameOverEvent = cocos2d::EventListenerCustom::create("gameOver", CC_CALLBACK_1(GameController::_gameOverEvent, this));
     
     auto fixEvent = cocos2d::EventListenerCustom::create("fix", CC_CALLBACK_1(GameController::_fixEvent, this));
     auto endFixEvent = cocos2d::EventListenerCustom::create("endFix", CC_CALLBACK_1(GameController::_endFixEvent, this));
     
     this->schedule(schedule_selector(GameController::_handleBallStatus), ballStatusInterval);
     this->addChild(contact, 0);
+    this->addChild(timer, 9);
     
     _eventDispatcher->addEventListenerWithFixedPriority(fixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(endFixEvent, 1);
@@ -41,7 +44,7 @@ bool GameController::init(void)
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localShoot, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteShoot, 1);
-    _eventDispatcher->addEventListenerWithFixedPriority(remoteResult, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(gameOverEvent, 1);
     
     return true;
 }
@@ -107,11 +110,11 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _remotePlayer->getBallsNumber();
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
-        // 平局
+        _network->sendGameOver(DRAW);
     } else if(localPlayerBalls == 0) {
-        // 我方赢
+        _network->sendGameOver(LOSE);
     } else if(remotePlayerBalls == 0) {
-        // 对方赢
+        _network->sendGameOver(WIN);
     } else {
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
@@ -135,9 +138,23 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
 }
 
 
-void GameController::_remoteResultEvent(cocos2d::EventCustom* event)
+void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
     // 决定谁先
+    auto status = *static_cast<int*>(event->getUserData());
+    switch (status) {
+        case WIN: // win is lose
+            // LOSE
+            break;
+        case LOSE: // lose is win
+            // WIN
+            break;
+        case DRAW: // draw is draw
+            // DRAW
+            break;
+        default:
+            break;
+    }
     printf("end\n");
     _status = END;
 }
