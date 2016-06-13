@@ -50,6 +50,22 @@ LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollec
 
 void LocalPlayer::setActive(bool state)
 {
+    // 如果轮到我操作，就显示光标
+    if(!state) {
+        auto childs = this->getChildren();
+        for(const auto &child : childs) {
+            if(child->getTag() == cursorTag) {
+                child->removeFromParentAndCleanup(true);
+            }
+        }
+    } else {
+        for(const auto &ball : _balls) {
+            auto cursor = Sprite::create(cursorFrameFile);
+            cursor->setPosition(Vec2(ball->getSprite()->getPositionX(), ball->getSprite()->getPositionY() + 20));
+            cursor->setTag(cursorTag);
+            this->addChild(cursor, 5);
+        }
+    }
     _active = state;
     _mouse->setActive(state);
 }

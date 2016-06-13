@@ -28,6 +28,8 @@ constexpr auto aboutTextureFile = "texture/about.png";
 constexpr auto onlineTextureFile = "texture/online.png";
 constexpr auto exitTextureFile = "texture/exit.png";
 constexpr auto battleSceneFrameFile = "texture/battle_bg.jpg";
+constexpr auto timerFrameFile = "texture/timer.png";
+constexpr auto cursorFrameFile = "texture/cursor.png";
 constexpr auto battleSceneFrameSizeX = 1024;
 constexpr auto battleSceneFrameSizeY = 678;
 constexpr auto battleMapFrameFile = "texture/battle_map.png";
@@ -57,6 +59,7 @@ constexpr int AIPlayerTag = 0;
 constexpr int localPlayerTag = 1;
 constexpr int remotePlayer = 2;
 constexpr int mouseControllerTag = 20;
+constexpr int cursorTag = 60;
 
 // ball number
 constexpr auto moonNumber = 4;
