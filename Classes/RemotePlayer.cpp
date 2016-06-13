@@ -52,25 +52,16 @@ void RemotePlayer::applyShoot(int ballId, const Vec2 &position)
             break;
         }
     }
+}
+
+void RemotePlayer::listenDepart()
+{
     this->schedule(CC_CALLBACK_1(RemotePlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
 }
 
-void RemotePlayer::_isDeparted(float dt)
+void RemotePlayer::unlistenDepart()
 {
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto lterator = _balls.begin();
-    while(lterator != _balls.end()) {
-        auto l = *lterator;
-        if (l->getSprite()->getTag() != mouseControllerTag &&
-            (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
-             l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
-                printf("remote depart");
-                l->depart();
-                _balls.erase(lterator);
-            } else {
-                ++lterator;
-            }
-    }
+    this->unschedule("isDeparted");
 }
 
 

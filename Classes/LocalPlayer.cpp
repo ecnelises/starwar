@@ -68,7 +68,7 @@ void LocalPlayer::applyShoot(Ball *ball, const Force &force)
     _eventDispatcher->dispatchEvent(&shootEvent);
     
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
-    this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
+    
 }
 
 void LocalPlayer::_isResting(float dt)
@@ -88,19 +88,29 @@ void LocalPlayer::_isResting(float dt)
     EventCustom overRoundEvent("localOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
     this->unschedule("isResting"); // 取消监听事件减少消耗
+    
+}
+
+void LocalPlayer::listenDepart()
+{
+    this->schedule(CC_CALLBACK_1(LocalPlayer::_isDeparted, this), isRestingInterval, kRepeatForever, 0, "isDeparted"); // 发射完小球后立即检测
+}
+
+void LocalPlayer::unlistenDepart()
+{
     this->unschedule("isDeparted"); // 取消监听事件减少消耗
 }
 
-void LocalPlayer::_isDeparted(float dt)
+void Player::_isDeparted(float dt)
 {
-    auto visibleSize = Director::getInstance()->getVisibleSize();
+    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
     auto lterator = _balls.begin();
     while(lterator != _balls.end()) {
         auto l = *lterator;
         if (l->getSprite()->getTag() != mouseControllerTag &&
             (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
              l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
-                printf("depart");
+                printf("remote depart");
                 l->depart();
                 _balls.erase(lterator);
             } else {
@@ -108,7 +118,6 @@ void LocalPlayer::_isDeparted(float dt)
             }
     }
 }
-
 
 // offset: 2.5f 偏移量球中心出地图才算出界
 

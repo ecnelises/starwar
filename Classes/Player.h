@@ -24,6 +24,8 @@ public:
     Player() : _active(false) {}
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
+    virtual void listenDepart() = 0;
+    virtual void unlistenDepart() = 0;
     virtual BallsCollection getBalls()
     {
         return _balls;
@@ -45,6 +47,7 @@ protected:
     bool _active;
     std::string _playerId;
     std::string _nickname;
+    void _isDeparted(float dt);
 };
 
 class LocalPlayer : public cocos2d::Node, public Player {
@@ -53,9 +56,10 @@ public:
     virtual ~LocalPlayer() = default;
     virtual void setActive(bool) override;
     void applyShoot(Ball*, const Force&);
+    virtual void listenDepart() override;
+    virtual void unlistenDepart() override;
 private:
     void _isResting(float);
-    void _isDeparted(float);
     MouseController* _mouse;
 };
 
@@ -66,20 +70,18 @@ public:
     virtual ~RemotePlayer() = default;
     void applyShoot(int, const cocos2d::Vec2&);
     virtual void setActive(bool) override;
-private:
-    void _isDeparted(float);
+    virtual void listenDepart() override;
+    virtual void unlistenDepart() override;
 };
 
-class AIPlayer : public cocos2d::Node, Player {
+class AIPlayer : public cocos2d::Node, public Player {
 public:
     virtual ~AIPlayer() = default;
-    virtual bool init() override;
     void applyShoot(Ball*, const Force&);
     virtual void setActive(bool) override {}
+    virtual void listenDepart() override {}
+    virtual void unlistenDepart() override {}
     void findAndShoot(observer_ptr<BallsCollection> aiBalls, observer_ptr<BallsCollection> enemyBalls);
-    CREATE_FUNC(AIPlayer);
-private:
-    void _isDeparted(float);
 };
 
 #endif // PLAYER_H_

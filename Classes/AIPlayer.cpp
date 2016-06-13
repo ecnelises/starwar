@@ -13,47 +13,7 @@
 #include <algorithm>
 
 USING_NS_CC;
-#if 0
 
-class Player {
-public:
-    Player() : _active(false) {}
-    virtual ~Player() = default;
-    virtual void setActive(bool) = 0;
-    int getBallsNumber() const
-    {
-        return _balls.size();
-    }
-protected:
-    BallsCollection _balls;
-    bool _active;
-    std::string _playerId;
-    std::string _nickname;
-};
-
-class AIPlayer : public cocos2d::Node, Player {
-public:
-    virtual ~AIPlayer() = default;
-    virtual bool init() override;
-    void applyShoot(Ball*, const Force&) {}
-    virtual void setActive(bool) override;
-    CREATE_FUNC(AIPlayer);
-private:
-    void _isDeparted(float);
-};
-
-#endif
-
-bool AIPlayer::init(void)
-{
-    if (!Node::init()) {
-        return false;
-    }
-    
-    // place balls.
-    
-    return true;
-}
 
 void AIPlayer::applyShoot(Ball* ball, const Force& force)
 {
@@ -88,3 +48,4 @@ void AIPlayer::findAndShoot(observer_ptr<BallsCollection> aiBalls,
                                           compareBallWithDistanceToBorder);
     this->applyShoot(targetAIBall, targetEnemyBall->getSprite()->getPosition() - targetAIBall->getSprite()->getPosition());
 }
+

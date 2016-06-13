@@ -54,6 +54,9 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
     auto force = std::get<1>(data);
     printf("local shoot\n");
     _status = BLOCKING;
+    // 开始监听消失事件
+    _localPlayer->listenDepart();
+    _remotePlayer->listenDepart();
     _localPlayer->setActive(false);
     _network->sendShoot(ballId, force);
 }
@@ -67,6 +70,9 @@ void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     auto forceX = d["force"][0].GetDouble();
     auto forceY = d["force"][1].GetDouble();
     _remotePlayer->applyShoot(ballId, cocos2d::Vec2(forceX, forceY));
+    // 开始监听消失事件
+    _localPlayer->listenDepart();
+    _remotePlayer->listenDepart();
     printf("remote shoot");
     _status = BLOCKING;
 }
@@ -155,7 +161,11 @@ void GameController::_handleBallStatus(float dt)
 // 进入下一回合
 void GameController::_overRound()
 {
-    _timeLeft = timeLeftDefault; // 时钟重置
+    // 时钟重置
+    _timeLeft = timeLeftDefault;
+    // 停止监听消失事件
+    _localPlayer->unlistenDepart();
+    _remotePlayer->unlistenDepart();
     if(_currentPlayer == LOCAL_PLAYER) {
         _localPlayer->setActive(false);
         _remotePlayer->setActive(true);
