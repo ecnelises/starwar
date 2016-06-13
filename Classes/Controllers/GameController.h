@@ -48,6 +48,7 @@ private:
     std::unique_ptr<NetworkController> _net;
     bool _isNetworkGame;
     int _timeLeft;
+    Timer *_timer;
     int _fixTimes;
     void _handleTime(float);
     void _overRound();
