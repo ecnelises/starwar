@@ -30,7 +30,7 @@ bool MenuScene::init()
 	});
 
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
-        //if(!_waiting) {
+        if(!_waiting) {
             auto network = new NetworkController();
             _network = network;
             auto connectLayer = Layer::create();
@@ -40,7 +40,7 @@ bool MenuScene::init()
             connectLayer->addChild(connectBg, 2);
             _waiting = true;
             this->addChild(connectLayer, 3);
-        //}
+        }
     });
     auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile, [=](Ref *sender) {
         audio->playItemClickEffect();

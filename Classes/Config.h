@@ -77,18 +77,18 @@ constexpr float moonRadius = 16.0f;
 constexpr float earthRadius = 25.0f;
 constexpr float sunRadius = 35.0f;
 // ball force
-constexpr float moonMaxForce = 80.0f;
-constexpr float earthMaxForce = 150.0f;
-constexpr float sunMaxForce = 250.0f;
+constexpr float moonMaxForce = 50.0f;
+constexpr float earthMaxForce = 160.0f;
+constexpr float sunMaxForce = 350.0f;
 // ball mass
 constexpr float moonMass = 20.0f;
 constexpr float earthMass = 40.0f;
 constexpr float sunMass = 80.0f;
 
 // ball linear damping
-constexpr float moonLinearDamping = 4.2f;
+constexpr float moonLinearDamping = 4.8f;
 constexpr float earthLinearDamping = 5.3f;
-constexpr float sunLinearDamping = 7.0f;
+constexpr float sunLinearDamping = 6.0f;
 
 // Position
 constexpr float moonPositionX = 260.0f;

@@ -30,6 +30,7 @@ bool GameController::init(void)
     auto remoteShoot = cocos2d::EventListenerCustom::create("remoteShoot", CC_CALLBACK_1(GameController::_remoteShootEvent, this));
     
     auto gameOverEvent = cocos2d::EventListenerCustom::create("gameOver", CC_CALLBACK_1(GameController::_gameOverEvent, this));
+    auto disconnectEvent = cocos2d::EventListenerCustom::create("disconnect", CC_CALLBACK_1(GameController::_disconnectEvent, this));
     
     auto fixEvent = cocos2d::EventListenerCustom::create("fix", CC_CALLBACK_1(GameController::_fixEvent, this));
     auto endFixEvent = cocos2d::EventListenerCustom::create("endFix", CC_CALLBACK_1(GameController::_endFixEvent, this));
@@ -41,6 +42,7 @@ bool GameController::init(void)
     this->addChild(timer, 9);
     
     _eventDispatcher->addEventListenerWithFixedPriority(fixEvent, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(disconnectEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(endFixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
@@ -112,25 +114,36 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
     }
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _remotePlayer->getBallsNumber();
+    // 本地给本地发, 世界上最遥远的距离莫过于游戏结束函数就在下面，而我却要通过事件分发器调用它
+    cocos2d::EventCustom gameOverEvent("gameOver");
+    int winner;
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
+        winner = DRAW;
         _network->sendGameOver(DRAW);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else if(localPlayerBalls == 0) {
+        winner = WIN;
         _network->sendGameOver(LOSE);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else if(remotePlayerBalls == 0) {
+        winner = LOSE;
         _network->sendGameOver(WIN);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else {
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
         auto remoteBalls = _remotePlayer->getBalls();
         for(const auto &ball : localBalls) {
-            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+            _network->sendFixed(ball->getId(), ball->getPosition());
         }
         for(const auto &ball : remoteBalls) {
-            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+            _network->sendFixed(ball->getId(), ball->getPosition());
         }
         _network->sendEndFixed();
     }
-    
 }
 
 void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
@@ -140,6 +153,11 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
     this->_overRound();
 }
 
+void GameController::_disconnectEvent(cocos2d::EventCustom *event)
+{
+    cocos2d::EventCustom backToMenuSceneEvent("backToMenuScene");
+    _eventDispatcher->dispatchEvent(&backToMenuSceneEvent);
+}
 
 void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
@@ -236,7 +254,6 @@ void GameController::initNetwork(NetworkController *network)
     _localPlayer = localPlayer;
     _remotePlayer = remotePlayer;
     _status =  first ? WAITING : LOADING;
-    
     _currentPlayer = first ? LOCAL_PLAYER : REMOTE_PLAYER;
     
     this->addChild(localPlayer, 9);

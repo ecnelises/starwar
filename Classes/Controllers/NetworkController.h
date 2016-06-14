@@ -56,6 +56,7 @@ private:
     void dispatchEndFixed(Socket*);
     void dispatchWait(Socket*);
     void dispatchConnect(Socket*);
+    void dispatchDisconnect(Socket*);
     std::string _room;
     std::string _starter;
     std::string _token;

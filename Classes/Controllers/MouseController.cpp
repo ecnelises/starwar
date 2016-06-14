@@ -59,7 +59,7 @@ void MouseController::handleMouseUp(cocos2d::Event* event)
     _drawer->clear();
     
     auto destPoint = getCurrentCursor(event);
-    auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
+    auto pointDiff = destPoint - _selectedBall->getPosition();
     auto force = Force(-pointDiff);
     if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
@@ -83,15 +83,15 @@ void MouseController::handleMouseMove(cocos2d::Event* event)
     
     _drawer->clear();
     auto destPoint = getCurrentCursor(event);
-    auto pointDiff = destPoint - _selectedBall->getSprite()->getPosition();
+    auto pointDiff = destPoint - _selectedBall->getPosition();
     
     // Distance has a limit.
     if (pointDiff.length() >= maxDistance) {
         pointDiff.normalize();
         pointDiff.scale(maxDistance);
-        destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
+        destPoint = _selectedBall->getPosition() + pointDiff;
     }
-    _drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
+    _drawer->drawSegment(_selectedBall->getPosition(), destPoint,
                          2, cocos2d::Color4F(1, 0, 0, 0.7)); // todo config
 }
 
@@ -103,7 +103,7 @@ void MouseController::handleMouseDown(cocos2d::Event* event)
     // Find if there is any ball the cursor in.
     auto currentCursor = getCurrentCursor(event);
     for (const auto f : _balls) {
-        if ((f->getSprite()->getBoundingBox()).containsPoint(currentCursor)) {
+        if ((f->getBoundingBox()).containsPoint(currentCursor)) {
             _selectedBall = f;
             return;
         }

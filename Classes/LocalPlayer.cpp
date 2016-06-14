@@ -113,11 +113,11 @@ void Player::_isDeparted(float dt)
     while(lterator != _balls.end()) {
         auto l = *lterator;
         if (l->getSprite()->getTag() != mouseControllerTag &&
-            (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
-             l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
+            (l->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
+             l->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
                 printf("remote depart");
                 l->depart();
-                _balls.erase(lterator);
+                lterator = _balls.erase(lterator);
             } else {
                 ++lterator;
             }

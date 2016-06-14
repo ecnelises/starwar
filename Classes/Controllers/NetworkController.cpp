@@ -20,7 +20,7 @@ NetworkController::NetworkController()
     _client->on("ready", CC_CALLBACK_2(NetworkController::dispatchReady, this));
     _client->on("overRound", CC_CALLBACK_1(NetworkController::dispatchRound, this));
     _client->on("connect", CC_CALLBACK_1(NetworkController::dispatchConnect, this));
-    _client->on("disconnect", CC_CALLBACK_1(NetworkController::dispatchConnect, this));
+    _client->on("disconnect", CC_CALLBACK_1(NetworkController::dispatchDisconnect, this));
 }
 
 NetworkController::~NetworkController()
@@ -147,6 +147,13 @@ void NetworkController::dispatchConnect(cocos2d::network::SIOClient *client)
     std::ostringstream stream;
     stream << R"({"player":)" << R"(")" << _token << R"("})";
     _client->emit("register", stream.str());
+}
+                                                        
+void NetworkController::dispatchDisconnect(cocos2d::network::SIOClient *client)
+{
+    // 断开网络
+    cocos2d::EventCustom disconnectEvent("disconnect");
+    _eventDispatcher->dispatchEvent(&disconnectEvent);
 }
 
 

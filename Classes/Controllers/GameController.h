@@ -15,9 +15,6 @@
 #include <vector>
 #include <memory>
 
-template<typename T>
-using observer_ptr = T*;
-
 /// \class GameController
 /// \brief Main dispatcher in game processing.
 class GameController : public cocos2d::Node {
@@ -43,6 +40,7 @@ private:
     void _remoteOverRoundEvent(cocos2d::EventCustom*);
     void _remoteResultEvent(cocos2d::EventCustom*);
     void _gameOverEvent(cocos2d::EventCustom*);
+    void _disconnectEvent(cocos2d::EventCustom*);
     NetworkController* _network;
 };
 
