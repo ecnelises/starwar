@@ -11,7 +11,6 @@ NetworkController::NetworkController()
     std::default_random_engine re;
     std::uniform_int_distribution<int> rdis(619, 414124121);
     _token = std::to_string(std::chrono::system_clock::to_time_t(currentTime)) + std::to_string(rdis(re)); // 时间戳+随机 = token
-    
     _client = cocos2d::network::SocketIO::connect(_destUri, _delegate);
     _client->on("shoot", CC_CALLBACK_2(NetworkController::dispatchShoot, this));
     _client->on("fix", CC_CALLBACK_2(NetworkController::dispatchFixed, this));
@@ -27,7 +26,6 @@ NetworkController::NetworkController()
 NetworkController::~NetworkController()
 {
     _client->disconnect();
-    delete _client;
 }
 
 void GameSocketDelegate::onClose(cocos2d::network::SIOClient *client)
@@ -38,7 +36,7 @@ void GameSocketDelegate::onClose(cocos2d::network::SIOClient *client)
 void GameSocketDelegate::onError(cocos2d::network::SIOClient *client,
                                  const std::string& data)
 {
-    printf("network error \n");
+    printf("error: %s\n", data.c_str());
 }
 
 void NetworkController::sendShoot(int ballId, const Force &force)
@@ -72,6 +70,12 @@ void NetworkController::sendFixed(int ballId, cocos2d::Vec2 pos)
     << R"("position":[)" << pos.x << "," << pos.y << "],"
     << R"("room":)" << "\"" <<  _room << "\"}";
     _client->emit("fix", stream.str());
+}
+
+void NetworkController::sendDisconnect()
+{
+    _client->disconnect();
+    this->unscheduleAllCallbacks();
 }
 
 

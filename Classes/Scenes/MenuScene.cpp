@@ -28,15 +28,16 @@ bool MenuScene::init()
             audio->playItemClickEffect();
         }
 	});
+
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
         //if(!_waiting) {
             auto network = new NetworkController();
+            _network = network;
             auto connectLayer = Layer::create();
+            audio->playItemClickEffect();
             auto connectBg = Sprite::create(connectingTextureFile);
             connectBg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
             connectLayer->addChild(connectBg, 2);
-            audio->playItemClickEffect();
-            _network = network;
             _waiting = true;
             this->addChild(connectLayer, 3);
         //}
@@ -81,7 +82,7 @@ void MenuScene::_inZoom(float dt)
 void MenuScene::_outZoom(float dt)
 {
     _scale -= 0.0005;
-    if(_scale <= 0.20) {
+    if(_scale <= 0.22) {
         this->unschedule(schedule_selector(MenuScene::_outZoom));
         this->schedule(schedule_selector(MenuScene::_inZoom));
     }
@@ -91,7 +92,8 @@ void MenuScene::_outZoom(float dt)
 
 void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)
 {
+    _eventDispatcher->removeAllEventListeners();
     auto battleScene = HelloWorld::createScene(_network);
-    Director::getInstance()->pushScene(battleScene);
+    Director::getInstance()->replaceScene(battleScene);
 }
 

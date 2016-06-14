@@ -31,8 +31,6 @@ private:
     currentPlayer _currentPlayer;
     RemotePlayer* _remotePlayer;
     LocalPlayer* _localPlayer;
-    
-    std::unique_ptr<NetworkController> _net;
     Timer *_timer;
     int _fixTimes;
     void _handleTime(float);

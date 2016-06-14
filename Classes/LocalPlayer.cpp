@@ -9,7 +9,7 @@ LocalPlayer::LocalPlayer(bool isStarter) //: _balls(std::make_unique<BallsCollec
 {
     auto applyShoot = cocos2d::EventListenerCustom::create("applyShoot", CC_CALLBACK_1(LocalPlayer::_applyShoot, this));
     auto mouseController = MouseController::create();
-    float diff = isStarter ? 0 : 768.0f;
+    float diff = isStarter ? 0 : 800.0f;
     int initNumber = isStarter ? 0 : 7;
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));

@@ -40,6 +40,7 @@ public:
     void sendShoot(int ballid, const Force&);
     void sendOverRound();
     void sendEndFixed();
+    void sendDisconnect();
     void sendGameOver(int);
     void sendFixed(int ballId, cocos2d::Vec2);
 private:

@@ -5,7 +5,7 @@ USING_NS_CC;
 
 RemotePlayer::RemotePlayer(bool isStarter)
 {
-    float diff = isStarter ? 0 : 768.0f;
+    float diff = isStarter ? 0 : 800.0f;
     int initNumber = isStarter ? 0 : 7;
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
