@@ -19,9 +19,9 @@ public:
     virtual void setActive(bool) = 0;
     virtual void listenDepart() = 0;
     virtual void unlistenDepart() = 0;
-    virtual BallsCollection getBalls()
+    virtual BallsCollection* getBalls()
     {
-        return _balls;
+        return &_balls;
     }
     virtual int getBallsNumber()
     {

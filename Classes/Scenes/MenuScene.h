@@ -1,7 +1,6 @@
 #ifndef MENU_SCENE_H_
 #define MENU_SCENE_H_
 
-
 #include "cocos2d.h"
 #include "../Controllers/NetworkController.h"
 
@@ -13,6 +12,7 @@ public:
     CREATE_FUNC(MenuScene)
 private:
     void _intoBattleScene(cocos2d::EventCustom*);
+    void _intoAIScene(void);
     void _inZoom(float);
     void _outZoom(float);
     float _scale;

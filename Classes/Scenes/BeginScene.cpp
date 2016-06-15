@@ -3,7 +3,6 @@
 #include "Config.h"
 #include "Audio.h"
 
-
 cocos2d::Scene* BeginScene::createScene()
 {
     // 'scene' is an autorelease object

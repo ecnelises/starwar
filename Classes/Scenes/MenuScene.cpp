@@ -2,7 +2,7 @@
 #include "HelloWorldScene.h"
 #include "Config.h"
 #include "Audio.h"
-
+#include <tuple>
 
 USING_NS_CC;
 
@@ -24,6 +24,7 @@ bool MenuScene::init()
     auto audio = new Audio();
     auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
+        this->_intoAIScene();
 	});
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
         //if(!_waiting) {
@@ -88,7 +89,12 @@ void MenuScene::_outZoom(float dt)
 
 void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)
 {
-    auto battleScene = HelloWorld::createScene(_network);
+    auto battleScene = HelloWorld::createScene(std::make_tuple(true, _network));
     Director::getInstance()->pushScene(battleScene);
 }
 
+void MenuScene::_intoAIScene(void)
+{
+    auto aiScene = HelloWorld::createScene(std::make_tuple(false, nullptr));
+    Director::getInstance()->pushScene(aiScene);
+}

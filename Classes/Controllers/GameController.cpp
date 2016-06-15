@@ -26,7 +26,8 @@ bool GameController::init(void)
     if (!_isNetworkGame) {
         std::default_random_engine dre;
         std::uniform_int_distribution<> uid(0, 1);
-        bool first = uid(dre);
+        //bool first = uid(dre);
+        bool first = true;
         auto localPlayer = new LocalPlayer(first);
         auto aiPlayer = new AIPlayer(!first);
         
@@ -114,7 +115,7 @@ void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     auto forceY = d["force"][1].GetDouble();
     
     Ball* target = nullptr;
-    for (auto i : _enemy->getBalls()) {
+    for (auto i : *_enemy->getBalls()) {
         if (i->getId() == ballId) {
             target = i;
             break;
@@ -155,6 +156,11 @@ void GameController::_endFixEvent(cocos2d::EventCustom *event)
 void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
 {
     // 在这里判断球数
+    if (!_isNetworkGame) {
+        this->_overRound();
+        ((AIPlayer*)_enemy)->findAndShoot(_enemy->getBalls(), _localPlayer->getBalls());
+        return;
+    } // TODO
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _enemy->getBallsNumber();
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
@@ -167,10 +173,10 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
         auto remoteBalls = _enemy->getBalls();
-        for(const auto &ball : localBalls) {
+        for(const auto &ball : *localBalls) {
             _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
         }
-        for(const auto &ball : remoteBalls) {
+        for(const auto &ball : *remoteBalls) {
             _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
         }
         _network->sendEndFixed();
@@ -191,8 +197,6 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
 
 void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
-    
-    
     auto status = *static_cast<int*>(event->getUserData());
     auto clickListenter = cocos2d::EventListenerMouse::create();
     printf("stats:: %d\n", status);

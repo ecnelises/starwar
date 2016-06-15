@@ -75,6 +75,11 @@ void LocalPlayer::_isResting(float dt)
     this->unschedule("isResting"); // 取消监听事件减少消耗
 }
 
+void LocalPlayer::applyShoot(Ball* ball, const Force& force)
+{
+    return;
+}
+
 void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
 {
     if(!_active) {
@@ -91,7 +96,6 @@ void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
     _eventDispatcher->dispatchEvent(&shootEvent);
     
     this->schedule(CC_CALLBACK_1(LocalPlayer::_isResting, this), isRestingInterval, kRepeatForever, 0, "isResting"); // 发射完小球后立即检测
-    
 }
 
 void LocalPlayer::listenDepart()
