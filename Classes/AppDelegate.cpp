@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 // TODO: Should we design our map in this resolution?
-static cocos2d::Size developmentResolutionSize = cocos2d::Size(1024, 768);
+static cocos2d::Size developmentResolutionSize = cocos2d::Size(640, 480);
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);

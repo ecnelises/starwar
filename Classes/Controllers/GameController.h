@@ -57,6 +57,7 @@ private:
     void _remoteOverRoundEvent(cocos2d::EventCustom*);
     void _remoteResultEvent(cocos2d::EventCustom*);
     void _gameOverEvent(cocos2d::EventCustom*);
+    void _disconnectEvent(cocos2d::EventCustom*);
     void _aiShootEvent(cocos2d::EventCustom* event);
     void _aiOverRoundEvent(cocos2d::EventCustom*);
     NetworkController* _network;

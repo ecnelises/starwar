@@ -38,6 +38,9 @@ constexpr auto bombFrameFile = "texture/bomb.png";
 constexpr auto earthFrameFile = "texture/earth.png";
 constexpr auto moonFrameFile = "texture/moon.png";
 constexpr auto sunFrameFile = "texture/sun.png";
+constexpr auto victoryFrameFile = "texture/victory.png";
+constexpr auto drawFrameFile = "texture/draw.png";
+constexpr auto defeatFrameFile = "texture/defeat.png";
 
 // left is larger?
 constexpr auto mapLeftBorder = (battleSceneFrameSizeX - battleMapFrameSizeX) / 2.0f;

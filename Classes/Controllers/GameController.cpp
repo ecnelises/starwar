@@ -11,6 +11,7 @@
 #include "../Player.h"
 #include "../Contact.h"
 #include "../Timer.h"
+#include "Config.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
 
@@ -169,8 +170,15 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         ((AIPlayer*)_enemy)->findAndShoot(_enemy->getBalls(), _localPlayer->getBalls());
         return;
     } // TODO
+    // 在这里判断球数
+    if(_status == END) {
+        return;
+    }
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _enemy->getBallsNumber();
+    // 本地给本地发, 世界上最遥远的距离莫过于游戏结束函数就在下面，而我却要通过事件分发器调用它
+    cocos2d::EventCustom gameOverEvent("gameOver");
+    int winner;
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
         winner = DRAW;
         _network->sendGameOver(DRAW);
@@ -191,10 +199,10 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
         auto localBalls = _localPlayer->getBalls();
         auto remoteBalls = _enemy->getBalls();
         for(const auto &ball : *localBalls) {
-            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+            _network->sendFixed(ball->getId(), ball->getPosition());
         }
         for(const auto &ball : *remoteBalls) {
-            _network->sendFixed(ball->getId(), ball->getSprite()->getPosition());
+            _network->sendFixed(ball->getId(), ball->getPosition());
         }
         _network->sendEndFixed();
     }
@@ -212,8 +220,17 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
     this->_overRound();
 }
 
+void GameController::_disconnectEvent(cocos2d::EventCustom *event)
+{
+    cocos2d::EventCustom backToMenuSceneEvent("backToMenuScene");
+    _eventDispatcher->dispatchEvent(&backToMenuSceneEvent);
+}
+
 void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
+    _status = END;
+    auto audio = new Audio;
+    auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
     auto status = *static_cast<int*>(event->getUserData());
     auto clickListenter = cocos2d::EventListenerMouse::create();
     cocos2d::Sprite *resultImg;
@@ -244,7 +261,7 @@ void GameController::_gameOverEvent(cocos2d::EventCustom* event)
     }
     resultImg->setPosition(cocos2d::Vec2(visibleSize.width/2, visibleSize.height/2));
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clickListenter, resultImg);
-    _remotePlayer->setActive(false);
+    _enemy->setActive(false);
     _localPlayer->setActive(false);
     _network->sendDisconnect();
     
