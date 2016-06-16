@@ -20,6 +20,7 @@ Scene* HelloWorld::createScene(std::tuple<bool, NetworkController*> arg)
     if (isNetworkGame) {
         gameController->initNetwork(network);
     }
+    scene->addChild(gameController, 3);
     scene->addChild(layer);
     scene->getPhysicsWorld()->setGravity(Vec2(0, 0));
     return scene;

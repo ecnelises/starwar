@@ -27,11 +27,12 @@ bool GameController::init(void)
     // TODO: move to other place
     bool first;
     if (!_isNetworkGame) {
-        std::default_random_engine dre;
-        dre.seed(std::time(nullptr));
-        std::uniform_int_distribution<> uid(0, 10);
-        first = !(uid(dre) % 3);
+        //std::default_random_engine dre;
+        //dre.seed(std::time(nullptr));
+        //std::uniform_int_distribution<> uid(0, 10);
+        //first = !(uid(dre) % 3);
         //bool first = true;
+        first = false;
         auto localPlayer = new LocalPlayer(first);
         auto aiPlayer = new AIPlayer(!first);
         

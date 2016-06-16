@@ -94,12 +94,12 @@ void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)
     //auto battleScene = HelloWorld::createScene(_network);
     //Director::getInstance()->replaceScene(battleScene);
     auto battleScene = HelloWorld::createScene(std::make_tuple(true, _network));
-    Director::getInstance()->pushScene(battleScene);
+    Director::getInstance()->replaceScene(battleScene);
 }
 
 void MenuScene::_intoAIScene(void)
 {
     _eventDispatcher->removeAllEventListeners();
     auto aiScene = HelloWorld::createScene(std::make_tuple(false, nullptr));
-    Director::getInstance()->pushScene(aiScene);
+    Director::getInstance()->replaceScene(aiScene);
 }

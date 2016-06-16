@@ -1,19 +1,20 @@
 //===--- Ball.h - Ball class definition ---===//
 /// \file Ball.h
-/// This file declares several classes related to Ball,
-/// including base Ball, Bomb, Curling, etc.
+/// This file declares the Ball class.
 
 #ifndef BALL_H_
 #define BALL_H_
 
-#include "cocos2d.h"
 #include "Config.h"
+#include "cocos2d.h"
 #include <vector>
+#include <string>
+#include <memory>
 
 using Force = cocos2d::Vec2;
 
 /// \class Ball
-/// \brief Ball is the base class of all other controllable objects on arena.
+/// \brief Ball is the main object on the game arena.
 class Ball {
 public:
     // What's the parameters?
@@ -65,41 +66,75 @@ protected:
 
 using BallsCollection = std::vector<Ball*>;
 
-/// \class Bomb
-/// \brief Any bomb will explode immediately when touching another ball.
-//class Bomb : public Ball {
-//public:
-//    Bomb()
-//    {
-//        _sprite = cocos2d::Sprite::create(bombFrameFile);
-//        _ballBody = cocos2d::PhysicsBody::createCircle(radius);
-//        // TODO: Where is physics material?
-//        _sprite->setPhysicsBody(_ballBody);
-//    }
-//
-//    virtual ~Bomb()
-//    {
-//        _sprite->release();
-//        _ballBody->release();
-//    }
-//
-//    virtual void move(const Force& force) {}
-//private:
-//    const float radius = 24;
-//};
+class ABallInitializerAggregate;
 
-/// \class Curling
-/// \brief A curling is a ordinary ball can collide with other balls.
-//class Curling : public Ball {
-//public:
-//    Curling() = default;
-//    // TODO: color of Curling should in constructor
-//    Curling(ballType, Vec2);
-//    virtual ~Curling() {}
-//    virtual void move(const Force&) override {}
-//};
-//
+struct ABallInitializer {
+    template <class ABallType>
+    ABallInitializer(ABallType ap) : density(ap.density),
+        restitution(ap.restitution), friction(ap.friction), radius(ap.radius),
+        linearDamping(ap.linearDamping), mass(ap.mass), tag(ap.tag),
+        file(ap.file)
+    {
+    }
+    
+    ABallInitializerAggregate atCenter(const cocos2d::Point& center);
+    ABallInitializerAggregate withDistance(float distance);
+    ABallInitializerAggregate byLine(void);
+    ABallInitializerAggregate byColumn(void);
+    
+    float density;
+    float restitution;
+    float friction;
 
+    float radius;
+    float linearDamping;
+    float mass;
+    int tag;
+    std::string file;
+};
 
+class ABall {
+    //friend Player::fixBall(int ballId, cocos2d::Vec2 pos);
+public:
+    ABall(ABallInitializer bi, cocos2d::Vec2 position);
+    ABall(const ABall& b) = delete;
+    ~ABall();
+    void move(const Force& force);
+    void depart(void);
+    cocos2d::Point position(void) const;
+    bool is(int tag) const;
+    float currentVelocity(void) const;
+protected:
+    cocos2d::Sprite* _sprite;
+    cocos2d::PhysicsBody* _ballBody;
+    float _linearDamping;
+    float _mass;
+};
+
+class ABallInitializerAggregate {
+public:
+    ABallInitializerAggregate(const ABallInitializer& bi);
+    ABallInitializerAggregate& atCenter(const cocos2d::Point& center);
+    ABallInitializerAggregate& withDistance(float distance);
+    ABallInitializerAggregate& byLine(void);
+    ABallInitializerAggregate& byColumn(void);
+    ABallInitializerAggregate& operator * (unsigned number);
+    std::vector<cocos2d::Point> getPositions(void);
+private:
+    ABallInitializer _unitedInitializer;
+    unsigned _number;
+    float _spacing;
+    cocos2d::Point _center;
+    enum { ByLine, ByColumn } _layout;
+};
+
+class ABallsCollection {
+public:
+    ABallsCollection() = default;
+    ~ABallsCollection() = default;
+    ABallsCollection& operator += (const ABallInitializerAggregate& ballInit);
+private:
+    std::vector<std::unique_ptr<ABall>> _balls;
+};
 
 #endif // BALL_H_
