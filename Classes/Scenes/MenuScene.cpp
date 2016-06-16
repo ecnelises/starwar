@@ -26,18 +26,19 @@ bool MenuScene::init()
 	auto computerItem = MenuItemImage::create(computerTextureFile, computerTextureFile, [=](Ref *sender) {
         this->_intoAIScene();
 	});
+
     auto onlineItem = MenuItemImage::create(onlineTextureFile, onlineTextureFile, [=](Ref *sender) {
-        //if(!_waiting) {
+        if(!_waiting) {
             auto network = new NetworkController();
+            _network = network;
             auto connectLayer = Layer::create();
+            audio->playItemClickEffect();
             auto connectBg = Sprite::create(connectingTextureFile);
             connectBg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
             connectLayer->addChild(connectBg, 2);
-            audio->playItemClickEffect();
-            _network = network;
             _waiting = true;
             this->addChild(connectLayer, 3);
-        //}
+        }
     });
     auto aboutItem = MenuItemImage::create(aboutTextureFile, aboutTextureFile, [=](Ref *sender) {
         audio->playItemClickEffect();
@@ -79,7 +80,7 @@ void MenuScene::_inZoom(float dt)
 void MenuScene::_outZoom(float dt)
 {
     _scale -= 0.0005;
-    if(_scale <= 0.20) {
+    if(_scale <= 0.22) {
         this->unschedule(schedule_selector(MenuScene::_outZoom));
         this->schedule(schedule_selector(MenuScene::_inZoom));
     }

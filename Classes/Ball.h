@@ -37,11 +37,17 @@ public:
     {
         return _force;
     }
+    cocos2d::Vec2 getPosition() {
+        return _sprite->getPosition();
+    }
     cocos2d::Sprite *getSprite() {
         return _sprite;
     }
     cocos2d::PhysicsBody *getBallBody() {
         return _ballBody;
+    }
+    cocos2d::Rect getBoundingBox() {
+        return _sprite->getBoundingBox();
     }
 protected:
     cocos2d::Sprite *_sprite;
@@ -54,7 +60,6 @@ protected:
     float _mass;
     float _linearDamping;
     int _id;
-    cocos2d::Vec2 _position;
     //float _speed;
 };
 

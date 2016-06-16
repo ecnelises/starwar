@@ -12,7 +12,6 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
             _force = moonMaxForce;
             _mass = moonMass;
             _linearDamping = moonLinearDamping;
-            //_position = moonPosition;
             _sprite = cocos2d::Sprite::create(moonFrameFile);
             _sprite->setTag(moonTag);
             break;
@@ -21,7 +20,6 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
             _force = earthMaxForce;
             _mass = earthMass;
             _linearDamping = earthLinearDamping;
-            //_position = earthPosition;
             _sprite = cocos2d::Sprite::create(earthFrameFile);
             _sprite->setTag(earthTag);
             break;
@@ -30,7 +28,6 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
             _force = sunMaxForce;
             _mass = sunMass;
             _linearDamping = sunLinearDamping;
-            //_position = sunPosition;
             _sprite = cocos2d::Sprite::create(sunFrameFile);
             _sprite->setTag(sunTag);
             break;

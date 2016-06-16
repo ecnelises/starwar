@@ -59,6 +59,7 @@ bool GameController::init(void)
     auto aiShoot = cocos2d::EventListenerCustom::create("aiShoot", CC_CALLBACK_1(GameController::_aiShootEvent, this));
     
     auto gameOverEvent = cocos2d::EventListenerCustom::create("gameOver", CC_CALLBACK_1(GameController::_gameOverEvent, this));
+    auto disconnectEvent = cocos2d::EventListenerCustom::create("disconnect", CC_CALLBACK_1(GameController::_disconnectEvent, this));
     
     auto fixEvent = cocos2d::EventListenerCustom::create("fix", CC_CALLBACK_1(GameController::_fixEvent, this));
     auto endFixEvent = cocos2d::EventListenerCustom::create("endFix", CC_CALLBACK_1(GameController::_endFixEvent, this));
@@ -70,6 +71,7 @@ bool GameController::init(void)
     this->addChild(timer, 9);
     
     _eventDispatcher->addEventListenerWithFixedPriority(fixEvent, 1);
+    _eventDispatcher->addEventListenerWithFixedPriority(disconnectEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(endFixEvent, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(localOverRound, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(remoteOverRound, 1);
@@ -85,7 +87,6 @@ bool GameController::init(void)
     
     return true;
 }
-
 
 void GameController::_localShootEvent(cocos2d::EventCustom* event)
 {
@@ -171,11 +172,20 @@ void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
     int localPlayerBalls = _localPlayer->getBallsNumber();
     int remotePlayerBalls = _enemy->getBallsNumber();
     if(localPlayerBalls == 0 && remotePlayerBalls == 0) {
+        winner = DRAW;
         _network->sendGameOver(DRAW);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else if(localPlayerBalls == 0) {
+        winner = WIN;
         _network->sendGameOver(LOSE);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else if(remotePlayerBalls == 0) {
+        winner = LOSE;
         _network->sendGameOver(WIN);
+        gameOverEvent.setUserData(&winner);
+        _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else {
         // 未分胜负，下一回合
         auto localBalls = _localPlayer->getBalls();
@@ -206,23 +216,49 @@ void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
     auto status = *static_cast<int*>(event->getUserData());
     auto clickListenter = cocos2d::EventListenerMouse::create();
-    printf("stats:: %d\n", status);
-    clickListenter->onMouseDown = [=](cocos2d::Event* event) {
-        auto menuScene = MenuScene::createScene();
-        cocos2d::Director::getInstance()->pushScene(menuScene);
-    };
-
+    cocos2d::Sprite *resultImg;
     
-//    _eventDispatcher->addEventListenerWithSceneGraphPriority(clickListenter, _resultBoard);
-//    this->_openResultBoard(status);
-    this->unschedule(schedule_selector(GameController::_handleTime)); // 取消timer调度器
+    clickListenter->onMouseDown = [=](cocos2d::Event* event) {
+        cocos2d::EventCustom backToMenuSceneEvent("backToMenuScene");
+        _eventDispatcher->dispatchEvent(&backToMenuSceneEvent);
+    };
+    
+    switch (status) {
+        case WIN: // win is lose
+            // LOSE
+            audio->playDefeatEffect();
+            resultImg = cocos2d::Sprite::create(defeatFrameFile);
+            break;
+        case LOSE: // lose is win
+            // WIN
+            audio->playVictoryEffect();
+            resultImg = cocos2d::Sprite::create(victoryFrameFile);
+            break;
+        case DRAW: // draw is draw
+            // DRAW
+            audio->playEnterBattleEffect();
+            resultImg = cocos2d::Sprite::create(drawFrameFile);
+            break;
+        default:
+            break;
+    }
+    resultImg->setPosition(cocos2d::Vec2(visibleSize.width/2, visibleSize.height/2));
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(clickListenter, resultImg);
+    _remotePlayer->setActive(false);
+    _localPlayer->setActive(false);
+    _network->sendDisconnect();
+    
+    this->addChild(resultImg, 10);
     printf("end\n");
-    _status = END;
+    
 }
 
 // 当时钟到0，就跳入下一回合
 void GameController::_handleTime(float dt)
 {
+    if(_status == END) {
+        return;
+    }
     if(_status == WAITING) {
         _timer->timeGo();
     }
@@ -271,14 +307,9 @@ void GameController::initNetwork(NetworkController *network)
     _localPlayer = localPlayer;
     _enemy = remotePlayer;
     _status =  first ? WAITING : LOADING;
-    
     _currentPlayer = first ? LOCAL_PLAYER : REMOTE_PLAYER;
     
-    this->addChild(localPlayer, 8);
-    this->addChild(remotePlayer, 8);
-//    cocos2d::EventCustom gameOverEvent("gameOver");
-//    auto winner = 1;
-//    gameOverEvent.setUserData(&winner);
-//    _eventDispatcher->dispatchEvent(&gameOverEvent);
+    this->addChild(localPlayer, 9);
+    this->addChild(remotePlayer, 9);
     printf("ready\n");
 }

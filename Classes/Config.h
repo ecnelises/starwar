@@ -24,13 +24,13 @@ constexpr auto aboutTextureFile = "texture/about.png";
 constexpr auto onlineTextureFile = "texture/online.png";
 constexpr auto connectingTextureFile = "texture/connecting.png";
 constexpr auto exitTextureFile = "texture/exit.png";
-constexpr auto battleSceneFrameFile = "texture/battle_bg.jpg";
+constexpr auto battleSceneFrameFile = "texture/battle_bg.png";
 constexpr auto timerFrameFile = "texture/timer.png";
 constexpr auto cursorFrameFile = "texture/cursor.png";
 constexpr auto timerContentFrameFile = "texture/timer_content.png";
 constexpr auto battleSceneFrameSizeX = 1024;
 constexpr auto battleSceneFrameSizeY = 678;
-constexpr auto battleMapFrameFile = "texture/battle_map.png";
+constexpr auto battleMapFrameFile = "texture/map.png";
 constexpr auto battleMapFrameSizeX = 641;
 constexpr auto battleMapFrameSizeY = 636;
 constexpr auto menuSceneFrameFile = "texture/menu_bg.jpg";
@@ -53,8 +53,8 @@ constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
 constexpr auto isRestingInterval = 0.1;
-constexpr auto mapWidth = 641.0f;
-constexpr auto mapHeight = 636.0f;
+constexpr auto mapWidth = 556.0f;
+constexpr auto mapHeight = 547.0f;
 constexpr auto WIN = 1;
 constexpr auto LOSE = 0;
 constexpr auto DRAW = 2;
@@ -80,31 +80,31 @@ constexpr float moonRadius = 16.0f;
 constexpr float earthRadius = 25.0f;
 constexpr float sunRadius = 35.0f;
 // ball force
-constexpr float moonMaxForce = 80.0f;
-constexpr float earthMaxForce = 150.0f;
-constexpr float sunMaxForce = 250.0f;
+constexpr float moonMaxForce = 50.0f;
+constexpr float earthMaxForce = 160.0f;
+constexpr float sunMaxForce = 350.0f;
 // ball mass
 constexpr float moonMass = 20.0f;
 constexpr float earthMass = 40.0f;
 constexpr float sunMass = 80.0f;
 
 // ball linear damping
-constexpr float moonLinearDamping = 4.2f;
+constexpr float moonLinearDamping = 4.8f;
 constexpr float earthLinearDamping = 5.3f;
-constexpr float sunLinearDamping = 7.0f;
+constexpr float sunLinearDamping = 6.0f;
 
 // Position
-constexpr float moonPositionX = 240.0f;
+constexpr float moonPositionX = 260.0f;
 constexpr float moonPositionY = 240.0f;
 
-constexpr float earthPositionX = 330.0f;
-constexpr float earthPositionY = 180.0f;
+constexpr float earthPositionX = 345.0f;
+constexpr float earthPositionY = 200.0f;
 
 constexpr float sunPositionX = 520.0f;
-constexpr float sunPositionY = 120.0f;
+constexpr float sunPositionY = 150.0f;
 
 // ball distance
-constexpr auto moonDistance = 180.0f;
+constexpr auto moonDistance = 170.0f;
 constexpr auto earthDistance = 360.0f;
 constexpr auto sunDistance = 20.0f;
 

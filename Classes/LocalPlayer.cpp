@@ -9,7 +9,7 @@ LocalPlayer::LocalPlayer(bool isStarter)
 {
     auto applyShoot = cocos2d::EventListenerCustom::create("applyShoot", CC_CALLBACK_1(LocalPlayer::_applyShoot, this));
     auto mouseController = MouseController::create();
-    float diff = isStarter ? 0 : 768.0f;
+    float diff = isStarter ? 0 : 800.0f;
     int initNumber = isStarter ? 0 : 7;
     for (int i = 0; i < moonNumber; ++i) {
         auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
@@ -116,11 +116,11 @@ void Player::_isDeparted(float dt)
     while(lterator != _balls.end()) {
         auto l = *lterator;
         if (l->getSprite()->getTag() != mouseControllerTag &&
-            (l->getSprite()->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getSprite()->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
-             l->getSprite()->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getSprite()->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
+            (l->getPosition().x - 2.5f >= visibleSize.width / 2 + mapWidth / 2 || l->getPosition().y - 2.5f >= visibleSize.height / 2 + mapHeight / 2 ||
+             l->getPosition().x + 2.5f <= visibleSize.width / 2 - mapWidth / 2 || l->getPosition().y + 2.5f <= visibleSize.height / 2 - mapHeight / 2 )) {
                 printf("remote depart");
                 l->depart();
-                _balls.erase(lterator);
+                lterator = _balls.erase(lterator);
             } else {
                 ++lterator;
             }

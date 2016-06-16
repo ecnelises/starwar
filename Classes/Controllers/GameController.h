@@ -15,9 +15,6 @@
 #include <vector>
 #include <memory>
 
-template<typename T>
-using observer_ptr = T*;
-
 /// \class GameController
 /// \brief Main dispatcher in game processing.
 class GameController : public cocos2d::Node {

@@ -6,7 +6,7 @@
 USING_NS_CC;
 
 // TODO: Should we design our map in this resolution?
-static cocos2d::Size developmentResolutionSize = cocos2d::Size(640, 480);
+static cocos2d::Size developmentResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
@@ -69,7 +69,6 @@ bool AppDelegate::applicationDidFinishLaunching()
 
     // Set the design resolution
     glview->setDesignResolutionSize(designResolutionSize.width, designResolutionSize.height, ResolutionPolicy::NO_BORDER);
-
     Size frameSize = glview->getFrameSize();
     // if the frame's height is larger than the height of medium size.
     if (frameSize.height > mediumResolutionSize.height) {

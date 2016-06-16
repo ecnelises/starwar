@@ -7,7 +7,7 @@ cocos2d::Scene* BeginScene::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = cocos2d::Scene::create();
-    // scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);  // Debug
+    
     // 'layer' is an autorelease object
     auto audio = new Audio();
     audio->playMenuSceneMusic();
@@ -32,16 +32,17 @@ bool BeginScene::init()
     bg->setScale(visibleSize.width / bg->getContentSize().width, visibleSize.height / bg->getContentSize().height);
     bg->setPosition(cocos2d::Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(bg);
-    this->schedule(schedule_selector(BeginScene::_update), 1.0f);
+    this->schedule(schedule_selector(BeginScene::_update), 0.8f);
     return true;
 }
 
 void BeginScene::_update(float dt)
 {
     _time += 1.0f;
-    if(_time >= 2.4f) {
+    if(_time >= 2.4f ) {
+        this->unschedule(schedule_selector(BeginScene::_update));
         auto menuScene = MenuScene::createScene();
-        auto scene =  cocos2d::TransitionSlideInR::create(0.5f, menuScene);
+        auto scene =  cocos2d::TransitionFade::create(0.8f, menuScene);
         cocos2d::Director::getInstance()->replaceScene(scene);
     }
 }
