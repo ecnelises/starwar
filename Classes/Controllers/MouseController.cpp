@@ -91,8 +91,13 @@ void MouseController::handleMouseMove(cocos2d::Event* event)
         pointDiff.scale(maxDistance);
         destPoint = _selectedBall->getSprite()->getPosition() + pointDiff;
     }
-    _drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
-                         2, cocos2d::Color4F(1, 0, 0, 0.7)); // todo config
+    auto ballCenter = _selectedBall->getSprite()->getPosition();
+    auto bottom = (destPoint - ballCenter).getNormalized().getRPerp();
+    bottom.scale(10);
+    //_drawer->drawSegment(_selectedBall->getSprite()->getPosition(), destPoint,
+    //                     2, cocos2d::Color4F(1, 0, 0, 0.7)); // todo config
+    _drawer->drawTriangle(destPoint, ballCenter + bottom, ballCenter - bottom, cocos2d::Color4F(0.3, 0.3, 0.3, 0.4));
+    // Semi-transparent gray.
 }
 
 void MouseController::handleMouseDown(cocos2d::Event* event)

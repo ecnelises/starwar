@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <random>
+#include <ctime>
 #include "GameController.h"
 #include "NetworkController.h"
 #include "../Scenes/MenuScene.h"
@@ -23,11 +24,13 @@ bool GameController::init(void)
     
     // --- ai start
     // TODO: move to other place
+    bool first;
     if (!_isNetworkGame) {
         std::default_random_engine dre;
-        std::uniform_int_distribution<> uid(0, 1);
-        //bool first = uid(dre);
-        bool first = true;
+        dre.seed(std::time(nullptr));
+        std::uniform_int_distribution<> uid(0, 10);
+        first = !(uid(dre) % 3);
+        //bool first = true;
         auto localPlayer = new LocalPlayer(first);
         auto aiPlayer = new AIPlayer(!first);
         
@@ -75,6 +78,10 @@ bool GameController::init(void)
     _eventDispatcher->addEventListenerWithFixedPriority(remoteShoot, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(aiShoot, 1);
     _eventDispatcher->addEventListenerWithFixedPriority(gameOverEvent, 1);
+    
+    if (!_isNetworkGame && !first) {
+        ((AIPlayer*)_enemy)->findAndShoot(_enemy->getBalls(), _localPlayer->getBalls());
+    }
     
     return true;
 }

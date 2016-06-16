@@ -37,9 +37,6 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
         default:
             break;
     }
-    // TODO
-    // If we really want to set balls randomly?
-    // If so, using C++11-style random generator is better.
     _sprite->setPosition(position);
     _missed = true;
     // Arguments of PhysicsMaterial: density, restitution, friction
@@ -54,8 +51,8 @@ Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
     _ballBody->setMass(_mass);
     _ballBody->setLinearDamping(_linearDamping);
 
-    //_ballBody->setAngularDamping(0.2);
-    _ballBody->setRotationEnable(false);
+    _ballBody->setAngularDamping(0.2);
+    _ballBody->setRotationEnable(true);
 
     _sprite->setPhysicsBody(_ballBody);
 }
