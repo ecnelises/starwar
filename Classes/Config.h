@@ -35,9 +35,9 @@ constexpr auto battleMapFrameSizeX = 641;
 constexpr auto battleMapFrameSizeY = 636;
 constexpr auto menuSceneFrameFile = "texture/menu_bg.jpg";
 constexpr auto bombFrameFile = "texture/bomb.png";
-constexpr auto earthFrameFile = "texture/earth.png";
-constexpr auto moonFrameFile = "texture/moon.png";
-constexpr auto sunFrameFile = "texture/sun.png";
+//constexpr auto earthFrameFile = "texture/earth.png";
+//constexpr auto moonFrameFile = "texture/moon.png";
+//constexpr auto sunFrameFile = "texture/sun.png";
 constexpr auto victoryFrameFile = "texture/victory.png";
 constexpr auto drawFrameFile = "texture/draw.png";
 constexpr auto defeatFrameFile = "texture/defeat.png";
@@ -79,22 +79,22 @@ constexpr auto sunNumber = 1;
 
 // ball radius
 // These should be defined as constant values instead of enums.
-constexpr float moonRadius = 16.0f;
-constexpr float earthRadius = 25.0f;
-constexpr float sunRadius = 35.0f;
+//constexpr float moonRadius = 16.0f;
+//constexpr float earthRadius = 25.0f;
+//constexpr float sunRadius = 35.0f;
 // ball force
 constexpr float moonMaxForce = 50.0f;
 constexpr float earthMaxForce = 160.0f;
 constexpr float sunMaxForce = 350.0f;
 // ball mass
-constexpr float moonMass = 20.0f;
-constexpr float earthMass = 40.0f;
-constexpr float sunMass = 80.0f;
+//constexpr float moonMass = 20.0f;
+//constexpr float earthMass = 40.0f;
+//constexpr float sunMass = 80.0f;
 
 // ball linear damping
-constexpr float moonLinearDamping = 4.8f;
-constexpr float earthLinearDamping = 5.3f;
-constexpr float sunLinearDamping = 6.0f;
+//constexpr float moonLinearDamping = 4.8f;
+//constexpr float earthLinearDamping = 5.3f;
+//constexpr float sunLinearDamping = 6.0f;
 
 // Position
 constexpr float moonPositionX = 260.0f;

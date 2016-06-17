@@ -44,7 +44,8 @@ namespace {
 
     cocos2d::Point getCurrentCursor(cocos2d::Event* event)
     {
-        return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(), static_cast<cocos2d::EventMouse*>(event)->getCursorY());
+        return cocos2d::Point(static_cast<cocos2d::EventMouse*>(event)->getCursorX(),
+                              static_cast<cocos2d::EventMouse*>(event)->getCursorY());
     }
     
 } // anonymous namespace
@@ -124,7 +125,7 @@ void MouseController::setActive(bool state)
     }
 }
 
-void MouseController::addBalls(BallsCollection balls)
+void MouseController::addBalls(BallsCollection* balls)
 {
     _balls = balls;
 }

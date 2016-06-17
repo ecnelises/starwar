@@ -3,6 +3,7 @@
 #define PLAYER_H_
 
 #include "Ball.h"
+#include "BallType.h"
 #include "Controllers/MouseController.h"
 #include "cocos2d.h"
 #include <vector>
@@ -14,26 +15,23 @@ class NetworkController;
 
 class Player {
 public:
-    Player() : _active(false) {}
+    Player() : _active(false)
+    {
+        ;
+    }
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
     virtual void listenDepart() = 0;
     virtual void unlistenDepart() = 0;
+    
     virtual BallsCollection* getBalls()
     {
         return &_balls;
     }
-    virtual int getBallsNumber()
+    
+    void fixBall(int ballId, cocos2d::Vec2 pos)
     {
-        return _balls.size();
-    }
-    virtual void fixBall(int ballId, cocos2d::Vec2 pos)
-    {
-        for(const auto &ball : _balls) {
-            if(ball->getId() == ballId) {
-                ball->getSprite()->setPosition(pos);
-            }
-        }
+        _balls.adjustBallPosition(ballId, pos);
     }
     virtual void applyShoot(Ball*, const Force&) = 0;
 protected:

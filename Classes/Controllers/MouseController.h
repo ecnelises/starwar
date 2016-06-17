@@ -17,7 +17,7 @@ class MouseController : public cocos2d::Node {
 public:
     virtual bool init() override;
     void setActive(bool);
-    void addBalls(BallsCollection);
+    void addBalls(BallsCollection* balls);
     CREATE_FUNC(MouseController)
     // Status of shootMethod cannot affect others, so we set it public.
     enum { Drag, Click } shootMethod;
@@ -29,8 +29,8 @@ private:
     bool _active;
     cocos2d::DrawNode* _drawer;
     // Here the mouse controller just "observe" the balls, which are
-    // owned by local player. So we using raw pointer here is good.
-    BallsCollection _balls;
+    // owned by the player. So we using raw pointer here is good.
+    BallsCollection* _balls;
     Ball* _selectedBall;
 };
 

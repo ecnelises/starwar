@@ -10,25 +10,25 @@ AIPlayer::AIPlayer(bool isStarter)
 {
     float diff = isStarter ? 0 : 768.0f;
     int initNumber = isStarter ? 0 : 7;
-    for (int i = 0; i < moonNumber; ++i) {
-        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
-        _balls.push_back(ball);
-        this->addChild(ball->getSprite(), 4); // Why 4 ? todo
-    }
+//    for (int i = 0; i < moonNumber; ++i) {
+//        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
+//        _balls.push_back(ball);
+//        this->addChild(ball->getSprite(), 4); // Why 4 ? todo
+//    }
     
     // earth 2
-    for (int i = 0; i < earthNumber; ++i) {
-        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
-        _balls.push_back(ball);
-        this->addChild(ball->getSprite(), 4);
-    }
+//    for (int i = 0; i < earthNumber; ++i) {
+//        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
+//        _balls.push_back(ball);
+//        this->addChild(ball->getSprite(), 4);
+//    }
     
     // sun 1
-    for (int i = 0; i < sunNumber; ++i) {
-        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
-        _balls.push_back(ball);
-        this->addChild(ball->getSprite(), 4);
-    }
+//    for (int i = 0; i < sunNumber; ++i) {
+//        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
+//        _balls.push_back(ball);
+//        this->addChild(ball->getSprite(), 4);
+//    }
     
     this->setActive(isStarter);
 }
@@ -58,7 +58,7 @@ namespace {
     
     bool compareBallWithDistanceToBorder(Ball* b1, Ball* b2)
     {
-        return shortestDistanceToBorder(b1->getSprite()->getPosition()) < shortestDistanceToBorder(b2->getSprite()->getPosition());
+        return shortestDistanceToBorder(b1->_sprite->getPosition()) < shortestDistanceToBorder(b2->_sprite->getPosition());
     }
 } // anonymous namespace
 
@@ -82,11 +82,8 @@ void AIPlayer::setActive(bool activity)
 
 void AIPlayer::_isResting(float dt)
 {
-    for (const auto& ballIter : _balls) {
-        if (ballIter->getSprite()->getTag() != mouseControllerTag &&
-            ballIter->getBallBody()->getVelocity().length() > 1e-1) {
-            return;
-        }
+    if (_balls.rest()) {
+        return;
     }
     EventCustom overRoundEvent("aiOverRound");
     _eventDispatcher->dispatchEvent(&overRoundEvent);
