@@ -2,58 +2,6 @@
 
 #include "Ball.h"
 
-//USING_NS_CC;
-
-//Ball::Ball(ballType type, int id, Vec2 position) : _type(type), _id(id)
-//{
-//    switch(_type) {
-//        case MOON:
-//            _radius = moonRadius;
-//            _force = moonMaxForce;
-//            _mass = moonMass;
-//            _linearDamping = moonLinearDamping;
-//            _sprite = cocos2d::Sprite::create(moonFrameFile);
-//            _sprite->setTag(moonTag);
-//            break;
-//        case EARTH:
-//            _radius = earthRadius;
-//            _force = earthMaxForce;
-//            _mass = earthMass;
-//            _linearDamping = earthLinearDamping;
-//            _sprite = cocos2d::Sprite::create(earthFrameFile);
-//            _sprite->setTag(earthTag);
-//            break;
-//        case SUN:
-//            _radius = sunRadius;
-//            _force = sunMaxForce;
-//            _mass = sunMass;
-//            _linearDamping = sunLinearDamping;
-//            _sprite = cocos2d::Sprite::create(sunFrameFile);
-//            _sprite->setTag(sunTag);
-//            break;
-//        default:
-//            break;
-//    }
-//    _sprite->setPosition(position);
-//    _missed = true;
-//    // Arguments of PhysicsMaterial: density, restitution, friction
-//    _ballBody = cocos2d::PhysicsBody::createCircle(_radius,
-//                                                   cocos2d::PhysicsMaterial(1.0, 1.2, 1.0));
-//    // We just set up a non-zero value here.
-//    // Curlings can make collision and contact with other balls.
-//    _ballBody->setCategoryBitmask(0x00000001);
-//    _ballBody->setCollisionBitmask(0x00000001);
-//    _ballBody->setContactTestBitmask(0x00000001);
-//    _ballBody->setGravityEnable(false);
-//    _ballBody->setMass(_mass);
-//    _ballBody->setLinearDamping(_linearDamping);
-//
-//    _ballBody->setAngularDamping(0.2);
-//    _ballBody->setRotationEnable(true);
-//
-//    _sprite->setPhysicsBody(_ballBody);
-//}
-
 Ball::Ball(const BallInitializer& bi, cocos2d::Vec2 position) : _mass(bi.mass), _linearDamping(bi.linearDamping)
 {
     _sprite = cocos2d::Sprite::create(bi.file);
@@ -69,7 +17,6 @@ Ball::Ball(const BallInitializer& bi, cocos2d::Vec2 position) : _mass(bi.mass), 
     _ballBody->setDynamic(true);
     _ballBody->setMass(bi.mass);
     _ballBody->setLinearDamping(bi.linearDamping);
-    //_ballBody->setAngularDamping(0.2);
     _ballBody->setRotationEnable(false);
     _sprite->setPhysicsBody(_ballBody);
     _sprite->setPosition(position);
@@ -77,9 +24,10 @@ Ball::Ball(const BallInitializer& bi, cocos2d::Vec2 position) : _mass(bi.mass), 
 
 Ball::~Ball()
 {
-    _sprite->release();
-    _ballBody->removeFromWorld();
-    _ballBody->release();
+    this->depart();
+    //_sprite->release();
+    //_ballBody->removeFromWorld();
+    //_ballBody->release();
 }
 
 void Ball::move(const Force& force)

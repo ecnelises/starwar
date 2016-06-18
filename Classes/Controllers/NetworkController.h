@@ -34,12 +34,19 @@ public:
 class NetworkController : public cocos2d::Node {
 public:
     NetworkController();
+    NetworkController(bool hasNetwork) : _enabled(false)
+    {
+        assert(!hasNetwork);
+    }
     ~NetworkController();
     
-    std::string getStarter() {
+    std::string getStarter()
+    {
         return _starter;
     }
-    std::string getToken() {
+    
+    std::string getToken()
+    {
         return _token;
     }
     void sendShoot(int ballid, const Force&);
@@ -50,6 +57,7 @@ public:
     void sendFixed(int ballId, cocos2d::Vec2);
 private:
     static constexpr auto _destUri = "115.159.189.232:6619";
+    bool _enabled;
     observer_ptr<GameController> _game;
     Socket* _client;
     GameSocketDelegate _delegate;
@@ -63,6 +71,7 @@ private:
     void dispatchConnect(Socket*);
     void dispatchDisconnect(Socket*);
     UnifiedMessageBody parseRemoteMessage(const std::string& msg);
+    bool hasInstance(void) const;
     std::string _room;
     std::string _starter;
     std::string _token;

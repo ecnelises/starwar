@@ -10,6 +10,12 @@
 #include <memory>
 #include <string>
 
+#define emitMsg(msg) { \
+    cocos2d::EventCustom eve(msg); \
+    eve.setUserData(nullptr); \
+    _eventDispatcher->dispatchEvent(&eve); \
+}
+
 class MouseController;
 class NetworkController;
 
@@ -17,9 +23,11 @@ class Player {
 public:
     Player() : _active(false) {}
     virtual ~Player() = default;
+    void createBalls(float diff);
     virtual void setActive(bool) = 0;
-    virtual void listenDepart() = 0;
-    virtual void unlistenDepart() = 0;
+    virtual void listenDepart(void) = 0;
+    virtual void unlistenDepart(void) = 0;
+    virtual void applyShoot(BallsCollection::BallId id, const Force& force) = 0;
     
     bool noBall(void) const
     {
@@ -35,12 +43,10 @@ public:
     {
         _balls.adjustBallPosition(id, pos);
     }
-    virtual void applyShoot(BallsCollection::BallId id, const Force& force) = 0;
 protected:
     BallsCollection _balls;
     bool _active;
     std::string _playerId;
-    //std::string _nickname;
     void _isDeparted(float dt);
 };
 
@@ -68,7 +74,6 @@ public:
     RemotePlayer(bool isStarter);
     virtual ~RemotePlayer() = default;
     virtual void applyShoot(BallsCollection::BallId id, const cocos2d::Vec2& force) override;
-    // TODO: parameter
     virtual void setActive(bool) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;

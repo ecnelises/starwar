@@ -10,54 +10,10 @@ LocalPlayer::LocalPlayer(bool isStarter)
 {
     auto applyShoot = cocos2d::EventListenerCustom::create("applyShoot", CC_CALLBACK_1(LocalPlayer::_applyShoot, this));
     auto mouseController = MouseController::create();
-    float diff = isStarter ? 0 : 800.0f;
-    int initNumber = isStarter ? 0 : 7;
+    //int initNumber = isStarter ? 0 : 7;
     
-    
-    auto centerX = (mapLeftBorder + mapRightBorder) / 2.0f;
-    
-    auto moonYPos = fabsf(diff - moonPositionY);
-    _balls += BallInitializer(MoonBall())
-        .atCenter(cocos2d::Point(centerX, moonYPos))
-        .withDistance(moonDistance)
-        .byLine() * 4;
-    
-    auto earthYPos = fabsf(diff - earthPositionY);
-    _balls += BallInitializer(EarthBall())
-        .atCenter(cocos2d::Point(centerX, earthYPos))
-        .withDistance(earthDistance)
-        .byLine() * 2;
-    
-    auto sunYPos = fabsf(diff - sunPositionY);
-    _balls += BallInitializer(SunBall())
-        .atCenter(cocos2d::Point(centerX, sunYPos))
-        .withDistance(sunDistance)
-        .byLine();
-    
-    
-    
-//    for (int i = 0; i < moonNumber; ++i) {
-//        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
-//        _balls.push_back(ball);
-//        this->addChild(ball->getSprite(), 4); // Why 4 ? todo
-//    }
-//    
-//    // earth 2
-//    for (int i = 0; i < earthNumber; ++i) {
-//        auto ball = new Ball(EARTH, initNumber + i + 5, Vec2(earthPositionX + earthDistance * i, fabsf(diff - earthPositionY)));
-//        _balls.push_back(ball);
-//        this->addChild(ball->getSprite(), 4);
-//    }
-//    
-//    // sun 1
-//    for (int i = 0; i < sunNumber; ++i) {
-//        auto ball = new Ball(SUN, initNumber + i + 7, Vec2(sunPositionX + sunDistance * i, fabsf(diff - sunPositionY)));
-//        _balls.push_back(ball);
-//        this->addChild(ball->getSprite(), 4);
-//    }
-    
+    this->createBalls(isStarter ? 0 : 800.0f);
     _balls.addBallsToNode(this);
-    
     mouseController->addBalls(&_balls);
     _mouse = mouseController;
     _eventDispatcher->addEventListenerWithFixedPriority(applyShoot, 1);
@@ -93,7 +49,7 @@ void LocalPlayer::setActive(bool state)
 
 void LocalPlayer::_isResting(float dt)
 {
-    if (_balls.rest()) {
+    if (!_balls.rest()) {
         return;
     }
     EventCustom overRoundEvent("localOverRound");
@@ -103,7 +59,7 @@ void LocalPlayer::_isResting(float dt)
 
 void LocalPlayer::applyShoot(BallsCollection::BallId ball, const Force& force)
 {
-    _balls.shootBall(ball, force);
+    _balls.shootBall(ball, force * shootEfficiency);
 }
 
 void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
@@ -146,4 +102,27 @@ void Player::_isDeparted(float dt)
         auto b4 = b->position().y + 2.5f <= visibleSize.height / 2.0f - mapHeight / 2.0f;
         return b1 || b2 || b3 || b4;
     });
+}
+
+void Player::createBalls(float diff)
+{
+    auto centerX = (mapLeftBorder + mapRightBorder) / 2.0f;
+    
+    auto moonYPos = fabsf(diff - moonPositionY);
+    _balls += BallInitializer(MoonBall())
+                .atCenter(cocos2d::Point(centerX, moonYPos))
+                .withDistance(moonDistance)
+                .byLine() * 4;
+    
+    auto earthYPos = fabsf(diff - earthPositionY);
+    _balls += BallInitializer(EarthBall())
+                .atCenter(cocos2d::Point(centerX, earthYPos))
+                .withDistance(earthDistance)
+                .byLine() * 2;
+    
+    auto sunYPos = fabsf(diff - sunPositionY);
+    _balls += BallInitializer(SunBall())
+                .atCenter(cocos2d::Point(centerX, sunYPos))
+                .withDistance(sunDistance)
+                .byLine();
 }

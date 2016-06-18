@@ -15,30 +15,24 @@
 #include "json/rapidjson.h"
 #include "json/document.h"
 
-
 bool GameController::init(void)
 {
     if (!Node::init()) {
         return false;
     }
-    _status = LOADING;
+    _status = Loading;
     
     // --- ai start
     // TODO: move to other place
     bool first;
     if (!_isNetworkGame) {
-        //std::default_random_engine dre;
-        //dre.seed(std::time(nullptr));
-        //std::uniform_int_distribution<> uid(0, 10);
-        //first = !(uid(dre) % 3);
-        //bool first = true;
         first = true;
         auto localPlayer = new LocalPlayer(first);
         auto aiPlayer = new AIPlayer(!first);
         
         _localPlayer = localPlayer;
         _enemy = aiPlayer;
-        _status =  first ? WAITING : LOADING;
+        _status = first ? Waiting : Loading;
         
         _currentPlayer = first ? LOCAL_PLAYER : AI_PLAYER;
         
@@ -82,7 +76,7 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
 {
     auto data = static_cast<UnifiedMessageBody*>(event->getUserData());
     //printf("local shoot\n");
-    _status = BLOCKING;
+    _status = Blocking;
     // 开始监听消失事件
     _localPlayer->listenDepart();
     _enemy->listenDepart();
@@ -94,7 +88,7 @@ void GameController::_localShootEvent(cocos2d::EventCustom* event)
 
 void GameController::_aiShootEvent(cocos2d::EventCustom* event)
 {
-    _status = BLOCKING;
+    _status = Blocking;
     _localPlayer->listenDepart();
     //printf("AI shoot!\n");
     _enemy->listenDepart();
@@ -109,70 +103,70 @@ void GameController::_remoteShootEvent(cocos2d::EventCustom* event)
     _localPlayer->listenDepart();
     _enemy->listenDepart();
     //printf("remote shoot");
-    _status = BLOCKING;
+    _status = Blocking;
 }
 
 void GameController::_fixEvent(cocos2d::EventCustom* event)
 {
     auto message = static_cast<UnifiedMessageBody*>(event->getUserData());
-    // TODO 暂且如此
-    _localPlayer->fixBall(message->targetId, message->vec);
-    _enemy->fixBall(message->targetId, message->vec);
-    //printf("fixed\n");
+    if (message->targetId & 0x8000) {
+        _enemy->fixBall(message->targetId & 0x0FFF, message->vec);
+    } else {
+        _localPlayer->fixBall(message->targetId, message->vec);
+    }
     ++_fixTimes;
-    //printf("fixed times :: %d\n", _fixTimes);
-    _status = FIXED;
+    _status = Fixed;
 }
 
 void GameController::_endFixEvent(cocos2d::EventCustom *event)
 {
-    if(_status == FIXED) {
+    if(_status == Fixed) {
         _network->sendOverRound();
         this->_overRound();
     }
 }
 
+namespace {
+GameController::GameStatus statusFromBallNumber(bool local, bool enemy)
+{
+    if (local && enemy) {
+        return GameController::Draw;
+    } else if (local) {
+        return GameController::Win;
+    } else if (enemy) {
+        return GameController::Lose;
+    } else {
+        return GameController::Processing;
+    }
+}
+} // anonymous namespace
+
 void GameController::_localOverRoundEvent(cocos2d::EventCustom* event)
 {
-    // 在这里判断球数
-    if (!_isNetworkGame) {
-        this->_overRound();
-        ((AIPlayer*)_enemy)->findAndShoot(_localPlayer->getBalls());
-        return;
-    } // TODO
-    // 在这里判断球数
-    if(_status == END) {
-        return;
-    }
-    // 本地给本地发, 世界上最遥远的距离莫过于游戏结束函数就在下面，而我却要通过事件分发器调用它
+    // The longest distance in the world
+    // is when the game-over function is just below
+    // but I have to invoke it by event dispatcher.
     cocos2d::EventCustom gameOverEvent("gameOver");
-    int winner;
-    if(_localPlayer->noBall() && _enemy->noBall()) {
-        winner = DRAW;
-        _network->sendGameOver(DRAW);
-        gameOverEvent.setUserData(&winner);
-        _eventDispatcher->dispatchEvent(&gameOverEvent);
-    } else if(_localPlayer->noBall()) {
-        winner = WIN;
-        _network->sendGameOver(LOSE);
-        gameOverEvent.setUserData(&winner);
-        _eventDispatcher->dispatchEvent(&gameOverEvent);
-    } else if(_enemy->noBall()) {
-        winner = LOSE;
-        _network->sendGameOver(WIN);
-        gameOverEvent.setUserData(&winner);
+    GameStatus status = statusFromBallNumber(_localPlayer->noBall(), _enemy->noBall());
+    if (status != Processing) {
+        _network->sendGameOver(status);
+        gameOverEvent.setUserData(&status);
         _eventDispatcher->dispatchEvent(&gameOverEvent);
     } else {
-        // 未分胜负，下一回合
-        auto localBalls = _localPlayer->getBalls();
-        auto remoteBalls = _enemy->getBalls();
-        for(const auto& ball : *localBalls) {
-            _network->sendFixed(ball.id, localBalls->getPosition(ball));
+        if (_isNetworkGame) {
+            auto localBalls = _localPlayer->getBalls();
+            auto remoteBalls = _enemy->getBalls();
+            for(const auto& ball : *localBalls) {
+                _network->sendFixed(0x8000 | ball.id, localBalls->getPosition(ball));
+            }
+            for(const auto& ball : *remoteBalls) {
+                _network->sendFixed(0x0000 | ball.id, remoteBalls->getPosition(ball));
+            }
+            _network->sendEndFixed();
+        } else {
+            this->_overRound();
+            ((AIPlayer*)_enemy)->findAndShoot(_localPlayer->getBalls());
         }
-        for(const auto& ball : *remoteBalls) {
-            _network->sendFixed(ball.id, localBalls->getPosition(ball));
-        }
-        _network->sendEndFixed();
     }
 }
 
@@ -190,13 +184,12 @@ void GameController::_remoteOverRoundEvent(cocos2d::EventCustom* event)
 
 void GameController::_disconnectEvent(cocos2d::EventCustom *event)
 {
-    cocos2d::EventCustom backToMenuSceneEvent("backToMenuScene");
-    _eventDispatcher->dispatchEvent(&backToMenuSceneEvent);
+    emitMsg("backToMenuScene");
 }
 
 void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 {
-    _status = END;
+    _status = End;
     auto audio = new Audio;
     auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
     auto status = *static_cast<int*>(event->getUserData());
@@ -204,23 +197,21 @@ void GameController::_gameOverEvent(cocos2d::EventCustom* event)
     cocos2d::Sprite *resultImg;
     
     clickListenter->onMouseDown = [=](cocos2d::Event* event) {
-        cocos2d::EventCustom backToMenuSceneEvent("backToMenuScene");
-        _eventDispatcher->dispatchEvent(&backToMenuSceneEvent);
+        emitMsg("backToMenuScene");
     };
     
     switch (status) {
-    case WIN: // win is lose
+    case Win: // win is lose
         // LOSE
         audio->playDefeatEffect();
         resultImg = cocos2d::Sprite::create(defeatFrameFile);
         break;
-    case LOSE: // lose is win
+    case Lose: // lose is win
         // WIN
         audio->playVictoryEffect();
         resultImg = cocos2d::Sprite::create(victoryFrameFile);
         break;
-    case DRAW: // draw is draw
-        // DRAW
+    case Draw: // draw is draw
         audio->playEnterBattleEffect();
         resultImg = cocos2d::Sprite::create(drawFrameFile);
         break;
@@ -241,10 +232,10 @@ void GameController::_gameOverEvent(cocos2d::EventCustom* event)
 // 当时钟到0，就跳入下一回合
 void GameController::_handleTime(float dt)
 {
-    if(_status == END) {
+    if(_status == End) {
         return;
     }
-    if(_status == WAITING) {
+    if(_status == Waiting) {
         _timer->timeGo();
     }
     
@@ -271,27 +262,32 @@ void GameController::_overRound()
         } else {
             _currentPlayer = AI_PLAYER;
         }
-        _status = LOADING;
+        _status = Loading;
     } else {
         _enemy->setActive(false);
         _localPlayer->setActive(true);
         _currentPlayer = LOCAL_PLAYER;
-        _status = WAITING;
+        _status = Waiting;
     }
 }
 
-void GameController::initNetwork(NetworkController *network)
+void GameController::initNetwork(NetworkController* network)
 {
+    if (network == nullptr) {
+        _network = new NetworkController(false);
+        return;
+    }
+    
     std::string starter = network->getStarter();
     std::string token = network->getToken();
     bool first = token == starter;
     auto localPlayer = new LocalPlayer(first);
     auto remotePlayer = new RemotePlayer(!first);
-    
+
     _network = network;
     _localPlayer = localPlayer;
     _enemy = remotePlayer;
-    _status =  first ? WAITING : LOADING;
+    _status =  first ? Waiting : Loading;
     _currentPlayer = first ? LOCAL_PLAYER : REMOTE_PLAYER;
     
     this->addChild(localPlayer, 9);

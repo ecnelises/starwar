@@ -9,8 +9,78 @@ using observer_ptr = T*;
 template<typename T>
 using const_observer_ptr = const T*;
 
-typedef enum {MOON, EARTH, SUN} ballType;
 typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
+
+namespace Config {
+
+namespace File {
+using str = decltype("");
+
+extern str knockAudio;
+extern str menuSceneMusic;
+extern str enterBattleAudio;
+extern str itemClickAudio;
+extern str defeatAudio;
+extern str victoryAudio;
+
+extern str beginSceneFrame;
+extern str computerTexture;
+extern str aboutTexture;
+extern str onlineTexture;
+extern str connectingTexture;
+extern str exitTexture;
+extern str battleSceneFrame;
+extern str timerFrame;
+extern str cursorFrame;
+extern str timerContentFrame;
+extern str battleMapFrame;
+extern str menuSceneFrame;
+extern str bombFrame;
+
+extern str victoryLogo;
+extern str drawLogo;
+extern str defeatLogo;
+}
+
+namespace Map {
+extern float leftBorder;
+extern float rightBorder;
+extern float topBorder;
+extern float bottomBorder;
+extern int battleMapFrameSizeX;
+extern int battleMapFrameSizeY;
+extern int battleSceneFrameSizeX;
+extern int battleSceneFrameSizeY;
+}
+
+namespace Data {
+extern int timeEachRound;
+extern float menuItemDistance;
+extern float menuTopY;
+extern float menuItemScale;
+extern float ballStatusInterval;
+extern float checkRestingInterval;
+extern unsigned moonNumber;
+extern unsigned earthNumber;
+extern unsigned sunNumber;
+extern float shootEfficiency;
+}
+
+namespace Ball {
+extern float moonPositionX;
+extern float moonPositionY;
+
+extern float earthPositionX;
+extern float earthPositionY;
+
+extern float sunPositionX;
+extern float sunPositionY;
+
+extern float moonDistance;
+extern float earthDistance;
+extern float sunDistance;
+}
+}
 
 // Audio
 constexpr auto knockEffectFile = "audio/knock.mp3";
@@ -54,24 +124,21 @@ constexpr auto mapBottomBorder = battleMapFrameSizeY + mapTopBorder;
 // Game data
 constexpr auto timeLeftDefault = 12;
 constexpr auto ballStatusInterval = 1.0f;
-constexpr auto menuItemDistance = 55.0f;
+constexpr auto menuItemDistance = 80.0f;
 constexpr auto menuFirstItemY = 150.0f;
 constexpr auto menuItemScale = 0.33f;
 constexpr auto ballsNumber = 7;
 constexpr auto isRestingInterval = 0.1;
 constexpr auto mapWidth = 556.0f;
 constexpr auto mapHeight = 547.0f;
-constexpr auto WIN = 1;
-constexpr auto LOSE = 0;
-constexpr auto DRAW = 2;
 
 // Tags
-constexpr int moonTag = 30;
-constexpr int earthTag = 31;
-constexpr int sunTag = 32;
-constexpr int AIPlayerTag = 0;
-constexpr int localPlayerTag = 1;
-constexpr int remotePlayer = 2;
+/* constexpr int moonTag = 30; */
+/* constexpr int earthTag = 31; */
+/* constexpr int sunTag = 32; */
+/* constexpr int AIPlayerTag = 0; */
+/* constexpr int localPlayerTag = 1; */
+/* constexpr int remotePlayer = 2; */
 constexpr int mouseControllerTag = 20;
 constexpr int cursorTag = 60;
 
@@ -118,6 +185,8 @@ constexpr auto sunDistance = 20.0f;
 
 // mouse controller data
 constexpr float drawWidth = 5.0f;
+
+constexpr float shootEfficiency = 128.0f;
 
 
 #endif // CONFIG_H_

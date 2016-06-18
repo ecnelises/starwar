@@ -1,5 +1,5 @@
 #include "MenuScene.h"
-#include "HelloWorldScene.h"
+#include "BattleScene.h"
 #include "Config.h"
 #include "Audio.h"
 #include <tuple>
@@ -34,7 +34,7 @@ bool MenuScene::init()
             auto connectLayer = Layer::create();
             audio->playItemClickEffect();
             auto connectBg = Sprite::create(connectingTextureFile);
-            connectBg->setPosition(Vec2(visibleSize.width/ 2, visibleSize.height / 2));
+            connectBg->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
             connectLayer->addChild(connectBg, 2);
             _waiting = true;
             this->addChild(connectLayer, 3);
@@ -91,15 +91,13 @@ void MenuScene::_outZoom(float dt)
 void MenuScene::_intoBattleScene(cocos2d::EventCustom* event)
 {
     _eventDispatcher->removeAllEventListeners();
-    //auto battleScene = HelloWorld::createScene(_network);
-    //Director::getInstance()->replaceScene(battleScene);
-    auto battleScene = HelloWorld::createScene(std::make_tuple(true, _network));
+    auto battleScene = BattleScene::createScene(std::make_tuple(true, _network));
     Director::getInstance()->replaceScene(battleScene);
 }
 
 void MenuScene::_intoAIScene(void)
 {
     _eventDispatcher->removeAllEventListeners();
-    auto aiScene = HelloWorld::createScene(std::make_tuple(false, nullptr));
+    auto aiScene = BattleScene::createScene(std::make_tuple(false, nullptr));
     Director::getInstance()->replaceScene(aiScene);
 }

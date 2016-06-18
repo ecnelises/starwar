@@ -13,6 +13,8 @@
 
 class LocalPlayer;
 
+/// \class MouseController
+/// \brief Receiving user operations from mouse and call game controller to tackle.
 class MouseController : public cocos2d::Node {
 public:
     virtual bool init() override;
