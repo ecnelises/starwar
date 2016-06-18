@@ -180,20 +180,22 @@ std::vector<cocos2d::Point> BallInitializerAggregate::getPositions(void) const
     std::vector<cocos2d::Point> positions;
     positions.reserve(_number);
     auto offset = 0.0f;
-    if (_number % 2 == 0) {
+    auto num = _number;
+    if (num % 2 == 0) {
         offset = _spacing / 2.0f;
     } else {
         positions.push_back(_center);
         offset = _spacing;
+        --num;
     }
     if (_layout == ByLine) {
-        for (int i = 0; i < (_number - 1) / 2; ++i) {
+        for (int i = 0; i < num / 2; ++i) {
             positions.push_back(cocos2d::Point(_center.x - offset, _center.y));
             positions.push_back(cocos2d::Point(_center.x + offset, _center.y));
             offset += _spacing;
         }
     } else if (_layout == ByColumn) {
-        for (int i = 0; i < (_number - 1) / 2; ++i) {
+        for (int i = 0; i < num / 2; ++i) {
             positions.push_back(cocos2d::Point(_center.x, _center.y - offset));
             positions.push_back(cocos2d::Point(_center.x, _center.y + offset));
             offset += _spacing;
@@ -221,12 +223,12 @@ bool BallsCollection::empty() const
     return _balls.empty();
 }
 
-void BallsCollection::shootBall(int id, const Force &force)
+void BallsCollection::shootBall(BallId id, const Force &force)
 {
-    if (_balls.find(id) == _balls.end()) {
+    if (_balls.find(id.id) == _balls.end()) {
         return;
     }
-    _balls.at(id)->move(force);
+    _balls.at(id.id)->move(force);
 }
 
 bool BallsCollection::rest(void) const
@@ -237,4 +239,41 @@ bool BallsCollection::rest(void) const
         }
     }
     return true;
+}
+
+BallsCollection::BallId BallsCollection::inWhichBall(const cocos2d::Point& cursor) const
+{
+    for (const auto& ball : _balls) {
+        if ((ball.second)->_sprite->getBoundingBox().containsPoint(cursor)) {
+            return BallId(ball.first);
+        }
+    }
+    return BallId::nil();
+}
+
+void BallsCollection::adjustBallPosition(BallsCollection::BallId id, cocos2d::Vec2 dest)
+{
+    for (const auto& ball : _balls) {
+        if (ball.first == id.id) {
+            (ball.second)->_sprite->setPosition(dest);
+            return;
+        }
+    }
+}
+
+cocos2d::Point BallsCollection::getPosition(BallsCollection::BallId id) const
+{
+    for (const auto& ball : _balls) {
+        if (ball.first == id.id) {
+            return (ball.second)->_sprite->getPosition();
+        }
+    }
+    return cocos2d::Point(0, 0);
+}
+
+void BallsCollection::addBallsToNode(cocos2d::Node* parent)
+{
+    for (auto& ball : _balls) {
+        parent->addChild(ball.second->_sprite);
+    }
 }

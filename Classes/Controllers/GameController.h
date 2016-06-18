@@ -12,6 +12,7 @@
 #include "NetworkController.h"
 #include "../Player.h"
 #include "../Timer.h"
+#include <initializer_list>
 #include <vector>
 #include <memory>
 
@@ -43,6 +44,7 @@ private:
     LocalPlayer* _localPlayer;
     
     std::unique_ptr<NetworkController> _net;
+    void registerCallbacks(std::initializer_list<std::pair<std::string, void (GameController::*)(cocos2d::EventCustom*)>>);
     bool _isNetworkGame;
     int _timeLeft;
     Timer *_timer;

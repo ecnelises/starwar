@@ -3,7 +3,6 @@
 
 USING_NS_CC;
 
-
 Audio::Audio()
 {
     _player = CocosDenshion::SimpleAudioEngine::getInstance();
@@ -53,5 +52,3 @@ void Audio::stopAllMusic()
 {
     _player->stopBackgroundMusic();
 }
-
-

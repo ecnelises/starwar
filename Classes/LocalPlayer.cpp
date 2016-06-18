@@ -1,7 +1,8 @@
-#include <memory>
+#include "Player.h"
+#include "Controllers/NetworkController.h"
 #include "json/rapidjson.h"
 #include "json/document.h"
-#include "Player.h"
+#include <memory>
 
 USING_NS_CC;
 
@@ -11,6 +12,30 @@ LocalPlayer::LocalPlayer(bool isStarter)
     auto mouseController = MouseController::create();
     float diff = isStarter ? 0 : 800.0f;
     int initNumber = isStarter ? 0 : 7;
+    
+    
+    auto centerX = (mapLeftBorder + mapRightBorder) / 2.0f;
+    
+    auto moonYPos = fabsf(diff - moonPositionY);
+    _balls += BallInitializer(MoonBall())
+        .atCenter(cocos2d::Point(centerX, moonYPos))
+        .withDistance(moonDistance)
+        .byLine() * 4;
+    
+    auto earthYPos = fabsf(diff - earthPositionY);
+    _balls += BallInitializer(EarthBall())
+        .atCenter(cocos2d::Point(centerX, earthYPos))
+        .withDistance(earthDistance)
+        .byLine() * 2;
+    
+    auto sunYPos = fabsf(diff - sunPositionY);
+    _balls += BallInitializer(SunBall())
+        .atCenter(cocos2d::Point(centerX, sunYPos))
+        .withDistance(sunDistance)
+        .byLine();
+    
+    
+    
 //    for (int i = 0; i < moonNumber; ++i) {
 //        auto ball = new Ball(MOON, initNumber + i + 1, Vec2(moonPositionX + moonDistance * i, fabsf(diff - moonPositionY)));
 //        _balls.push_back(ball);
@@ -31,6 +56,8 @@ LocalPlayer::LocalPlayer(bool isStarter)
 //        this->addChild(ball->getSprite(), 4);
 //    }
     
+    _balls.addBallsToNode(this);
+    
     mouseController->addBalls(&_balls);
     _mouse = mouseController;
     _eventDispatcher->addEventListenerWithFixedPriority(applyShoot, 1);
@@ -41,23 +68,25 @@ LocalPlayer::LocalPlayer(bool isStarter)
 
 void LocalPlayer::setActive(bool state)
 {
-    // 如果轮到我操作，就显示光标
-//    if(!state) {
-//        auto childs = this->getChildren();
-//        for(const auto &child : childs) {
-//            if(child->getTag() == cursorTag) {
-//                child->removeFromParentAndCleanup(true);
-//            }
-//        }
-//    } else {
-//        _mouse->addBalls(_balls); // 同步mouseController能控制的球
-//        for(const auto &ball : _balls) {
-//            auto cursor = Sprite::create(cursorFrameFile);
-//            cursor->setPosition(Vec2(ball->getSprite()->getPositionX(), ball->getSprite()->getPositionY() + 20));
-//            cursor->setTag(cursorTag);
-//            this->addChild(cursor, 5);
-//        }
-//    }
+    // Set cursors on each ball.
+    if (!state) {
+        auto children = this->getChildren();
+        for (const auto& child : children) {
+            if (child->getTag() == cursorTag) {
+                child->removeFromParentAndCleanup(true);
+            }
+        }
+    } else {
+        _mouse->addBalls(&_balls); // Really necessary?
+        for (const auto& ball : _balls) {
+            // Using textures is better here?
+            auto cursor = Sprite::create(cursorFrameFile);
+            auto ballPos = _balls.getPosition(ball);
+            cursor->setPosition(cocos2d::Vec2(ballPos.x, ballPos.y + 20));
+            cursor->setTag(cursorTag);
+            this->addChild(cursor, 5);
+        }
+    }
     _active = state;
     _mouse->setActive(state);
 }
@@ -72,9 +101,9 @@ void LocalPlayer::_isResting(float dt)
     this->unschedule("isResting"); // 取消监听事件减少消耗
 }
 
-void LocalPlayer::applyShoot(Ball* ball, const Force& force)
+void LocalPlayer::applyShoot(BallsCollection::BallId ball, const Force& force)
 {
-    return;
+    _balls.shootBall(ball, force);
 }
 
 void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
@@ -82,14 +111,10 @@ void LocalPlayer::_applyShoot(cocos2d::EventCustom *event)
     if(!_active) {
         return;
     }
-    auto message = *static_cast<std::tuple<Ball*, Force>*>(event->getUserData());
-    auto ball = std::get<0>(message);
-    auto force = std::get<1>(message);
-    auto data = std::make_tuple(ball->getId(), force * ball->getMaxForce());
+    auto message = static_cast<UnifiedMessageBody*>(event->getUserData());
     EventCustom shootEvent("localShoot");
-    
-    ball->move(force * ball->getMaxForce());
-    shootEvent.setUserData(&data);
+    applyShoot(message->targetId, message->vec);
+    shootEvent.setUserData(message);
     _eventDispatcher->dispatchEvent(&shootEvent);
     
     // Check whether all balls are at rest.

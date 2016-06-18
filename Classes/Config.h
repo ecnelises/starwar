@@ -6,6 +6,9 @@
 template<typename T>
 using observer_ptr = T*;
 
+template<typename T>
+using const_observer_ptr = const T*;
+
 typedef enum {MOON, EARTH, SUN} ballType;
 typedef enum {LOCAL_PLAYER, AI_PLAYER, REMOTE_PLAYER} currentPlayer;
 

@@ -11,6 +11,11 @@
 #include "Ball.h"
 #include <string>
 
+struct UnifiedMessageBody {
+    unsigned targetId;
+    cocos2d::Vec2 vec;
+};
+
 class GameController;
 using Socket = cocos2d::network::SIOClient;
 /// \class GameSocketDelegate
@@ -57,6 +62,7 @@ private:
     void dispatchWait(Socket*);
     void dispatchConnect(Socket*);
     void dispatchDisconnect(Socket*);
+    UnifiedMessageBody parseRemoteMessage(const std::string& msg);
     std::string _room;
     std::string _starter;
     std::string _token;

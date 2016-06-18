@@ -78,7 +78,6 @@ void NetworkController::sendDisconnect()
     this->unscheduleAllCallbacks();
 }
 
-
 void NetworkController::sendGameOver(int status)
 {
     std::ostringstream stream;
@@ -87,13 +86,12 @@ void NetworkController::sendGameOver(int status)
     _client->emit("gameOver", stream.str());
 }
 
-// The fucking cocos2d-x document has no words on arguments of this
+// The f**king cocos2d-x document has no words on arguments of this
 // callback function. Here I just assume the second string argument
 // means the message sent from remote server.
-
 void NetworkController::dispatchShoot(cocos2d::network::SIOClient *client, const std::string &message)
 {
-    auto data = message;
+    auto data = parseRemoteMessage(message);
     cocos2d::EventCustom remoteShootEvent("remoteShoot");
     remoteShootEvent.setUserData(&data);
     _eventDispatcher->dispatchEvent(&remoteShootEvent);
@@ -135,7 +133,7 @@ void NetworkController::dispatchEndFixed(cocos2d::network::SIOClient *client)
 
 void NetworkController::dispatchFixed(cocos2d::network::SIOClient *client, const std::string &message)
 {
-    auto data = message;
+    auto data = parseRemoteMessage(message);
     cocos2d::EventCustom fixEvent("fix");
     fixEvent.setUserData(&data);
     _eventDispatcher->dispatchEvent(&fixEvent);
@@ -148,7 +146,7 @@ void NetworkController::dispatchConnect(cocos2d::network::SIOClient *client)
     stream << R"({"player":)" << R"(")" << _token << R"("})";
     _client->emit("register", stream.str());
 }
-                                                        
+
 void NetworkController::dispatchDisconnect(cocos2d::network::SIOClient *client)
 {
     // 断开网络
@@ -156,11 +154,24 @@ void NetworkController::dispatchDisconnect(cocos2d::network::SIOClient *client)
     _eventDispatcher->dispatchEvent(&disconnectEvent);
 }
 
-
 void NetworkController::dispatchWait(cocos2d::network::SIOClient *client)
 {
     // 等待其他人进入房间
     printf("waiting...\n");
     cocos2d::EventCustom waitEvent("wait");
     _eventDispatcher->dispatchEvent(&waitEvent);
+}
+
+UnifiedMessageBody NetworkController::parseRemoteMessage(const std::string &msg)
+{
+    rapidjson::Document d;
+    d.Parse(msg.c_str());
+    UnifiedMessageBody res;
+    res.targetId = d["ballId"].GetInt();
+    if (d.HasMember("force")) {
+        res.vec = cocos2d::Vec2(d["force"][0].GetDouble(), d["force"][1].GetDouble());
+    } else if (d.HasMember("position")) {
+        res.vec = cocos2d::Vec2(d["position"][0].GetDouble(), d["position"][1].GetDouble());
+    }
+    return res;
 }

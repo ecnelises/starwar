@@ -29,7 +29,7 @@ RemotePlayer::RemotePlayer(bool isStarter)
 //    }
     auto earthYPos = fabsf(diff - earthPositionY);
     _balls += BallInitializer(EarthBall())
-                .atCenter(cocos2d::Point(centerX, moonYPos))
+                .atCenter(cocos2d::Point(centerX, earthYPos))
                 .withDistance(earthDistance)
                 .byLine() * 2;
     
@@ -45,15 +45,17 @@ RemotePlayer::RemotePlayer(bool isStarter)
 //        _balls.push_back(ball);
 //        this->addChild(ball->getSprite(), 4);
 //    }
+    _balls.addBallsToNode(this);
+    
     this->setActive(isStarter);
 }
 
-void RemotePlayer::applyShoot(Ball* ball, const Vec2 &position)
+void RemotePlayer::applyShoot(BallsCollection::BallId id, const Force& force)
 {
     if(!_active) {
         return;
     }
-    ball->move(position);
+    _balls.shootBall(id, force);
 }
 
 void RemotePlayer::listenDepart()

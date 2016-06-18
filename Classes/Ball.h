@@ -11,6 +11,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <climits>
 
 using Force = cocos2d::Vec2;
 
@@ -143,8 +144,8 @@ struct BallInitializer {
 };
 
 class Ball {
-    //friend class Player;
     friend class AIPlayer;
+    friend class BallsCollection;
 public:
     Ball(const BallInitializer& bi, cocos2d::Vec2 position);
     Ball(const Ball& b) = delete;
@@ -182,19 +183,80 @@ private:
 class BallsCollection {
     friend class Player;
 public:
+    struct BallId {
+        BallId() : id(UINT_MAX) {}
+        BallId(unsigned i) : id(i) {}
+        bool isNil(void) const
+        {
+            return id == UINT_MAX;
+        }
+        
+        static BallId nil(void)
+        {
+            return BallId(UINT_MAX);
+        }
+        
+        unsigned id;
+    };
+    
+    class BallsCollectionIterator {
+        friend class BallsCollection;
+    public:
+        BallId operator * () const
+        {
+            return BallId(_mapIter->first);
+        }
+        
+        const BallsCollectionIterator& operator ++ (int n)
+        {
+            ++_mapIter;
+            return *this;
+        }
+        
+        BallsCollectionIterator operator ++ (void)
+        {
+            _mapIter++;
+            return *this;
+        }
+        
+        bool operator != (const BallsCollectionIterator& rhs) const
+        {
+            // TODO when no ball, it will crash?
+            return _mapIter != rhs._mapIter;
+        }
+    private:
+        using InnerIter = std::unordered_map<unsigned, std::unique_ptr<Ball>>::const_iterator;
+        BallsCollectionIterator(const InnerIter& iter) : _mapIter(iter) {}
+        InnerIter _mapIter;
+    };
+    
+    BallsCollectionIterator begin(void) const
+    {
+        return BallsCollectionIterator(_balls.cbegin());
+    }
+    
+    BallsCollectionIterator end(void) const
+    {
+        return BallsCollectionIterator(_balls.cend());
+    }
+    
     BallsCollection() : _vernier(0) {}
-    ~BallsCollection() = default;
     BallsCollection(const BallsCollection& abc) = delete;
+    ~BallsCollection() = default;
     BallsCollection& operator += (const BallInitializerAggregate& ballInit);
+    
     bool empty(void) const;
     bool rest(void) const;
-    void shootBall(int id, const Force& force);
+    void shootBall(BallId id, const Force& force);
+    BallId inWhichBall(const cocos2d::Point& cursor) const;
+    cocos2d::Point getPosition(BallId id) const;
+    void addBallsToNode(cocos2d::Node* parent);
     
     template<typename BallOutPredicate>
     void filter(BallOutPredicate pre)
     {
         for (auto i = std::begin(_balls); i != std::end(_balls);) {
-            if (pre(*(i->second))) {
+            if (pre(i->second)) {
                 i = _balls.erase(i);
             } else {
                 ++i;
@@ -203,7 +265,7 @@ public:
     }
 private:
     // By default, mark of each ball is an integer.
-    void adjustBallPosition(unsigned id, cocos2d::Point newPosition);
+    void adjustBallPosition(BallId id, cocos2d::Point newPosition);
     std::unordered_map<unsigned, std::unique_ptr<Ball>> _balls;
     unsigned _vernier;
 };

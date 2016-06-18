@@ -15,39 +15,45 @@ class NetworkController;
 
 class Player {
 public:
-    Player() : _active(false)
-    {
-        ;
-    }
+    Player() : _active(false) {}
     virtual ~Player() = default;
     virtual void setActive(bool) = 0;
     virtual void listenDepart() = 0;
     virtual void unlistenDepart() = 0;
     
-    virtual BallsCollection* getBalls()
+    bool noBall(void) const
+    {
+        return _balls.empty();
+    }
+    
+    const BallsCollection* getBalls() const
     {
         return &_balls;
     }
     
-    void fixBall(int ballId, cocos2d::Vec2 pos)
+    void fixBall(int id, cocos2d::Vec2 pos)
     {
-        _balls.adjustBallPosition(ballId, pos);
+        _balls.adjustBallPosition(id, pos);
     }
-    virtual void applyShoot(Ball*, const Force&) = 0;
+    virtual void applyShoot(BallsCollection::BallId id, const Force& force) = 0;
 protected:
     BallsCollection _balls;
     bool _active;
     std::string _playerId;
-    std::string _nickname;
+    //std::string _nickname;
     void _isDeparted(float dt);
 };
 
 class LocalPlayer : public cocos2d::Node, public Player {
 public:
     LocalPlayer(bool isStarter);
-    virtual ~LocalPlayer() = default;
+    virtual ~LocalPlayer()
+    {
+        _mouse->release();
+    }
+    
     virtual void setActive(bool) override;
-    virtual void applyShoot(Ball*, const Force&) override;
+    virtual void applyShoot(BallsCollection::BallId id, const Force& force) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;
 private:
@@ -61,7 +67,8 @@ class RemotePlayer : public cocos2d::Node, public Player {
 public:
     RemotePlayer(bool isStarter);
     virtual ~RemotePlayer() = default;
-    virtual void applyShoot(Ball*, const cocos2d::Vec2&) override; // TODO: parameter
+    virtual void applyShoot(BallsCollection::BallId id, const cocos2d::Vec2& force) override;
+    // TODO: parameter
     virtual void setActive(bool) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;
@@ -71,11 +78,11 @@ class AIPlayer : public cocos2d::Node, public Player {
 public:
     AIPlayer(bool isStarter);
     virtual ~AIPlayer() = default;
-    virtual void applyShoot(Ball*, const Force&) override;
+    virtual void applyShoot(BallsCollection::BallId id, const Force& force) override;
     virtual void setActive(bool) override;
     virtual void listenDepart() override;
     virtual void unlistenDepart() override;
-    void findAndShoot(observer_ptr<BallsCollection> aiBalls, observer_ptr<BallsCollection> enemyBalls);
+    void findAndShoot(const_observer_ptr<BallsCollection> enemyBalls);
 private:
     void _isResting(float);
 };
